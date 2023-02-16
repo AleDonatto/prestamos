@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('clientes', function (Blueprint $table) {
-            $table->id('idCliente');
+        Schema::create('aval', function (Blueprint $table) {
+            $table->id('idAval');
             $table->string('nombre');
             $table->string('apellido_paterno');
             $table->string('apellido_materno');
@@ -25,13 +25,10 @@ return new class extends Migration
             $table->string('municipio');
             $table->string('poblado');
             $table->string('calle');
-            $table->string('refrencias');
+            $table->string('referencia');
             $table->string('garantias');
-            $table->string('plazos');
-            $table->string('monto');
-            $table->date('diaAlta');
-            $table->unsignedBigInteger('grupo_id');
-            $table->foreign('grupo_id')->references('idGrupos')->on('grupos');
+            $table->unsignedBigInteger('cliente_id');
+            $table->foreign('cliente_id')->references('idCliente')->on('clientes');
             $table->timestamps();
         });
     }
@@ -43,6 +40,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('clientes');
+        Schema::dropIfExists('aval');
     }
 };
