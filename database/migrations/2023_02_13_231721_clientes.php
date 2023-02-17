@@ -27,8 +27,8 @@ return new class extends Migration
             $table->string('calle');
             $table->string('refrencias');
             $table->string('garantias');
-            $table->string('plazos');
-            $table->string('monto');
+            //$table->string('plazos');
+            //$table->string('monto');
             $table->date('diaAlta');
             $table->unsignedBigInteger('grupo_id');
             $table->foreign('grupo_id')->references('idGrupos')->on('grupos');
