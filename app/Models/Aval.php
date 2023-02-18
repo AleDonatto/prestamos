@@ -25,6 +25,7 @@ class Aval extends Model
         'calle', 
         'referencias',
         'garantias',
+        'cliente_id'
     ];
 
 }

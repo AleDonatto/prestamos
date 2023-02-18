@@ -27,6 +27,7 @@ class Cliente extends Model
         'garantias',
         //'plazos', 
         //'monto', 
-        'diaAlta'
+        'diaAlta',
+        'grupo_id'
     ];
 }

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->string('municipio');
             $table->string('poblado');
             $table->string('calle');
-            $table->string('referencia');
+            $table->string('referencias');
             $table->string('garantias');
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('idCliente')->on('clientes');
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('aval');
+        Schema::dropIfExists('avales');
     }
 };
