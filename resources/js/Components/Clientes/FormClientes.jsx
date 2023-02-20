@@ -21,6 +21,9 @@ export const FormClientes = () => {
         celular: '',
         estado: 'Guerrero',
         municipio: '',
+        poblado: '',
+        calle: '',
+        referencias: '',
         garantia: '',
         //fecha_acreditacion: date.toISOString("es-MX", {timeZone: "America/Mexico_City"}).split(',')[0],
         fecha_acreditacion: date.split('T')[0],
@@ -31,6 +34,8 @@ export const FormClientes = () => {
         telefono_aval: '',
         celular_aval: '',
         municipio_aval: '',
+        poblado_aval: '',
+        calle_aval: '',
         referencias_aval: '',
         garantia_aval: '',
         grupo: 0,
@@ -147,7 +152,7 @@ export const FormClientes = () => {
                 icon: 'error',
                 title: err.response.data.message,
                 showConfirmButton: false,
-                timer: 1500
+                timer: 10000
             })
         })
     }
@@ -162,6 +167,9 @@ export const FormClientes = () => {
             telefono: '',
             celular: '',
             municipio: '',
+            poblado: '',
+            calle: '',
+            referencias: '',
             garantia: '',
             fecha_acreditacion: date.split('T')[0],
             nombre_aval: '',
@@ -171,6 +179,8 @@ export const FormClientes = () => {
             telefono_aval: '',
             celular_aval: '',
             municipio_aval: '',
+            poblado_aval: '',
+            calle_aval: '',
             referencias_aval: '',
             garantia_aval: '',
             plazos: 14,
@@ -180,7 +190,6 @@ export const FormClientes = () => {
     
     return (
         <div>
-            <pre>{JSON.stringify(cliente.fecha_acreditacion)}</pre>
             <div className='mt-10 grid lg:grid-cols-2 sm:grid-cols-1 gap-4'>
                 <div>
                     <form method='post' onSubmit={handleCreateGrupo}>
@@ -242,25 +251,25 @@ export const FormClientes = () => {
                     </div>
                     <div className="-mx-3 mt-5 flex flex-wrap">
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id="" label="Nombre" name='nombre' className="w-full outline-0 focus:border-0" onChange={handleChange}/>
+                            <TextField id="" label="Nombre" name='nombre' className="w-full outline-0 focus:border-0" value={cliente.nombre} onChange={handleChange}/>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id="" label="Apellido Paterno" name='apellido_paterno' className="w-full" onChange={handleChange}/>
+                            <TextField id="" label="Apellido Paterno" name='apellido_paterno' className="w-full" value={cliente.apellido_paterno} onChange={handleChange}/>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id='filled basic' label="Apellido Materno" name='apellido_materno' className='w-full' onChange={handleChange}></TextField>
+                            <TextField id='filled basic' label="Apellido Materno" name='apellido_materno' className='w-full' value={cliente.apellido_materno} onChange={handleChange}></TextField>
                         </div>
                     </div>
 
                     <div className="-mx-3 mt-5 flex flex-wrap">
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id="" label="CURP" name='curp' className="w-full" onChange={handleChange}/>
+                            <TextField id="" label="CURP" name='curp' className="w-full" value={cliente.curp} onChange={handleChange}/>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id="" label="Telefono" name='telefono' className="w-full" onChange={handleChange}/>
+                            <TextField id="" label="Telefono" name='telefono' className="w-full" value={cliente.telefono} onChange={handleChange}/>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id='' label="Celular" name='celular' className='w-full' onChange={handleChange}></TextField>
+                            <TextField id='' label="Celular" name='celular' className='w-full' value={cliente.celular} onChange={handleChange}></TextField>
                         </div>
                     </div>
 
@@ -276,18 +285,23 @@ export const FormClientes = () => {
                                 renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio' onSelect={handleChange}/>}
                             />
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextField id='' label="Calle" name='calle' className='w-full' onChange={handleChange}></TextField>
+                        <div className='w-full px-3 sm:w-1/3'>
+                            <TextField id='' label="Poblado" name='poblado' className='w-full' value={cliente.poblado} onChange={handleChange}></TextField>
                         </div>
                     </div>
 
                     <div className="-mx-3 mt-5 flex flex-wrap">
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id='' label="Referencias" name='referencias' className='w-full' onChange={handleChange}></TextField>
+                            <TextField id='' label="Calle" name='calle' className='w-full' value={cliente.calle} onChange={handleChange}></TextField>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id='' label="Garantia" name='garantia' className='w-full' onChange={handleChange}></TextField>
+                            <TextField id='' label="Referencias" name='referencias' className='w-full' value={cliente.referencias} onChange={handleChange}></TextField>
                         </div>
+                        <div className="w-full px-3 sm:w-1/3">
+                            <TextField id='' label="Garantia" name='garantia' className='w-full' value={cliente.garantia} onChange={handleChange}></TextField>
+                        </div>
+                    </div>
+                    <div className='-mx-3 mt-5 flex flex-wrap'>
                         <div className="w-full px-3 sm:w-1/3">
                             <TextField id='' label="Fecha Alta" name='fecha_acreditacion' value={cliente.fecha_acreditacion} className='w-full' type="date" InputLabelProps={{shrink: true,}} onChange={handleChange}></TextField>
                         </div>
@@ -298,25 +312,25 @@ export const FormClientes = () => {
                     </div>
                     <div className="-mx-3 mt-5 flex flex-wrap">
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id="" label="Nombre" name='nombre_aval' className="w-full outline-0 focus:border-0" onChange={handleChange}/>
+                            <TextField id="" label="Nombre" name='nombre_aval' className="w-full outline-0 focus:border-0" value={cliente.nombre_aval} onChange={handleChange}/>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id="" label="Apellido Paterno"  name='apellido_paterno_aval' className="w-full" onChange={handleChange}/>
+                            <TextField id="" label="Apellido Paterno"  name='apellido_paterno_aval' className="w-full" value={cliente.apellido_paterno_aval} onChange={handleChange}/>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id='filled basic' label="Apellido Materno" name='apellido_materno_aval' className='w-full' onChange={handleChange}></TextField>
+                            <TextField id='' label="Apellido Materno" name='apellido_materno_aval' className='w-full' value={cliente.apellido_materno_aval} onChange={handleChange}></TextField>
                         </div>
                     </div>
 
                     <div className="-mx-3 mt-5 flex flex-wrap">
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id="" label="CURP" name='curp_aval' className="w-full" onChange={handleChange}/>
+                            <TextField id="" label="CURP" name='curp_aval' className="w-full" value={cliente.curp_aval} onChange={handleChange}/>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id="" label="Telefono" name='telefono_aval' className="w-full" onChange={handleChange} />
+                            <TextField id="" label="Telefono" name='telefono_aval' className="w-full" value={cliente.telefono_aval} onChange={handleChange} />
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField id='' label="Celular" name='celular_aval' className='w-full' onChange={handleChange}></TextField>
+                            <TextField id='' label="Celular" name='celular_aval' className='w-full' value={cliente.celular_aval} onChange={handleChange}></TextField>
                         </div>
                     </div>
 
@@ -332,19 +346,20 @@ export const FormClientes = () => {
                                 renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio_aval' onSelect={handleChange} />}
                             />
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextField label="Calle" name='calle_aval' className='w-full' onChange={handleChange}></TextField>
+                        <div className='w-full px-3 sm:w-1/3'>
+                            <TextField id='' label="Poblado" name='poblado_aval' className='w-full' value={cliente.poblado_aval} onChange={handleChange}></TextField>
                         </div>
                     </div>
 
                     <div className="-mx-3 mt-5 flex flex-wrap">
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField label="Referencias" name='referencias_aval' className='w-full' onChange={handleChange}></TextField>
+                            <TextField label="Calle" name='calle_aval' className='w-full' value={cliente.calle_aval} onChange={handleChange}></TextField>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <TextField label="Garantia" name='garantia_aval' className='w-full' onChange={handleChange}></TextField>
+                            <TextField label="Referencias" name='referencias_aval' className='w-full' value={cliente.referencias_aval} onChange={handleChange}></TextField>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
+                            <TextField label="Garantia" name='garantia_aval' className='w-full' value={cliente.garantia_aval} onChange={handleChange}></TextField>
                         </div>
                     </div>
 

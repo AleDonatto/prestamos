@@ -3,6 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Head } from '@inertiajs/react'
 import Button from '@mui/material/Button';
 import { FormClientes } from '@/Components/Clientes/FormClientes';
+import { ListClientes } from '@/Components/Clientes/ListClientes';
 
 const Clientes = (props) => {
     return (
@@ -21,7 +22,14 @@ const Clientes = (props) => {
 
                             <FormClientes />
                         </div>
-                        
+                    </div>
+
+                    <div className="mt-10 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div className="p-6 text-gray-900">
+                            <h1 className='text-base md:text-lg lg:text-xl font-weight-bold text-gray-600 font-bold'>Consulta Clientes</h1>
+
+                            <ListClientes/>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@ class Credito extends Model
 {
     use HasFactory;
 
-    protected $table = "credito";
+    protected $table = "creditos";
     protected $primaryKey = "idCredito";
 
     protected $fillable = [

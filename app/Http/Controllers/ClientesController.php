@@ -47,9 +47,10 @@ class ClientesController extends Controller
     }
 
     public function createClientes(Request $request){
-        return $request;
+        //return $request;
 
         $validation = $request->validate([
+            'grupo' => 'required|integer',
             'nombre' => 'required|string',
             'apellido_paterno' => 'required|string',
             'apellido_materno' => 'required|string',
@@ -69,8 +70,8 @@ class ClientesController extends Controller
             'municipio_aval' => 'required|string',
             'garantia_aval' => 'required|string',
 
-            'plazos' => 'required|string',
-            'monto' => 'required|string',
+            'plazos' => 'required|integer',
+            'monto' => 'required|integer',
         ]);
 
         $cliente = new Cliente();
@@ -82,8 +83,10 @@ class ClientesController extends Controller
         $cliente->celular = $request->celular;
         $cliente->estado = $request->estado;
         $cliente->municipio = $request->municipio;
+        $cliente->poblado = $request->poblado;
+        $cliente->calle = $request->calle;
         $cliente->referencias = $request->referencias;
-        $cliente->garantia = $request->garantia;
+        $cliente->garantias = $request->garantia;
         //$cliente->plazos = $request->plazos; 
         //$cliente->monto = $request->monto;
         $cliente->diaAlta = $request->fecha_acreditacion;
@@ -97,12 +100,12 @@ class ClientesController extends Controller
         $aval->curp = $request->curp_aval;
         $aval->telefono = $request->telefono_aval;
         $aval->celular = $request->celular_aval;
-        $aval->estado = $request->estado_aval;
+        $aval->estado = $request->estado;
         $aval->municipio = $request->municipio_aval;
         $aval->poblado = $request->poblado_aval;
         $aval->calle = $request->calle_aval;
-        $aval->refencias = $request->referecnias_aval;
-        $aval->garantias = $request->garantias_aval;
+        $aval->referencias = $request->referencias_aval;
+        $aval->garantias = $request->garantia_aval;
         $aval->cliente_id = $cliente->idCliente;
         $aval->save();
 
@@ -121,7 +124,8 @@ class ClientesController extends Controller
 
     public function listClientes(){
         $listClientes = DB::table('clientes')
-        ->select('clientes.*')
+        ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+        ->select('clientes.*', 'grupos.nombreGrupo')
         ->orderBy('clientes.created_at')
         ->get();
 
