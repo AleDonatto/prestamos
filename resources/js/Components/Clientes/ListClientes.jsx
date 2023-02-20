@@ -5,6 +5,7 @@ import UpdateIcon from '@mui/icons-material/Update';
 import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
+import { Link } from '@inertiajs/react';
 
 const handleClick = (event, cellValues) => {
     console.log(cellValues.row);
@@ -31,15 +32,20 @@ const columnsGrid = [
     field: "Actions",
     renderCell: (cellValues) => {
       return (
-        <Button
+        <div>
+          {/*<Button
           className='px-2'
           variant="text"
           endIcon={<EditIcon />}
           onClick={(event) => {
             handleClick(event, cellValues);
           }}
-        >
-        </Button>
+          >
+        </Button>*/}
+          {<Link href={route('editCliente', cellValues.row.idCliente)}>
+            <EditIcon />
+        </Link>}
+        </div>
       );
     }
   }

@@ -9,6 +9,7 @@ use App\Models\Grupo;
 use App\Models\Cliente;
 use App\Models\Aval;
 use App\Models\Credito;
+use Inertia\Inertia;
 
 class ClientesController extends Controller
 {
@@ -59,6 +60,8 @@ class ClientesController extends Controller
             'celular' => 'required|string',
             'municipio' => 'required|string',
             'garantia' => 'required|string',
+            'poblado' => 'required|string',
+            'referecnias' => 'required|string',
             'fecha_acreditacion' => 'required|string',
 
             'nombre_aval' => 'required|string',
@@ -68,6 +71,8 @@ class ClientesController extends Controller
             'telefono_aval' => 'required|string',
             'celular_aval' => 'required|string',
             'municipio_aval' => 'required|string',
+            'poblado_aval' => 'required|string',
+            'referencias_aval' => 'required|string',
             'garantia_aval' => 'required|string',
 
             'plazos' => 'required|integer',
@@ -131,6 +136,99 @@ class ClientesController extends Controller
 
         return response()->json([
             'clientes' => $listClientes
+        ]);
+    }
+
+    public function viewEditCliente($idCliente){
+        $client = DB::table('clientes')
+        ->select('clientes.*')
+        ->where('clientes.idCliente', $idCliente)
+        ->first();
+
+        $aval = DB::table('avales')
+        ->select('avales.*')
+        ->where('avales.cliente_id', $idCliente)
+        ->first();
+
+        $cliente = array(
+            'dataClient' => $client,
+            'dataAval' => $aval
+        );
+
+        return Inertia::render('EditClientes', [
+            'cliente' => $cliente
+        ]);
+    }
+
+    public function updateDatosCliente(Request $request){
+        $validate = $request->validate([
+            'nombre' => 'required|string',
+            'apellido_paterno' => 'required|string',
+            'apellido_materno' => 'required|string',
+            'curp' => 'required|string',
+            'telefono' => 'required|string',
+            'celular' => 'required|string',
+            'municipio' => 'required|string',
+            'poblado' => 'required|string',
+            'calle' => 'required|string',
+            'referencias' => 'required|string',
+            'garantia' => 'required|string',
+        ]);
+
+        $cliente = Cliente::where('idCliente', $request->idCliente)
+        ->update([
+            'nombre' => $request->nombre, 
+            'apellido_paterno' => $request->apellido_paterno,
+            'apellido_materno' => $request->apellido_materno,
+            'curp' => $request->curp,
+            'telefono' => $request->telefono, 
+            'celular' => $request->celular,
+            'municipio' => $request->municipio,
+            'poblado' => $request->poblado,
+            'calle' => $request->calle,
+            'referencias' => $request->referencias, 
+            'garantias' => $request->garantia,
+        ]);
+
+        return response()->json([
+            'message' => 'Datos del cliente Actualizado',
+            'updateClient' => $cliente,
+        ]);
+    }
+
+    public function updateDatosAval(Request $request){
+        $validate = $request->validate([
+            'nombre' => 'required|string',
+            'apellido_paterno' => 'required|string',
+            'apellido_materno' => 'required|string',
+            'curp' => 'required|string',
+            'telefono' => 'required|string',
+            'celular' => 'required|string',
+            'municipio' => 'required|string',
+            'poblado' => 'required|string',
+            'calle' => 'required|string',
+            'referencias' => 'required|string',
+            'garantia' => 'required|string',
+        ]);
+
+        $aval = Aval::where('idAval', $request->idAval)
+        ->update([
+            'nombre' => $request->nombre, 
+            'apellido_paterno' => $request->apellido_paterno,
+            'apellido_materno' => $request->apellido_materno,
+            'curp' => $request->curp,
+            'telefono' => $request->telefono, 
+            'celular' => $request->celular,
+            'municipio' => $request->municipio,
+            'poblado' => $request->poblado,
+            'calle' => $request->calle,
+            'referencias' => $request->referencias, 
+            'garantias' => $request->garantia,
+        ]);
+
+        return response()->json([
+            'message' => 'Datos del Aval Actualizado',
+            'updateAval' => $aval,
         ]);
     }
 }
