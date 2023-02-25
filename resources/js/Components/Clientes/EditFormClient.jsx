@@ -188,13 +188,13 @@ export const EditFormClient = (props) => {
                             <div className='-mx-3 mt-5 flex flex-wrap'>
                                 <div className="w-full px-3 sm:w-1/3">
                                     <TextField id='' label="Fecha Alta" name='fecha_acreditacion' 
-                                    disabled value={client.fecha_acreditacion} className='w-full' type="date" InputLabelProps={{shrink: true,}} onChange={handleChangeCliente}></TextField>
+                                    disabled={disableClient} value={client.fecha_acreditacion} className='w-full' type="date" InputLabelProps={{shrink: true,}} onChange={handleChangeCliente}></TextField>
                                 </div>
                             </div>
                             <div className="-mx-3 mt-5 flex">
                                 <div className="px-3 ">
                                     <Button type='button' variant="contained" onClick={() => {setdisableClient(!disableClient)}}>
-                                        { disableClient === true ? 'Habilaitar Campos' : 'Deshabilitar Campos'}
+                                        { disableClient === true ? 'Editar' : 'Cancelar'}
                                     </Button>
                                 </div>
                                 <div className="px-3 ">

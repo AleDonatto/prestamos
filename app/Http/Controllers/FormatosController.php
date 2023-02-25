@@ -36,6 +36,6 @@ class FormatosController extends Controller
         $pdf->setOption(['dpi' => 100, 'defaultFont' => 'sans-serif']);
      
         //return $pdf->download('itsolutionstuff.pdf');
-        return $pdf->stream('itsolutionstuff.pdf');
+        return $pdf->stream('listclients.pdf');
     }
 }

@@ -56,19 +56,17 @@ class ClientesController extends Controller
             'apellido_paterno' => 'required|string',
             'apellido_materno' => 'required|string',
             'curp' => 'required|string',
-            'telefono' => 'required|string',
             'celular' => 'required|string',
             'municipio' => 'required|string',
             'garantia' => 'required|string',
             'poblado' => 'required|string',
-            'referecnias' => 'required|string',
+            'referencias' => 'required|string',
             'fecha_acreditacion' => 'required|string',
 
             'nombre_aval' => 'required|string',
             'apellido_paterno_aval' => 'required|string',
             'apellido_materno_aval' => 'required|string',
             'curp_aval' => 'required|string',
-            'telefono_aval' => 'required|string',
             'celular_aval' => 'required|string',
             'municipio_aval' => 'required|string',
             'poblado_aval' => 'required|string',
@@ -79,51 +77,63 @@ class ClientesController extends Controller
             'monto' => 'required|integer',
         ]);
 
-        $cliente = new Cliente();
-        $cliente->nombre = $request->nombre;
-        $cliente->apellido_paterno = $request->apellido_paterno;
-        $cliente->apellido_materno = $request->apellido_materno;
-        $cliente->curp = $request->curp;
-        $cliente->telefono = $request->telefono; 
-        $cliente->celular = $request->celular;
-        $cliente->estado = $request->estado;
-        $cliente->municipio = $request->municipio;
-        $cliente->poblado = $request->poblado;
-        $cliente->calle = $request->calle;
-        $cliente->referencias = $request->referencias;
-        $cliente->garantias = $request->garantia;
-        //$cliente->plazos = $request->plazos; 
-        //$cliente->monto = $request->monto;
-        $cliente->diaAlta = $request->fecha_acreditacion;
-        $cliente->grupo_id = $request->grupo;
-        $cliente->save();
+        $checkCurp = DB::table('clientes')
+        ->where('clientes.curp', $request->curp)
+        ->count();
 
-        $aval = new Aval();
-        $aval->nombre = $request->nombre_aval;
-        $aval->apellido_paterno = $request->apellido_paterno;
-        $aval->apellido_materno = $request->apellido_materno;
-        $aval->curp = $request->curp_aval;
-        $aval->telefono = $request->telefono_aval;
-        $aval->celular = $request->celular_aval;
-        $aval->estado = $request->estado;
-        $aval->municipio = $request->municipio_aval;
-        $aval->poblado = $request->poblado_aval;
-        $aval->calle = $request->calle_aval;
-        $aval->referencias = $request->referencias_aval;
-        $aval->garantias = $request->garantia_aval;
-        $aval->cliente_id = $cliente->idCliente;
-        $aval->save();
+        if($checkCurp >= 1){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ya existe un registro del cliente que ingreso'
+            ]);
+        }else{
+            $cliente = new Cliente();
+            $cliente->nombre = $request->nombre;
+            $cliente->apellido_paterno = $request->apellido_paterno;
+            $cliente->apellido_materno = $request->apellido_materno;
+            $cliente->curp = $request->curp;
+            $cliente->telefono = 's/n'; 
+            $cliente->celular = $request->celular;
+            $cliente->estado = $request->estado;
+            $cliente->municipio = $request->municipio;
+            $cliente->poblado = $request->poblado;
+            $cliente->calle = $request->calle;
+            $cliente->referencias = $request->referencias;
+            $cliente->garantias = $request->garantia;
+            //$cliente->plazos = $request->plazos; 
+            //$cliente->monto = $request->monto;
+            $cliente->diaAlta = $request->fecha_acreditacion;
+            $cliente->grupo_id = $request->grupo;
+            $cliente->save();
 
-        $credito = new Credito();
-        $credito->fechaAcreditacion = $request->fecha_acreditacion;
-        $credito->monto = $request->monto;
-        $credito->plazos = $request->plazos;
-        $credito->cliente_id = $cliente->idCliente;
-        $credito->save();
+            $aval = new Aval();
+            $aval->nombre = $request->nombre_aval;
+            $aval->apellido_paterno = $request->apellido_paterno;
+            $aval->apellido_materno = $request->apellido_materno;
+            $aval->curp = $request->curp_aval;
+            $aval->telefono = 's/n';
+            $aval->celular = $request->celular_aval;
+            $aval->estado = $request->estado;
+            $aval->municipio = $request->municipio_aval;
+            $aval->poblado = $request->poblado_aval;
+            $aval->calle = $request->calle_aval;
+            $aval->referencias = $request->referencias_aval;
+            $aval->garantias = $request->garantia_aval;
+            $aval->cliente_id = $cliente->idCliente;
+            $aval->save();
 
-        return response()->json([
-            'statusText' => 'Cliente Agregado'
-        ]);
+            $credito = new Credito();
+            $credito->fechaAcreditacion = $request->fecha_acreditacion;
+            $credito->monto = $request->monto;
+            $credito->plazos = $request->plazos;
+            $credito->cliente_id = $cliente->idCliente;
+            $credito->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Cliente Agregado'
+            ]);
+        }
 
     }
 
@@ -135,6 +145,7 @@ class ClientesController extends Controller
         ->get();
 
         return response()->json([
+            'status' => 'success',
             'clientes' => $listClientes
         ]);
     }
@@ -173,6 +184,7 @@ class ClientesController extends Controller
             'calle' => 'required|string',
             'referencias' => 'required|string',
             'garantia' => 'required|string',
+            'fecha_acreditacion' => 'required|date'
         ]);
 
         $cliente = Cliente::where('idCliente', $request->idCliente)
@@ -188,6 +200,7 @@ class ClientesController extends Controller
             'calle' => $request->calle,
             'referencias' => $request->referencias, 
             'garantias' => $request->garantia,
+            'diaAlta' => $request->fecha_acreditacion
         ]);
 
         return response()->json([

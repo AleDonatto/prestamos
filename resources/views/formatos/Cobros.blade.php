@@ -19,77 +19,86 @@
         font-size: 0.60rem;
     }
 
+    .font-size-9{
+        font-size: 0.50rem; 
+    }
+
     .max-w-15{
         width: 15px !important;
     }
 
     .borders{
-        margin-left: -20px;
-    }
-
-    .vertical-text{
-        writing-mode: vertical-rl;
-        text-orientation: upright;
-        transform: rotate(90deg);
+        margin-left: -290px;
     }
 
     .pading-0{
         padding: 0px;
     }
+    .table-file{
+        width:100% !important;
+        page-break-inside: avoid !important;
+    }
+    table, th, td {
+        border: 1px solid black !important;
+        border-collapse: collapse !important;
+    }
     </style>
-    <table class="table table-bordered borders" style="width:100%">
+    <div class="container">
+    <table class="table borders border-table" >
         <tr>
-            <th class="font-size-10">Cred.</th>
-            <th class="font-size-10">Gpo</th>
-            <th class="font-size-10">Cliente</th>
-            <th class="font-size-10">Direccion</th>
-            <th class="font-size-10">Garantias <br>/Tel.</th>
-            <th class="font-size-10">Aval</th>
-            <th class="font-size-10">Direccion Aval</th>
-            <th class="font-size-10">Garantias <br>/Tel. Aval</th>
-            <th class="font-size-10">Pago</th>
-            <th class="font-size-10">1</th>
-            <th class="font-size-10">2</th>
-            <th class="font-size-10">3</th>
-            <th class="font-size-10">4</th>
-            <th class="font-size-10">5</th>
-            <th class="font-size-10">6</th>
-            <th class="font-size-10">7</th>
-            <th class="font-size-10">8</th>
-            <th class="font-size-10">9</th>
-            <th class="font-size-10">10</th>
-            <th class="font-size-10">11</th>
-            <th class="font-size-10">12</th>
-            <th class="font-size-10">13</th>
-            <th class="font-size-10">14</th>
+            <th class="font-size-9" style="max-width: 10px;">Cred.</th>
+            <th class="font-size-9" style="max-width: 10px;">Gpo</th>
+            <th class="font-size-9" style="max-width: 20px;">Clien.</th>
+            <th class="font-size-9" style="max-width: 20px;">Dir.</th>
+            <th class="font-size-9" style="max-width: 18px;">Gar. <br>/Tel.</th>
+            <th class="font-size-9">Aval</th>
+            <th class="font-size-9">Dir. Aval</th>
+            <th class="font-size-9" style="max-width: 18px;">Gar. <br>/Tel. Aval</th>
+            <th class="font-size-9">Pago</th>
+            <th class="font-size-9">1</th>
+            <th class="font-size-9">2</th>
+            <th class="font-size-9">3</th>
+            <th class="font-size-9">4</th>
+            <th class="font-size-9">5</th>
+            <th class="font-size-9">6</th>
+            <th class="font-size-9">7</th>
+            <th class="font-size-9">8</th>
+            <th class="font-size-9">9</th>
+            <th class="font-size-9">10</th>
+            <th class="font-size-9">11</th>
+            <th class="font-size-9">12</th>
+            <th class="font-size-9">13</th>
+            <th class="font-size-9">14</th>
         </tr>
         @foreach($clientes as $client)
         <tr>
-            <td class="font-size-10 px-0" style="height: 120px; max-width: 10px;">{{ $client->idCredito }}</td>
-            <td class="font-size-10 px-0" style="height: 120px; max-width: 10px;">{{ $client->nombreGrupo }}</td>
-            <td class="font-size-10 px-1" style="height: 130px; max-width: 25px;">{{ $client->nombre}} <br> {{$client->apellido_paterno }} <br> {{$client->apellido_materno}}</td>
-            <td class="font-size-10 px-1" style="height: 120px; max-width: 25px;">{{ $client->municipio }} {{$client->poblado}} {{$client->calle}}</td>
-            <td class="font-size-10 px-1" style="height: 120px; max-width: 25px;">{{ $client->garantias }} <br> Tel: {{$client->telefono}} </td>
-            <td class="font-size-10 px-1" style="height: 120px; max-width: 25px;">{{ $client->nombre_aval}}</td>
-            <td class="font-size-10 px-1" style="height: 120px; max-width: 25px;">{{ $client->municipio_aval }} {{$client->poblado_aval}} {{$client->calle_aval}}</td>
-            <td class="font-size-10 px-1" style="height: 120px; max-width: 25px;">{{ $client->garantias_aval}} <br>Tel: {{$client->telefono_aval}}</td>
-            <td class="font-size-10 px-0" style="height: 120px; min-width: 15px;">$2000.00</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 8 days")); }}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 16 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 24 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 32 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 40 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 48 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 56 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 64 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 72 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 80 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 88 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 96 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 104 days"));}}</td>
-            <td class="font-size-10 px-2" style="height: 120px; max-width: 20px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 112 days"));}}</td>
+            <td class="font-size-9 px-1 text-center" style="height: 130px; max-width: 8px;">{{ $client->idCredito }}</td>
+            <td class="font-size-9 px-1" style="height: 130px; max-width: 8px;">{{ $client->nombreGrupo }}</td>
+            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->nombre}} <br> {{$client->apellido_paterno }} <br> {{$client->apellido_materno}}</td>
+            <td class="font-size-9 px-1" style="height: 130px; width: 15px;">{{ $client->municipio }} {{$client->poblado}} {{$client->calle}}</td>
+            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->garantias }} <br> /{{$client->telefono}} </td>
+            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->nombre_aval}}</td>
+            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->municipio_aval }} {{$client->poblado_aval}} {{$client->calle_aval}}</td>
+            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->garantias_aval}} <br>/{{$client->telefono_aval}}</td>
+            <td class="font-size-9 px-1" style="height: 130px; min-width: 15px;">$2000.00</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 8 days")); }}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 16 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 24 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 32 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 40 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 48 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 56 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 64 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 72 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 80 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 88 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 96 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 104 days"));}}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 112 days"));}}</td>
         </tr>
         @endforeach
     </table>
+    </div>
+    
 </body>
 </html>
