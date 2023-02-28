@@ -42,6 +42,11 @@
         border: 1px solid black !important;
         border-collapse: collapse !important;
     }
+    .vertical-text{
+        /*transform: rotate(180deg);*/
+        transform: rotate(90deg);
+        transform-origin: left top 0;
+    }
     </style>
     <div class="container">
     <table class="table borders border-table" >
@@ -75,13 +80,17 @@
             <td class="font-size-9 px-1 text-center" style="height: 130px; max-width: 8px;">{{ $client->idCredito }}</td>
             <td class="font-size-9 px-1" style="height: 130px; max-width: 8px;">{{ $client->nombreGrupo }}</td>
             <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->nombre}} <br> {{$client->apellido_paterno }} <br> {{$client->apellido_materno}}</td>
-            <td class="font-size-9 px-1" style="height: 130px; width: 15px;">{{ $client->municipio }} {{$client->poblado}} {{$client->calle}}</td>
-            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->garantias }} <br> /{{$client->telefono}} </td>
+            <td class="font-size-9 px-1" style="height: 130px; width: 15px;">{{ $client->nombreMunicipio }} {{$client->poblado}} {{$client->calle}}</td>
+            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->garantias }} <br> {{$client->celular}} </td>
             <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->nombre_aval}}</td>
-            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->municipio_aval }} {{$client->poblado_aval}} {{$client->calle_aval}}</td>
-            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->garantias_aval}} <br>/{{$client->telefono_aval}}</td>
+            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{$client->poblado_aval}} {{$client->calle_aval}}</td>
+            <td class="font-size-9 px-1" style="height: 130px; max-width: 12px;">{{ $client->garantias_aval}} <br>{{$client->telefono_aval}}</td>
             <td class="font-size-9 px-1" style="height: 130px; min-width: 15px;">$2000.00</td>
-            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 8 days")); }}</td>
+            <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">
+                <span class="vertical-text">
+                    {{date("Y-m-d",strtotime($client->diaAlta."+ 8 days")); }}
+                </span>
+            </td>
             <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 16 days"));}}</td>
             <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 24 days"));}}</td>
             <td class="font-size-9 px-3" style="height: 130px; max-width: 18px;">{{date("Y-m-d",strtotime($client->diaAlta."+ 32 days"));}}</td>

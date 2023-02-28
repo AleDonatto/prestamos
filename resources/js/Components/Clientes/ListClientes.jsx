@@ -27,7 +27,7 @@ const columnsGrid = [
   //{ field: 'telefono',headerName: 'Telefono', width: 130},
   { field: 'celular',headerName: 'Celular', width: 130},
   { field: 'nombreGrupo',headerName: 'Grupo', width: 130},
-  { field: 'municipio',headerName: 'Municipio', width: 130},
+  { field: 'nombreMunicipio',headerName: 'Municipio', width: 130},
   { field: 'poblado', headerName: 'Colonia', width: 130},
   {
     field: "Actions",
@@ -195,7 +195,7 @@ export const ListClientes = () => {
                 rows={listClientes}
                 columns={columnsGrid}
                 checkboxSelection
-                rowsPerPage={25}
+                pageSize={25}
                 onCellClick={handleCellClick}
                 onRowClick={handleRowClick}
               />

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('fechaAcreditacion');
             $table->integer('monto');
             $table->integer('plazos');
+            $table->string('estatus', 100);
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('idCliente')->on('clientes');
             $table->timestamps();

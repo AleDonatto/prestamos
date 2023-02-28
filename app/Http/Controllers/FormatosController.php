@@ -12,15 +12,15 @@ class FormatosController extends Controller
     public function formatoCobros(){
         $listClientes = DB::table('clientes')
         ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+        ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
         ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
         ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
-        ->select('clientes.*', 'grupos.nombreGrupo', 'creditos.idCredito', 
+        ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
             'avales.nombre as nombre_aval', 
-            'avales.municipio as municipio_aval',
             'avales.poblado as poblado_aval',
             'avales.calle as calle_aval',
             'avales.garantias as garantias_aval',
-            'avales.telefono as telefono_aval',
+            'avales.celular as telefono_aval',
         )
         ->orderBy('clientes.created_at')
         ->get();

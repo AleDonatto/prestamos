@@ -15,18 +15,18 @@ return new class extends Migration
     {
         Schema::create('avales', function (Blueprint $table) {
             $table->id('idAval');
-            $table->string('nombre');
-            $table->string('apellido_paterno');
-            $table->string('apellido_materno');
-            $table->string('curp');
-            $table->string('telefono');
-            $table->string('celular');
-            $table->string('estado');
-            $table->string('municipio');
-            $table->string('poblado');
-            $table->string('calle');
-            $table->string('referencias');
-            $table->string('garantias');
+            $table->string('nombre', 100);
+            $table->string('apellido_paterno', 100);
+            $table->string('apellido_materno', 100);
+            $table->string('curp', 20);
+            $table->string('telefono', 12);
+            $table->string('celular', 12);
+            $table->string('estado', 100);
+            $table->string('municipio', 100);
+            $table->string('poblado', 100);
+            $table->string('calle', 100);
+            $table->string('referencias', 100);
+            $table->string('garantias', 100);
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('idCliente')->on('clientes');
             $table->timestamps();
