@@ -34,8 +34,8 @@ class FormatosController extends Controller
         ]; 
 
         $pdf = PDF::loadView('/formatos/Cobros', $data);
-        $pdf->setPaper('A4', 'landscape');
-        $pdf->setOption(['dpi' => 100, 'defaultFont' => 'sans-serif']);
+        $pdf->setPaper('a4', 'landscape');
+        $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
      
         //return $pdf->download('itsolutionstuff.pdf');
         return $pdf->stream('listclients.pdf');
