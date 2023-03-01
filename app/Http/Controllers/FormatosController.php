@@ -17,6 +17,8 @@ class FormatosController extends Controller
         ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
         ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
             'avales.nombre as nombre_aval', 
+            'avales.apellido_paterno as apellido_paterno_aval', 
+            'avales.apellido_materno as apellido_materno_aval', 
             'avales.poblado as poblado_aval',
             'avales.calle as calle_aval',
             'avales.garantias as garantias_aval',

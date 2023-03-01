@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import municipios from '../Municipios/estados-municipios.json'
+import React, { useEffect, useState } from 'react'
 import { Button, TextField, Autocomplete, Select, MenuItem, FormControl } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import Swal from 'sweetalert2'
@@ -11,6 +10,8 @@ export const EditFormClient = (props) => {
     
     const [disableClient, setdisableClient] = useState(true)
     const [disableAval, setdisableAval] = useState(true)
+    const [municipios, setmunicipios] = useState([])
+    const [defMunicipio, setdefMunicipio] = useState(null)
 
     const date = moment().format()
     const [client, setclient] = useState({
@@ -22,7 +23,7 @@ export const EditFormClient = (props) => {
         telefono: cliente.dataClient.telefono,
         celular: cliente.dataClient.celular,
         estado: 'Guerrero',
-        municipio: cliente.dataClient.municipio,
+        municipio: cliente.dataClient.municipio_id,
         poblado: cliente.dataClient.poblado,
         calle: cliente.dataClient.calle,
         referencias: cliente.dataClient.referencias,
@@ -39,7 +40,7 @@ export const EditFormClient = (props) => {
         telefono: cliente.dataAval?.telefono,
         celular: cliente.dataAval?.celular,
         estado: 'Guerrero',
-        municipio: cliente.dataAval?.municipio,
+        municipio: cliente.dataAval?.municipio_id,
         poblado: cliente.dataAval?.poblado,
         calle: cliente.dataAval?.calle,
         referencias: cliente.dataAval?.referencias,
@@ -57,6 +58,20 @@ export const EditFormClient = (props) => {
         setaval({
             ...aval,
             [e.target.name]: e.target.value
+        })
+    }
+
+    const handlegetMunicipios = () => {
+        axios.get('/municipios/list')
+        .then(res => {
+            console.log(res.data)
+            const list = res.data.listMunicipios
+            setmunicipios(list)
+
+            handlegetDefaultMun()
+        })
+        .catch(err => {
+            console.log(err.response)
         })
     }
 
@@ -111,6 +126,18 @@ export const EditFormClient = (props) => {
         })
     }
 
+    const handlegetDefaultMun = () => {
+        let aux = municipios
+
+        let filter = aux.filter( item => item.idMunicipio === client.municipio )
+        setdefMunicipio(filter)
+    }
+
+    useEffect(() => {
+        handlegetMunicipios()
+    }, [])
+    
+
     return (
         <div>
             <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -160,9 +187,16 @@ export const EditFormClient = (props) => {
                                         disablePortal
                                         id=""
                                         disabled={disableClient}
-                                        options={municipios.Guerrero}
-                                        value={client.municipio}
-                                        renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio' onSelect={handleChangeCliente}/>}
+                                        options={municipios}
+                                        getOptionLabel={option => option.nombreMunicipio||''}
+                                        isOptionEqualToValue={option => option.idMunicipio === client.municipio}
+                                        onChange={(e,item) => {
+                                            setclient({
+                                                ...client,
+                                                municipio: item.idMunicipio
+                                            })
+                                        }}
+                                        renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio'/>}
                                     />
                                 </div>
                                 <div className='w-full px-3 sm:w-1/3'>
@@ -250,10 +284,17 @@ export const EditFormClient = (props) => {
                                 <Autocomplete
                                     disablePortal
                                     id=""
-                                    options={municipios.Guerrero}
-                                    defaultValue={aval.municipio}
+                                    options={municipios}
+                                    getOptionLabel={option => option.nombreMunicipio||''}
+                                    isOptionEqualToValue={option => option.idMunicipio === aval.municipio}
                                     disabled={disableAval}
-                                    renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio' onSelect={handleChangeAval} />}
+                                    onChange={(e,item) => {
+                                        setaval({
+                                            ...aval,
+                                            municipio: item.idMunicipio
+                                        })
+                                    }}
+                                    renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio' />}
                                 />
                             </div>
                             <div className='w-full px-3 sm:w-1/3'>
@@ -280,7 +321,7 @@ export const EditFormClient = (props) => {
                         <div className="-mx-3 mt-5 flex">
                             <div className="px-3">
                                 <Button type='button' variant='contained' onClick={() => {setdisableAval(!disableAval)}}>
-                                    { disableClient === true ? 'Habilitar Campos Aval' : 'Deshabilitar Campos Aval'}
+                                    { disableClient === true ? 'Editar' : 'Cancelar'}
                                 </Button>
                             </div>
                             <div className="px-3">
