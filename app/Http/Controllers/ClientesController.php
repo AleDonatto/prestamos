@@ -255,4 +255,52 @@ class ClientesController extends Controller
             'updateAval' => $aval,
         ]);
     }
+
+    public function consDynamicClients(Request $request){
+        
+        if($request->grupo > 0 && $request->municipio === 0){
+
+            $listClientes = DB::table('clientes')
+            ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+            ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
+            ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
+            ->where('grupos.idGrupo', $request->grupo)
+            ->orderBy('clientes.created_at')
+            ->get();
+
+            return response()->json([
+                'listClients' => $listClientes
+            ]);
+        }else if($request->grupo === 0 && $request->municipio > 0){
+
+            $listClientes = DB::table('clientes')
+            ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+            ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
+            ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
+            ->where('municipios.idMunicipio', $request->municipio)
+            ->orderBy('clientes.created_at')
+            ->get();
+
+            return response()->json([
+                'listClients' => $listClientes
+            ]);
+        }else if($request->grupo > 0 && $request->municipio > 0){
+            $listClientes = DB::table('clientes')
+            ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+            ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
+            ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
+            ->where('municipios.idMunicipio', $request->municipio)
+            ->where('grupos.idGrupo', $request->grupo)
+            ->orderBy('clientes.created_at')
+            ->get();
+
+            return response()->json([
+                'listClients' => $listClientes
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'No se envio ningun parametro'
+        ]);
+    }
 }

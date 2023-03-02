@@ -6,9 +6,10 @@ import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import { Link } from '@inertiajs/react';
+import Swal from 'sweetalert2'
 
 const handleClick = (event, cellValues) => {
-    console.log(cellValues.row);
+  console.log(cellValues.row);
 };
   
 const handleCellClick = (param, event) => {
@@ -55,22 +56,29 @@ const columnsGrid = [
 ];
 
 export const ListClientes = () => {
-  let aux = []
-  let aux1 = []
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [listClientes, setlistClientes] = useState([])
   const [auxClient, setauxClient] = useState([])
   const [search, setsearch] = useState('')
   const [grupos, setGrupos] = useState([]);
-  const [grupo, setgrupo] = useState(0)
+  const [minicipios, setminicipios] = useState([])
+
+  const [listGrupo, setlistGrupo] = useState({
+    grupo: 0
+  })
+
+  const [listMunicipios, setlistMunicipios] = useState({
+    municipio: 0
+  })
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
+    setRowsPerPage(event.target.value);
     setPage(0);
   };
 
@@ -114,55 +122,93 @@ export const ListClientes = () => {
       //console.log(res.data)
       const listGruposData = res.data.grupos
       setGrupos(listGruposData)
-      aux = res.data.grupos
-      aux1 = res.data.grupos
     })
     .catch(err => {
       console.log(err.response)
     })
   }
 
-  const handleSelectGrupo = (e) => {
-    setgrupo(e.target.value);
+  const handlegetMunicipios = async () => {
+    axios.get('/municipios/list')
+    .then(res => {
+      console.log(res.data)
+      const dataMunicipios = res.data.listMunicipios 
+      setminicipios(dataMunicipios)
+    })
+    .catch(err => {
+      console.log(err.response)
+    })
   }
 
-  const handleFilterGrupo = () => {
+  const handleConstClients = async () => {
+    const data = {
+      grupo: listGrupo.grupo,
+      municipio: listMunicipios.municipio
+    }
 
-    if(grupo > 0){
-      let auxClientes = listClientes
-      let filterTable = auxClientes.filter(clients => clients.grupo_id === grupo)
-      console.log(filterTable)
-      setlistClientes(filterTable)
-      
+    if(listGrupo.grupo === 0 && listMunicipios.municipio === 0){
+      Swal.fire({
+        position: 'center',
+        icon: 'error',
+        title: 'Seleccione Grupo y/o Municipio',
+        showConfirmButton: true,
+        timer: 10000
+      })
+    }else{
+      axios.post('/clientes/params', data)
+      .then(res => {
+        console.log(res.data)
+        setlistClientes(res.data.listClients)
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
     }
   }
+
+  const handleCreateList = () => {
+    const data = {
+      grupo: listGrupo.grupo,
+      municipio: listMunicipios.municipio
+    }
+
+    axios.post('formatos/pagos', data)
+    .then(res => {
+      console.log(res.data)
+    })
+    .catch(err => {
+      console.log(err.response)
+    })
+  }
+
 
   useEffect(() => {
     handlegetClients()
     handlelistGrupos()
+    handlegetMunicipios()
   }, [])
 
   useEffect(() => {
     handleSearchTable()
   }, [search])
 
-  useEffect(() => {
-    //handleTableRollback()
-    handleFilterGrupo()
-  }, [grupo])
   
   return (
     <div>
-      <div className='mt-5 grid lg:grid-cols-3 sm:grid-cols-1 gap-2'>
-        <div className='flex justify-start'>
-          <TextField label='Buscar' onChange={ (e) => setsearch(e.target.value)}/>
-          {/*<Button variant="contained" onClick={handleSearchTable}>Buscar</Button>*/}
+      <div className='mt-5 grid lg:grid-cols-6 md:grid-cols-1 gap-4'>
+        <div className=''>
+          <TextField label='Buscar' className='w-full' onChange={ (e) => setsearch(e.target.value)}/>
         </div>
-        <div className='flex justify-start'>
-          <div className=''>
-            <FormControl className='w-40'>
+        <div className='col-span-2 flex'>
+          <div className='pr-2'>
+            <FormControl className='w-48'>
               <InputLabel id="grupo">Grupo</InputLabel>
-              <Select name='grupo' defaultValue={0} label="Grupo" onChange={handleSelectGrupo}>
+              <Select name='grupo' defaultValue={0} label="Grupo" onChange={(e) => {
+                setlistGrupo({
+                  ...listGrupo,
+                  [e.target.name]: e.target.value
+                }) 
+              }}>
                 <MenuItem value={0}>
                   <em>Seleccione</em>
                 </MenuItem>
@@ -174,20 +220,45 @@ export const ListClientes = () => {
               </Select>
             </FormControl>
           </div>
-          <div className='ml-5 mt-2'>
-            <Button variant="outlined" type='button' onClick={handleTableRollback}>Restaurar</Button>
+          <div className='pr-2'>
+            <FormControl className='w-48'>
+              <InputLabel id="municipio">Municipio</InputLabel>
+              <Select name='municipio' defaultValue={0} label="Municipio" onChange={(e) => {
+                setlistMunicipios({
+                  ...listMunicipios,
+                  [e.target.name]: e.target.value
+                })
+              }}>
+                <MenuItem value={0}>
+                  <em>Seleccione</em>
+                </MenuItem>
+                {
+                  minicipios.map((item, index) => (
+                    <MenuItem value={item.idMunicipio} key={'municipio'+item.idMunicipio}>{item.nombreMunicipio}</MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
           </div>
         </div>
-        <div className='flex justify-end'>
+        <div className='col-span-2 flex mt-2'>
+          <div className='pr-2'>
+            <Button variant="outlined" type='button' onClick={handleConstClients}>Consultar Datos</Button>
+          </div>
+          <div className="pr-2">
+            <Button variant="outlined" className='ml-2' type='button'>
+              <a href={route('formatoCobro',{...listGrupo, ...listMunicipios})} target="_blank" rel="noopener noreferrer">Crear Lista</a>
+            </Button>
+          </div>
+        </div>
+        <div className='flex justify-items-end'>
           {/*<Button variant="outlined" endIcon={<RefreshIcon/>} className='mx-5' onClick={handleTableRollback}>Revertir</Button>*/}
           <Button variant="outlined" endIcon={<UpdateIcon/>} className='mx-5' onClick={handlegetClients}>Actualizar</Button>
-          <a href={route('formatoCobro')} target="_blank" rel="noopener noreferrer"className="border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
-            <FileOpenIcon/>
-          </a>
         </div>
       </div>
+
       <div className='mt-10 grid lg:grid-cols-1 sm:grid-cols-1 gap-4'>
-        <div >
+        <div>
           <Paper>
             <div style={{ height: 500, width: "100%" }}>
               <DataGrid
