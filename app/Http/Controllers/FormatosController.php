@@ -9,33 +9,134 @@ use PDF;
 class FormatosController extends Controller
 {
     //
-    public function formatoCobros(){
-        $listClientes = DB::table('clientes')
-        ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
-        ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
-        ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
-        ->select('clientes.*', 'grupos.nombreGrupo', 'creditos.idCredito', 
-            'avales.nombre as nombre_aval', 
-            'avales.municipio as municipio_aval',
-            'avales.poblado as poblado_aval',
-            'avales.calle as calle_aval',
-            'avales.garantias as garantias_aval',
-            'avales.telefono as telefono_aval',
-        )
-        ->orderBy('clientes.created_at')
-        ->get();
+    public function formatoCobros(Request $request){
 
-        $data = [
-            'title' => 'Welcome to Test',
-            'date' => date('m/d/Y'),
-            'clientes' => $listClientes
-        ]; 
+        if($request->grupo >= 1 && $request->municipio == 0){
 
-        $pdf = PDF::loadView('/formatos/Cobros', $data);
-        $pdf->setPaper('A4', 'landscape');
-        $pdf->setOption(['dpi' => 100, 'defaultFont' => 'sans-serif']);
-     
-        //return $pdf->download('itsolutionstuff.pdf');
-        return $pdf->stream('listclients.pdf');
+            $listClientes = DB::table('clientes')
+            ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+            ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
+            ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
+            ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
+            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
+                'avales.nombre as nombre_aval', 
+                'avales.apellido_paterno as apellido_paterno_aval', 
+                'avales.apellido_materno as apellido_materno_aval', 
+                'avales.poblado as poblado_aval',
+                'avales.calle as calle_aval',
+                'avales.garantias as garantias_aval',
+                'avales.celular as telefono_aval',
+            )
+            ->where('grupos', $request->grupo)
+            ->orderBy('clientes.created_at')
+            ->get();
+
+            $data = [
+                'title' => 'Welcome to Test',
+                'date' => date('m/d/Y'),
+                'clientes' => $listClientes
+            ]; 
+    
+            $pdf = PDF::loadView('/formatos/Cobros', $data);
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
+
+            return $pdf->stream('listclients.pdf');
+        }else if($request->grupo == 0 && $request->municipio >= 1){
+
+            $listClientes = DB::table('clientes')
+            ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+            ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
+            ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
+            ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
+            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
+                'avales.nombre as nombre_aval', 
+                'avales.apellido_paterno as apellido_paterno_aval', 
+                'avales.apellido_materno as apellido_materno_aval', 
+                'avales.poblado as poblado_aval',
+                'avales.calle as calle_aval',
+                'avales.garantias as garantias_aval',
+                'avales.celular as telefono_aval',
+            )
+            ->where('municipios.idMunicipio', $request->municipio)
+            ->orderBy('clientes.created_at')
+            ->get();
+
+            $data = [
+                'title' => 'Welcome to Test',
+                'date' => date('m/d/Y'),
+                'clientes' => $listClientes
+            ]; 
+
+            $pdf = PDF::loadView('/formatos/Cobros', $data);
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
+
+            return $pdf->stream('listclients.pdf');
+        }else if($request->municipio >= 1 && $request->grupo >= 0){
+
+            $listClientes = DB::table('clientes')
+            ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+            ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
+            ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
+            ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
+            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
+                'avales.nombre as nombre_aval', 
+                'avales.apellido_paterno as apellido_paterno_aval', 
+                'avales.apellido_materno as apellido_materno_aval', 
+                'avales.poblado as poblado_aval',
+                'avales.calle as calle_aval',
+                'avales.garantias as garantias_aval',
+                'avales.celular as telefono_aval',
+            )
+            ->where('grupos.idGrupo', $request->grupo)
+            ->where('municipios.idMunicipio', $request->municipio)
+            ->orderBy('clientes.created_at')
+            ->get();
+
+            $data = [
+                'title' => 'Welcome to Test',
+                'date' => date('m/d/Y'),
+                'clientes' => $listClientes
+            ]; 
+
+            $pdf = PDF::loadView('/formatos/Cobros', $data);
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
+        
+            //return $pdf->download('itsolutionstuff.pdf');
+            return $pdf->stream('listclients.pdf');
+        }else {
+
+            $listClientes = DB::table('clientes')
+            ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+            ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
+            ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
+            ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
+            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
+                'avales.nombre as nombre_aval', 
+                'avales.apellido_paterno as apellido_paterno_aval', 
+                'avales.apellido_materno as apellido_materno_aval', 
+                'avales.poblado as poblado_aval',
+                'avales.calle as calle_aval',
+                'avales.garantias as garantias_aval',
+                'avales.celular as telefono_aval',
+            )
+            ->orderBy('clientes.created_at')
+            ->get();
+
+            $data = [
+                'title' => 'Welcome to Test',
+                'date' => date('m/d/Y'),
+                'clientes' => $listClientes
+            ]; 
+
+            $pdf = PDF::loadView('/formatos/Cobros', $data);
+            $pdf->setPaper('a4', 'landscape');
+            $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
+        
+            //return $pdf->download('itsolutionstuff.pdf');
+            return $pdf->stream('listclients.pdf');
+        }
     }
 }

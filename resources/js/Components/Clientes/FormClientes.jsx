@@ -20,7 +20,7 @@ export const FormClientes = () => {
         telefono: '',
         celular: '',
         estado: 'Guerrero',
-        municipio: '',
+        municipio: 0,
         poblado: '',
         calle: '',
         referencias: '',
@@ -43,14 +43,7 @@ export const FormClientes = () => {
         plazos: 14,
         monto: 2000
     })
-
-    const municipios = [
-        "El Pericon", "Las Animas", "Huamachapa", "Los Saucitos", "Perota Seca", "El Carrizo",
-        "San Francisco", "Tacunapa Centro", "Tacunapa", "Mexcaltepec", "Buena Vista", "Laguinilla",
-        "Colotepec", "Cruz Quemada", "Tamarindo", "San Jose la Hacienda", "Ayutla 1", "Ayutla 2", 
-        "Pozolapa", "Tonala 1", "Tonala 2", "El Meson", "La Union", "El Guineo", "Zapote", "Tlachimala", 
-        "Azuzuca", "Las Isletas", "T. Colorada", "Ocotito", "Mazitan", "Palo Blanco", "Acahuizatla"
-    ]
+    const [municipios, setmunicipios] = useState([])
 
     const listPlazos = [
         <MenuItem value={10} key={10+1}>{10}</MenuItem>,
@@ -66,6 +59,7 @@ export const FormClientes = () => {
 
     useEffect(() => {
         handlelistGrupos()
+        handlelistMunicipios()
     }, [])
 
     const [showForm, setshowForm] = useState(false)
@@ -95,6 +89,18 @@ export const FormClientes = () => {
             setGrupos(listGruposData)
         })
         .catch(err => {
+            console.log(err.response)
+        })
+    }
+
+    const handlelistMunicipios = () => {
+        axios.get('/municipios/list')
+        .then(res => {
+            console.log(res.data)
+            const list = res.data.listMunicipios
+            setmunicipios(list)
+        })
+        .catch( err => {
             console.log(err.response)
         })
     }
@@ -316,7 +322,12 @@ export const FormClientes = () => {
                                 disablePortal
                                 id=""
                                 options={municipios}
-                                renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio' onSelect={handleChange}/>}
+                                getOptionLabel={option => option.nombreMunicipio||''}
+                                onChange={(e,item) => { setcliente({
+                                    ...cliente,
+                                    municipio: item.idMunicipio
+                                }) }}
+                                renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio"/>}
                             />
                         </div>
                         <div className='w-full px-3 sm:w-1/3'>
@@ -390,7 +401,12 @@ export const FormClientes = () => {
                                 disablePortal
                                 id=""
                                 options={municipios}
-                                renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio_aval' onSelect={handleChange} />}
+                                getOptionLabel={option => option.nombreMunicipio||''}
+                                onChange={(e,item) => { setcliente({
+                                    ...cliente,
+                                    municipio_aval: item.idMunicipio
+                                }) }}
+                                renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio_aval' />}
                             />
                         </div>
                         <div className='w-full px-3 sm:w-1/3'>
