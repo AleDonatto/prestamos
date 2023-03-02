@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\CreditosController;
 use App\Http\Controllers\FormatosController;
 
 /*
@@ -36,6 +37,11 @@ Route::get('/clientes', function () {
     return Inertia::render('Clientes');
 })->middleware(['auth', 'verified'])->name('clientes');
 
+Route::get('/aplicacionPagos', function () {
+    return Inertia::render('AplicacionPagos');
+})->middleware(['auth', 'verified'])->name('aplicacionPagos');
+
+
 Route::get('/grupos/list', [ClientesController::class, 'listGrupos'])->middleware(['auth', 'verified'])->name('listGrupos');
 Route::post('/grupos/create', [ClientesController::class, 'createGrupos'])->middleware(['auth', 'verified'])->name('createGrupos');
 
@@ -48,10 +54,20 @@ Route::post('/clientes/update/aval', [ClientesController::class, 'updateDatosAva
 
 Route::get('formatos/pagos', [FormatosController::class, 'formatoCobros'])->middleware(['auth', 'verified'])->name('formatoCobro');
 
+
+
+Route::post('/aplicar-pagos', [AplicacionPagosController::class, 'store'])->middleware(['auth', 'verified'])->name('aplicarPagosStore');
+Route::get('/creditos', [CreditosController::class, 'index'])->middleware(['auth', 'verified'])->name('creditosIndex');
+// Route::get('/creditos', [CreditosController::class, 'index'])->middleware(['auth', 'verified'])->name('creditosIndex');
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+
 
 require __DIR__.'/auth.php';
