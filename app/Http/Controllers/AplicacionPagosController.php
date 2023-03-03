@@ -12,6 +12,18 @@ use App\Models\AplicacionPagos;
 class AplicacionPagosController extends Controller
 {
     public function store(Request $request){
+        $pagos    = $request->pagos;
+        $clientes = $request->clientes;
+
+        $AplicacionPagos = new AplicacionPagos();
+
+        foreach($clientes as $cliente) {
+            for($i = 1 ; $i <= $pagos ; $i++){
+                $AplicacionPagos->monto = $cliente->pagoRegular;
+                $AplicacionPagos->cliente_id = $cliente->idCliente;
+                $AplicacionPagos->save();
+            }
+        }
 
     }
 

@@ -7,40 +7,52 @@ import { ListClientesCreditos } from '@/Components/Clientes/ListClientesCreditos
 
 const AplicacionPago = (props) => {
 
-    const [pagosAplicar, setPagosAplicar] = useState(0);
+    const [pagosAplicar, setPagosAplicar] = useState(1);
     const [clientesSeleccionados, setClientesSeleccionados] = useState([]);
 
     const handleAplicarPagos = async () => {
-        if(pagosAplicar > 0 && clientesSeleccionados.length > 0 ){
-            await axios.post('/aplicar-pagos', {
-                pagos : pagosAplicar,
-                clientes : clientesSeleccionados
-            })
-            .then(res => {
+        let sobrepasanLosPagosRestantes = false
+        // let idClientes = []
 
+
+        if(pagosAplicar > 0 && clientesSeleccionados.length > 0 ){
+            clientesSeleccionados.forEach( (value) => {
+                let pagosRestantes = (value.plazo - value.plazosPagados)
+                if( pagosRestantes <= pagosAplicar){
+                    console.error('Los pagos a aplicar sobrepasan los pagos que restan')
+                    sobrepasanLosPagosRestantes = true
+                    return;
+                }
+                // idClientes.push(value.credito)
             })
-            .catch(err => {
-                console.log(err.response)
-            })
-            console.log("OKKK")
+
+            if(!sobrepasanLosPagosRestantes) {
+
+                await axios.post('/aplicar-pagos', {
+                    pagos : pagosAplicar,
+                    clientes : clientesSeleccionados
+                })
+                .then(res => {
+
+                })
+                .catch(err => {
+                    console.log(err.response)
+                })
+            } else {
+                console.error("Los pagos a aplicar sobrepasan los pagos que restan")
+            }
+
         } else {
-            console.log("Faltan campos")
+            console.error("Faltan campos")
         }
     }
     const handleChangePagoAplicar = (e) => {
         setPagosAplicar(e.target.value)
     }
 
-
-    const handleSelectGrupo = (e) => {
-    }
-
     const handleCheckedData = (e) => {
-        console.log('handleCheckedData');
-        console.log(e);
         setClientesSeleccionados(e);
     }
-
 
     return (
         <AuthenticatedLayout
@@ -60,17 +72,15 @@ const AplicacionPago = (props) => {
                             <div>
                             <div className='mt-10 grid lg:grid-cols-2 sm:grid-cols-1 gap-4'>
                                 <div>
-                                    {/* <form method='post' onSubmit={handleAplicarPagos}> */}
-                                        <div className='flex flex-grap mt-4'>
-                                            <div>
-                                                <TextField label="Pagos" name='pagos' className="outline-0 focus:border-0" min={0} value={pagosAplicar}  onChange={handleChangePagoAplicar}></TextField>
-                                            </div>
-                                            <div className='ml-5 mt-2' >
-                                                <Button variant="outlined" onClick={handleAplicarPagos}>Aplicar</Button>
-                                            </div>
-
+                                    <div className='flex flex-grap mt-4'>
+                                        <div>
+                                            <TextField label="Pagos" name='pagos' className="outline-0 focus:border-0" min={0} value={pagosAplicar}  onChange={handleChangePagoAplicar}></TextField>
                                         </div>
-                                    {/* </form> */}
+                                        <div className='ml-5 mt-2' >
+                                            <Button variant="outlined" onClick={handleAplicarPagos}>Aplicar</Button>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
 

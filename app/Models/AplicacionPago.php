@@ -9,7 +9,7 @@ class AplicacionPagos extends Model
 {
     use HasFactory;
 
-    protected $table = 'aplicacionPagos';
+    protected $table = 'aplicacion_pagos';
     protected $primaryKey = 'id';
 
 }

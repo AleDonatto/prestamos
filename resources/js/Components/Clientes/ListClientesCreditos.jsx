@@ -135,13 +135,7 @@ export const ListClientesCreditos = (props) => {
   }
 
   const handleCheckSelection = (data) => {
-    console.log('handleCheckSelection seleccionados')
-    console.log(data)
-    console.log(this.listClientes.datos)
-    let datos = this.listClientes.datos.filter( cliente => data.includes(cliente.idCliente) )
-    console.log(datos)
-    props.getCheckedData(datos);
-
+    props.getCheckedData( listClientes.filter( cliente =>  data.includes(cliente.idCliente) ) );
   };
 
 
@@ -163,8 +157,7 @@ export const ListClientesCreditos = (props) => {
     <div>
       <div className='mt-5 grid lg:grid-cols-3 sm:grid-cols-1 gap-2'>
         <div className='flex justify-start'>
-          <TextField label='Buscar' onChange={ (e) => setsearch(e.target.value)}/>
-          {/*<Button variant="contained" onClick={handleSearchTable}>Buscar</Button>*/}
+          <TextField label='Cliente' onChange={ (e) => setsearch(e.target.value)}/>
         </div>
         <div className='flex justify-start'>
           <div className=''>

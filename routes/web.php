@@ -7,6 +7,7 @@ use Inertia\Inertia;
 
 use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\CreditosController;
+use App\Http\Controllers\AplicacionPagosController;
 use App\Http\Controllers\FormatosController;
 use App\Http\Controllers\MunicipioController;
 
