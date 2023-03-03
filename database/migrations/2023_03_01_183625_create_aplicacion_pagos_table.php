@@ -15,9 +15,7 @@ return new class extends Migration
     {
         Schema::create('aplicacion_pagos', function (Blueprint $table) {
             $table->id();
-
             $table->integer('monto');
-            $table->integer('plazo');
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('idCliente')->on('clientes');
 
