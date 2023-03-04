@@ -144,6 +144,12 @@
                 </td>
             </tr>
             @endforeach
+            <tr>
+                <td class="font-size-9 px-1 text-center" style="width: 10px;" colspan="8"></td>
+                <td class="font-size-9 px-1 text-center" style="width: 15px;">  {{ '$' . number_format( ($nClientes * 200) , 2 ) }} </td>
+                <td class="font-size-9 px-3" style="max-width: 18px;" colspan="14">
+                </td>
+            </tr>
         </table>
     </div>
     
