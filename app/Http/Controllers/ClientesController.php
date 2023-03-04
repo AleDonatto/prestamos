@@ -117,8 +117,8 @@ class ClientesController extends Controller
 
             $aval = new Aval();
             $aval->nombre = $request->nombre_aval;
-            $aval->apellido_paterno = $request->apellido_paterno;
-            $aval->apellido_materno = $request->apellido_materno;
+            $aval->apellido_paterno = $request->apellido_paterno_aval;
+            $aval->apellido_materno = $request->apellido_materno_aval;
             $aval->curp = $request->curp_aval;
             $aval->telefono = 's/n';
             $aval->celular = $request->celular_aval;
@@ -195,7 +195,8 @@ class ClientesController extends Controller
             'calle' => 'required|string',
             'referencias' => 'required|string', 
             'garantia' => 'required|string',
-            'fecha_acreditacion' => 'required|date'
+            'fecha_acreditacion' => 'required|date',
+            'grupo' => 'required|integer'
         ]);
 
         $cliente = Cliente::where('idCliente', $request->idCliente)
@@ -211,7 +212,8 @@ class ClientesController extends Controller
             'calle' => $request->calle,
             'referencias' => $request->referencias, 
             'garantias' => $request->garantia,
-            'diaAlta' => $request->fecha_acreditacion
+            'diaAlta' => $request->fecha_acreditacion,
+            'grupo_id' => $request->grupo,
         ]);
 
         return response()->json([
