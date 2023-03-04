@@ -34,7 +34,8 @@ class FormatosController extends Controller
             $data = [
                 'title' => 'Welcome to Test',
                 'date' => date('m/d/Y'),
-                'clientes' => $listClientes
+                'clientes' => $listClientes,
+                'nClientes' => count($listClientes)
             ]; 
     
             $pdf = PDF::loadView('/formatos/Cobros', $data);
@@ -65,7 +66,8 @@ class FormatosController extends Controller
             $data = [
                 'title' => 'Welcome to Test',
                 'date' => date('m/d/Y'),
-                'clientes' => $listClientes
+                'clientes' => $listClientes,
+                'nClientes' => count($listClientes)
             ]; 
 
             $pdf = PDF::loadView('/formatos/Cobros', $data);
@@ -97,7 +99,8 @@ class FormatosController extends Controller
             $data = [
                 'title' => 'Welcome to Test',
                 'date' => date('m/d/Y'),
-                'clientes' => $listClientes
+                'clientes' => $listClientes,
+                'nClientes' => count($listClientes)
             ]; 
 
             $pdf = PDF::loadView('/formatos/Cobros', $data);
@@ -128,7 +131,8 @@ class FormatosController extends Controller
             $data = [
                 'title' => 'Welcome to Test',
                 'date' => date('m/d/Y'),
-                'clientes' => $listClientes
+                'clientes' => $listClientes,
+                'nClientes' => count($listClientes)
             ]; 
 
             $pdf = PDF::loadView('/formatos/Cobros', $data);
