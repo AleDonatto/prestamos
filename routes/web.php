@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\FormatosController;
 use App\Http\Controllers\MunicipioController;
+use App\Http\Controllers\GruposController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,10 @@ Route::get('/municipios', [MunicipioController::class, 'viewMunicipios'])->middl
 Route::get('/municipios/list', [MunicipioController::class, 'listMunicipios'])->middleware(['auth', 'verified'])->name('listMunicipios');
 Route::post('/municipios/create', [MunicipioController::class, 'createMunicipios'])->middleware(['auth', 'verified'])->name('createMunicipios');
 Route::post('/municipios/edit', [MunicipioController::class, 'editMunicipios'])->middleware(['auth', 'verified'])->name('editMunicipios');
+
+Route::get('/grupos', [GruposController::class, 'viewGrupos'])->middleware(['auth', 'verified'])->name('viewGrupos');
+Route::post('/grupos/delete', [GruposController::class, 'deleteGrupos'])->middleware(['auth', 'verified'])->name('deleteGrupos');
+Route::post('/grupos/edit', [GruposController::class, 'editGrupos'])->middleware(['auth', 'verified'])->name('editGrupos');
 
 Route::get('formatos/pagos', [FormatosController::class, 'formatoCobros'])->middleware(['auth', 'verified'])->name('formatoCobro');
 

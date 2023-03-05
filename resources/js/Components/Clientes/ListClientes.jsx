@@ -214,7 +214,7 @@ export const ListClientes = () => {
                 </MenuItem>
                 {
                   grupos.map((item, index) => (
-                    <MenuItem value={item.idGrupo} key={'grupo'+item.idGrupo}>{item.nombreGrupo}</MenuItem>
+                    <MenuItem value={item.idGrupo} key={'grupo'+item.idGrupo}>{item.idGrupo}</MenuItem>
                   ))
                 }
               </Select>

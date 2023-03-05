@@ -245,7 +245,7 @@ export const FormClientes = () => {
                                     disabled={showForm} onChange={handleSelectGrupo}
                                 >
                                     <MenuItem value={0}>
-                                        <em>None</em>
+                                        <em>Seleccione</em>
                                     </MenuItem>
                                     {
                                         grupos.map((item, index) => (
