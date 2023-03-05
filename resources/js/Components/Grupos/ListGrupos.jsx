@@ -148,11 +148,11 @@ export const ListGrupos = () => {
                             <EditIcon />
                         </Button>
                         
-                        <Button onClick={(e) => {
+                        {/*<Button onClick={(e) => {
                             handleDeleteOpen(e, cellValues)
                         }}>
                             <DeleteOutlineIcon />
-                        </Button>
+                    </Button>*/}
                         
                     </div>
                 );
