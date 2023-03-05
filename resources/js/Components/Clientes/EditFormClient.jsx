@@ -12,6 +12,7 @@ export const EditFormClient = (props) => {
     const [disableAval, setdisableAval] = useState(true)
     const [municipios, setmunicipios] = useState([])
     const [defMunicipio, setdefMunicipio] = useState(null)
+    const [grupos, setgrupos] = useState([])
 
     const date = moment().format()
     const [client, setclient] = useState({
@@ -30,7 +31,9 @@ export const EditFormClient = (props) => {
         garantia: cliente.dataClient.garantias,
         //fecha_acreditacion: date.toISOString("es-MX", {timeZone: "America/Mexico_City"}).split(',')[0],
         fecha_acreditacion: cliente.dataClient.diaAlta,
+        grupo: cliente.dataClient.grupo_id
     })
+
     const [aval, setaval] = useState({
         idAval: cliente.dataAval?.idAval,
         nombre: cliente.dataAval?.nombre,
@@ -133,7 +136,20 @@ export const EditFormClient = (props) => {
         setdefMunicipio(filter)
     }
 
+    const handlegetGrupos = async () => {
+        axios.get('/grupos/list')
+        .then(res => {
+            console.log(res.data)
+            const dataresponse = res.data.grupos
+            setgrupos(dataresponse)
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
     useEffect(() => {
+        handlegetGrupos()
         handlegetMunicipios()
     }, [])
     
@@ -223,6 +239,25 @@ export const EditFormClient = (props) => {
                                 <div className="w-full px-3 sm:w-1/3">
                                     <TextField id='' label="Fecha Alta" name='fecha_acreditacion' 
                                     disabled={disableClient} value={client.fecha_acreditacion} className='w-full' type="date" InputLabelProps={{shrink: true,}} onChange={handleChangeCliente}></TextField>
+                                </div>
+                                <div className="w-full px-3 sm:w-1/3">
+                                    <FormControl fullWidth disabled={disableClient}>
+                                        <InputLabel >Grupo</InputLabel>
+                                            <Select
+                                                value={client.grupo}
+                                                name='grupo'
+                                                onChange={handleChangeCliente}
+                                            >
+                                                <MenuItem value={0}>
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                {
+                                                    grupos.map((item, index) => (
+                                                        <MenuItem value={item.idGrupo} key={'grupo'+item.idGrupo}>{item.idGrupo}</MenuItem>
+                                                    ))
+                                                }
+                                        </Select>
+                                    </FormControl>
                                 </div>
                             </div>
                             <div className="-mx-3 mt-5 flex">

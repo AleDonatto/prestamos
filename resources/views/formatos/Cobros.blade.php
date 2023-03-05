@@ -98,52 +98,58 @@
                 <td class="font-size-9 px-1" style="height: 145px; width: 15px;">$2000.00</td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
                     <p class="vertical-text width-fecha">
-                        {{date("Y-m-d",strtotime($client->diaAlta."+ 8 days")); }}
+                        {{date("Y-m-d",strtotime($client->diaAlta."+ 7 days")); }}
                     </p>
                 </td>
                 <td class="font-size-9 px-3 " style="height: 145px; max-width: 18px;">
                     <p class="vertical-text width-fecha">
-                        {{date("Y-m-d",strtotime($client->diaAlta."+ 16 days"));}}
+                        {{date("Y-m-d",strtotime($client->diaAlta."+ 14 days"));}}
                     </p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 24 days"));}}</p>
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 21 days"));}}</p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 32 days"));}}</p>
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 28 days"));}}</p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 40 days"));}}</p>
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 35 days"));}}</p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 48 days"));}}</p>
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 42 days"));}}</p>
+                </td>
+                <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 49 days"));}}</p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
                     <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 56 days"));}}</p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 64 days"));}}</p>
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 63 days"));}}</p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 72 days"));}}</p>
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 70 days"));}}</p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 80 days"));}}</p>
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 77 days"));}}</p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 88 days"));}}</p>
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 84 days"));}}</p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 96 days"));}}</p>
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 91 days"));}}</p>
                 </td>
                 <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 104 days"));}}</p>
-                </td>
-                <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 112 days"));}}</p>
+                    <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 98 days"));}}</p>
                 </td>
             </tr>
             @endforeach
+            <tr>
+                <td class="font-size-9 px-1 text-center" style="width: 10px;" colspan="8"></td>
+                <td class="font-size-9 px-1 text-center" style="width: 15px;">  {{ '$' . number_format( ($nClientes * 200) , 2 ) }} </td>
+                <td class="font-size-9 px-3" style="max-width: 18px;" colspan="14">
+                </td>
+            </tr>
         </table>
     </div>
     
