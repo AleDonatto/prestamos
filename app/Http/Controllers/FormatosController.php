@@ -17,6 +17,7 @@ class FormatosController extends Controller
             ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
             ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
             ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
+            ->join('avales', 'avales.municipio_id', '=', 'municipios,idMunicipio')
             ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
             ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
                 'avales.nombre as nombre_aval', 
@@ -26,10 +27,14 @@ class FormatosController extends Controller
                 'avales.calle as calle_aval',
                 'avales.garantias as garantias_aval',
                 'avales.celular as telefono_aval',
+                'avales.referencias as referencias_aval'
             )
+            ->select('avles.*', 'municipios.nombreMunicipio')
             ->where('grupos', $request->grupo)
             ->orderBy('clientes.created_at')
             ->get();
+
+            return $listClientes;
 
             $data = [
                 'title' => 'Welcome to Test',
@@ -58,6 +63,7 @@ class FormatosController extends Controller
                 'avales.calle as calle_aval',
                 'avales.garantias as garantias_aval',
                 'avales.celular as telefono_aval',
+                'avales.referencias as referencias_aval'
             )
             ->where('municipios.idMunicipio', $request->municipio)
             ->orderBy('clientes.created_at')
@@ -90,6 +96,7 @@ class FormatosController extends Controller
                 'avales.calle as calle_aval',
                 'avales.garantias as garantias_aval',
                 'avales.celular as telefono_aval',
+                'avales.referencias as referencias_aval'
             )
             ->where('grupos.idGrupo', $request->grupo)
             ->where('municipios.idMunicipio', $request->municipio)
@@ -124,6 +131,7 @@ class FormatosController extends Controller
                 'avales.calle as calle_aval',
                 'avales.garantias as garantias_aval',
                 'avales.celular as telefono_aval',
+                'avales.referencias as referencias_aval'
             )
             ->orderBy('clientes.created_at')
             ->get();
