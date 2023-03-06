@@ -145,7 +145,7 @@
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombreMunicipio }} {{$client->referencias}}</td>
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->garantias }} <br> {{$client->celular}} </td>
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombre_aval}} <br> {{$client->apellido_paterno_aval }} <br> {{$client->apellido_materno_aval}}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->poblado_aval}} {{$client->referencias_aval}}</td>
+                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombreMunicipio}} {{$client->referencias_aval}}</td>
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->garantias_aval}} <br>{{$client->telefono_aval}}</td>
                         <td class="font-size-9 px-1" style="height: 145px; width: 15px;">$2000.00</td>
                         <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
