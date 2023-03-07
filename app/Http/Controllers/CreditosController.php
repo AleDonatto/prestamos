@@ -15,7 +15,8 @@ use Inertia\Inertia;
 class CreditosController extends Controller
 {
 
-    public function index() {
+    public function index(Request $request) {
+        $grupo = $request->grupo;
         $credito = DB::table('creditos')
         ->select([
             'creditos.idCredito as credito',
@@ -26,12 +27,15 @@ class CreditosController extends Controller
             DB::raw('(creditos.monto / creditos.plazos) as pagoRegular'),
             DB::raw("concat(clientes.nombre , ' ' , clientes.apellido_paterno , ' ', clientes.apellido_materno ) as cliente"),
             'clientes.poblado as poblados',
-            'creditos.cliente_id as idCliente'
-
+            'creditos.cliente_id as idCliente',
+            'grupos.idGrupo as grupo_id',
+            'grupos.nombreGrupo as nombreGrupo',
         ])
         ->join('clientes', 'clientes.idCliente', '=', 'creditos.cliente_id')
-        ->orderBy('creditos.created_at')
-        ->get();
+        ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+        ->whereRaw('clientes.id_anterior is null')
+        ->whereRaw(" if($grupo <> 0 , grupos.idGrupo = '$grupo', true) ")
+        ->orderBy('creditos.created_at')->get();
 
         return response()->json([
             'datos' => $credito

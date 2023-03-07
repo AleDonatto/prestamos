@@ -46,14 +46,17 @@ Route::get('/aplicacionPagos', function () {
 
 Route::get('/grupos/list', [ClientesController::class, 'listGrupos'])->middleware(['auth', 'verified'])->name('listGrupos');
 Route::post('/grupos/create', [ClientesController::class, 'createGrupos'])->middleware(['auth', 'verified'])->name('createGrupos');
+Route::get('/grupos-show/{nombre}', [ClientesController::class, 'showGrupo'])->middleware(['auth', 'verified'])->name('showGrupo');
 
 Route::post('/clientes/create', [ClientesController::class, 'createClientes'])->middleware(['auth', 'verified'])->name('createCliente');
 Route::get('/clientes/list', [ClientesController::class, 'listClientes'])->middleware(['auth', 'verified'])->name('listCliente');
 Route::get('/clientes/edit/{id}', [ClientesController::class, 'viewEditCliente'])->middleware(['auth', 'verified'])->name('editCliente');
 Route::post('/clientes/params', [ClientesController::class, 'consDynamicClients'])->middleware(['auth', 'verified'])->name('clientsParams');
+Route::post('/clientes-registrar-renovacion', [ClientesController::class, 'renovarCliente'])->middleware(['auth', 'verified'])->name('renovarCliente');
 
 Route::post('/clientes/update/client', [ClientesController::class, 'updateDatosCliente'])->middleware(['auth', 'verified'])->name('updateCliente');
 Route::post('/clientes/update/aval', [ClientesController::class, 'updateDatosAval'])->middleware(['auth', 'verified'])->name('updateAval');
+Route::get('/clientes-edit/{id}', [ClientesController::class, 'editCliente'])->middleware(['auth', 'verified'])->name('editClienteAPI');
 
 Route::get('/municipios', [MunicipioController::class, 'viewMunicipios'])->middleware(['auth', 'verified'])->name('viewMunicipios');
 Route::get('/municipios/list', [MunicipioController::class, 'listMunicipios'])->middleware(['auth', 'verified'])->name('listMunicipios');
@@ -65,7 +68,7 @@ Route::get('formatos/pagos', [FormatosController::class, 'formatoCobros'])->midd
 
 
 Route::post('/aplicar-pagos', [AplicacionPagosController::class, 'store'])->middleware(['auth', 'verified'])->name('aplicarPagosStore');
-Route::get('/creditos', [CreditosController::class, 'index'])->middleware(['auth', 'verified'])->name('creditosIndex');
+Route::post('/creditos', [CreditosController::class, 'index'])->middleware(['auth', 'verified'])->name('creditosIndex');
 // Route::get('/creditos', [CreditosController::class, 'index'])->middleware(['auth', 'verified'])->name('creditosIndex');
 
 
