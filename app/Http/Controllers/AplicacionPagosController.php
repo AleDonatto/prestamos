@@ -15,18 +15,15 @@ class AplicacionPagosController extends Controller
         $clientes = $request->clientes;
 
         $insert = [];
-        // $AplicacionPagos = new AplicacionPagos();
+        $AplicacionPagos = new AplicacionPagos();
 
         foreach($clientes as $cliente) {
             for($i = 1 ; $i <= $pagos ; $i++){
-                $insert[] = [
-                    'monto' => $cliente['pagoRegular'],
-                    'cliente_id' => $cliente['idCliente'],
-                ];
+                $AplicacionPagos->monto = $cliente['pagoRegular'];
+                $AplicacionPagos->cliente_id = $cliente['idCliente'];
+                $AplicacionPagos->save();
             }
         }
-
-        AplicacionPagos::insert($insert);
     }
 
 }
