@@ -19,7 +19,7 @@ class FormatosController extends Controller
             ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
             //->join('avales', 'avales.municipio_id', '=', 'municipios,idMunicipio')
             ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
-            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
+            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo','grupos.idGrupo', 'creditos.idCredito', 
                 'avales.nombre as nombre_aval', 
                 'avales.apellido_paterno as apellido_paterno_aval', 
                 'avales.apellido_materno as apellido_materno_aval', 
@@ -30,11 +30,9 @@ class FormatosController extends Controller
                 'avales.referencias as referencias_aval'
             )
             //->select('avles.*', 'municipios.nombreMunicipio')
-            ->where('grupos', $request->grupo)
+            ->where('grupos.idGrupo', $request->grupo)
             ->orderBy('clientes.created_at')
             ->get();
-
-            return $listClientes;
 
             $data = [
                 'title' => 'Welcome to Test',
@@ -55,7 +53,7 @@ class FormatosController extends Controller
             ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
             ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
             ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
-            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
+            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo','grupos.idGrupo', 'creditos.idCredito', 
                 'avales.nombre as nombre_aval', 
                 'avales.apellido_paterno as apellido_paterno_aval', 
                 'avales.apellido_materno as apellido_materno_aval', 
@@ -88,7 +86,7 @@ class FormatosController extends Controller
             ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
             ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
             ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
-            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
+            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo','grupos.idGrupo', 'creditos.idCredito', 
                 'avales.nombre as nombre_aval', 
                 'avales.apellido_paterno as apellido_paterno_aval', 
                 'avales.apellido_materno as apellido_materno_aval', 
@@ -123,7 +121,7 @@ class FormatosController extends Controller
             ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
             ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
             ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
-            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo', 'creditos.idCredito', 
+            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo','grupos.idGrupo', 'creditos.idCredito', 
                 'avales.nombre as nombre_aval', 
                 'avales.apellido_paterno as apellido_paterno_aval', 
                 'avales.apellido_materno as apellido_materno_aval', 

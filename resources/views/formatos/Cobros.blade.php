@@ -112,7 +112,7 @@
                 <thead>
                     <tr>
                         <th class="font-size-9" style="width: 15px;">Cred.</th>
-                        <th class="font-size-9 text-center" style="width: 15px;">Gpo</th>
+                        <th class="font-size-9 text-center" style="width: 15px;">Gpo.</th>
                         <th class="font-size-9 text-center" style="width: 20px;">Clien.</th>
                         <th class="font-size-9 text-center" style="width: 20px;">Dir.</th>
                         <th class="font-size-9 text-center" style="width: 18px;">Gar. <br>/Tel.</th>
@@ -140,7 +140,7 @@
                     @foreach($clientes as $client)
                     <tr>
                         <td class="font-size-9 px-1 text-center" style="height: 145px; width: 10px;">{{ $client->idCredito }}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 10px;">{{ $client->nombreGrupo }}</td>
+                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 10px;">{{ $client->idGrupo }}</td>
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombre}} <br> {{$client->apellido_paterno }} <br> {{$client->apellido_materno}}</td>
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombreMunicipio }} {{$client->referencias}}</td>
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->garantias }} <br> {{$client->celular}} </td>

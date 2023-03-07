@@ -44,6 +44,7 @@ export const FormClientes = () => {
         monto: 2000
     })
     const [municipios, setmunicipios] = useState([])
+    const [disableSubmit, setdisableSubmit] = useState(false)
 
     const listPlazos = [
         <MenuItem value={10} key={10+1}>{10}</MenuItem>,
@@ -147,6 +148,7 @@ export const FormClientes = () => {
 
     const handleCreateCliente = (e) => {
         e.preventDefault()
+        setdisableSubmit(true)
         axios.post('/clientes/create', cliente)
         .then(res => {
             console.log(res.data)
@@ -162,6 +164,7 @@ export const FormClientes = () => {
             if(res.data.status === 'success'){
                 handleResetValues()
             }
+            setdisableSubmit(false)
         })
         .catch( err => {
             console.log(err.response)
@@ -172,6 +175,7 @@ export const FormClientes = () => {
                 showConfirmButton: false,
                 timer: 10000
             })
+            setdisableSubmit(false)
         })
     }
 
@@ -456,7 +460,7 @@ export const FormClientes = () => {
                     </div>
                     <div className="-mx-3 mt-5 flex flex-wrap">
                         <div className="w-full px-3">
-                            <Button type='submit' variant="contained">Agregar Cliente</Button>
+                            <Button type='submit' variant="contained" disabled={disableSubmit}>Agregar Cliente</Button>
                         </div>
                     </div>
                 </ValidatorForm>
