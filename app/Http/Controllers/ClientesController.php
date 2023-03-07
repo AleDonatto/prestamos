@@ -84,8 +84,9 @@ class ClientesController extends Controller
                                     ->update(['id_anterior' => $cliente->idCliente]);
 
             $credito = new Credito();
-            $credito->fechaAcreditacion = $clienteRequest['diaAlta'];
-            $credito->monto = $clienteRequest['monto'];
+            $credito->fechaAcreditacion = date('Y-m-d'); // $clienteRequest['diaAlta']
+            $credito->monto = $clienteRequest['capital'];
+            // $credito->prestamo = $clienteRequest['monto'];
             $credito->plazos = $clienteRequest['plazos'];
             $credito->estatus = 'activo';
             $credito->cliente_id = $cliente->idCliente;
@@ -95,7 +96,7 @@ class ClientesController extends Controller
             DB::rollback();
             return response()->json([
                 'status' => false,
-                'msg' => 'Error inesperado',
+                'msg' => 'Error inesperado ' . $e->getMessage(),
             ]);
         }
             

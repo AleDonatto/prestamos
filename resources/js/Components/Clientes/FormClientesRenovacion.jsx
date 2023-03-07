@@ -93,6 +93,8 @@ export const FormClientesRenovacion = (props) => {
                 client.monto          = prestamo
                 client.pagosFaltantes = pagosFaltantes
                 client.montoFaltante  = montoFaltante
+                client.capital  = prestamo - montoFaltante
+                
                 
                 axios.post('/clientes-registrar-renovacion', {
                     client,
