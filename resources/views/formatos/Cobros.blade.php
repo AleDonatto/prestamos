@@ -114,7 +114,7 @@
                         <th class="font-size-9" style="width: 15px;">Cred.</th>
                         <th class="font-size-9 text-center" style="width: 15px;">Gpo.</th>
                         <th class="font-size-9 text-center" style="width: 20px;">Clien.</th>
-                        <th class="font-size-9 text-center" style="width: 20px;">Dir.</th>
+                        <th class="font-size-9 text-center" style="max-width: 60px;">Dir.</th>
                         <th class="font-size-9 text-center" style="width: 18px;">Gar. <br>/Tel.</th>
                         <th class="font-size-9 text-center">Aval</th>
                         <th class="font-size-9 text-center">Dir. Aval</th>
@@ -142,10 +142,10 @@
                         <td class="font-size-9 px-1 text-center" style="height: 145px; width: 10px;">{{ $client->idCredito }}</td>
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 10px;">{{ $client->idGrupo }}</td>
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombre}} <br> {{$client->apellido_paterno }} <br> {{$client->apellido_materno}}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombreMunicipio }} {{$client->referencias}}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->garantias }} <br> {{$client->celular}} </td>
+                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; max-width: 40px;">{{ $client->nombreMunicipio }} <br> {{$client->referencias}}</td>
+                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; max-width: 54px;">{{ $client->garantias }} <br> {{$client->celular}} </td>
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombre_aval}} <br> {{$client->apellido_paterno_aval }} <br> {{$client->apellido_materno_aval}}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombreMunicipio}} {{$client->referencias_aval}}</td>
+                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; max-width: 40px;">{{ $client->nombreMunicipio}} <br> {{$client->referencias_aval}}</td>
                         <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->garantias_aval}} <br>{{$client->telefono_aval}}</td>
                         <td class="font-size-9 px-1" style="height: 145px; width: 15px;">$2000.00</td>
                         <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
