@@ -1,29 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Head } from '@inertiajs/react'
-import { UpdateIcon } from '@mui/icons-material/Update';
-import { Button, TextField, Autocomplete, Select, MenuItem, FormControl, InputLabel  } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { ListClientesCreditos } from '@/Components/Clientes/ListClientesCreditos';
+import Swal from 'sweetalert2'
 
 const AplicacionPago = (props) => {
 
     const [pagosAplicar, setPagosAplicar] = useState(1);
     const [clientesSeleccionados, setClientesSeleccionados] = useState([]);
+    const [onReload, setOnReload] = useState(false);
+    
 
     const handleAplicarPagos = async () => {
         let sobrepasanLosPagosRestantes = false
-        // let idClientes = []
 
-
-        if(pagosAplicar > 0 && clientesSeleccionados.length > 0 ){
+        if( pagosAplicar > 0 && clientesSeleccionados.length > 0 ){
             clientesSeleccionados.forEach( (value) => {
                 let pagosRestantes = (value.plazo - value.plazosPagados)
-                if( pagosRestantes <= pagosAplicar){
+                if( pagosRestantes < pagosAplicar){
                     console.error('Los pagos a aplicar sobrepasan los pagos que restan')
                     sobrepasanLosPagosRestantes = true
                     return;
                 }
-                // idClientes.push(value.credito)
             })
 
             if(!sobrepasanLosPagosRestantes) {
@@ -33,19 +32,41 @@ const AplicacionPago = (props) => {
                     clientes : clientesSeleccionados
                 })
                 .then(res => {
+                    let auxOnReload = !onReload
+                    setOnReload(auxOnReload)
 
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Pagos registrados exitosamente',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
                 })
                 .catch(err => {
                     console.log(err.response)
                 })
             } else {
-                console.error("Los pagos a aplicar sobrepasan los pagos que restan")
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Los pagos a aplicar sobrepasan los pagos que restan',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
             }
 
         } else {
-            console.error("Faltan campos")
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'Falta seleccionar clientes o pagos a aplicar',
+                showConfirmButton: false,
+                timer: 1500
+            })
         }
     }
+
     const handleChangePagoAplicar = (e) => {
         setPagosAplicar(e.target.value)
     }
@@ -85,7 +106,7 @@ const AplicacionPago = (props) => {
                             </div>
 
                             <div>
-                                <ListClientesCreditos getCheckedData={handleCheckedData} />
+                                <ListClientesCreditos getCheckedData={handleCheckedData} onReload={onReload} />
                             </div>
                         </div>
                         </div>
