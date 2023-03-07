@@ -27,7 +27,7 @@ const columnsGrid = [
   { field: 'curp',headerName: 'CURP', width: 130},
   //{ field: 'telefono',headerName: 'Telefono', width: 130},
   { field: 'celular',headerName: 'Celular', width: 130},
-  { field: 'nombreGrupo',headerName: 'Grupo', width: 130},
+  { field: 'grupo_id',headerName: 'Grupo', width: 130},
   { field: 'nombreMunicipio',headerName: 'Municipio', width: 130},
   { field: 'poblado', headerName: 'Colonia', width: 130},
   {
@@ -214,7 +214,7 @@ export const ListClientes = () => {
                 </MenuItem>
                 {
                   grupos.map((item, index) => (
-                    <MenuItem value={item.idGrupo} key={'grupo'+item.idGrupo}>{item.nombreGrupo}</MenuItem>
+                    <MenuItem value={item.idGrupo} key={'grupo'+item.idGrupo}>{item.idGrupo}</MenuItem>
                   ))
                 }
               </Select>

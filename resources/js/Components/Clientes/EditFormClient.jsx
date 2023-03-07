@@ -302,12 +302,12 @@ export const EditFormClient = (props) => {
                                 disabled={disableAval} value={aval.curp} onChange={handleChangeAval}/>
                             </div>
                             <div className="w-full px-3 sm:w-1/3">
-                                <TextField id="" label="Telefono" name='telefono' className="w-full" 
-                                disabled={disableAval} value={aval.telefono} onChange={handleChangeAval} />
-                            </div>
-                            <div className="w-full px-3 sm:w-1/3">
                                 <TextField id='' label="Celular" name='celular' className='w-full' 
                                 disabled={disableAval} value={aval.celular} onChange={handleChangeAval}></TextField>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                {/*<TextField id="" label="Telefono" name='telefono' className="w-full" 
+                                disabled={disableAval} value={aval.telefono} onChange={handleChangeAval} />*/}
                             </div>
                         </div>
 
