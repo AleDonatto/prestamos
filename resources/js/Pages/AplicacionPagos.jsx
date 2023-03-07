@@ -10,6 +10,7 @@ const AplicacionPago = (props) => {
     const [pagosAplicar, setPagosAplicar] = useState(1);
     const [clientesSeleccionados, setClientesSeleccionados] = useState([]);
     const [onReload, setOnReload] = useState(false);
+    const [formIsOpen, setFormIsOpen] = useState(false);
     
 
     const handleAplicarPagos = async () => {
@@ -75,6 +76,10 @@ const AplicacionPago = (props) => {
         setClientesSeleccionados(e);
     }
 
+    const handleFormIsOpen = (e) => {
+        setFormIsOpen(e)
+    }
+
     return (
         <AuthenticatedLayout
             auth={props.auth}
@@ -92,21 +97,30 @@ const AplicacionPago = (props) => {
                             </h1>
                             <div>
                             <div className='mt-10 grid lg:grid-cols-2 sm:grid-cols-1 gap-4'>
-                                <div>
-                                    <div className='flex flex-grap mt-4'>
-                                        <div>
-                                            <TextField label="Pagos" name='pagos' className="outline-0 focus:border-0" min={0} value={pagosAplicar}  onChange={handleChangePagoAplicar}></TextField>
+                                
+                                {
+                                    !formIsOpen 
+                                    ?
+                                    <div>
+                                        <div className='flex flex-grap mt-4'>
+                                            <div>
+                                                <TextField label="Pagos" name='pagos' className="outline-0 focus:border-0" min={0} value={pagosAplicar}  onChange={handleChangePagoAplicar}></TextField>
+                                            </div>
+                                            <div className='ml-5 mt-2' >
+                                                <Button variant="outlined" onClick={handleAplicarPagos}>Aplicar</Button>
+                                            </div>
                                         </div>
-                                        <div className='ml-5 mt-2' >
-                                            <Button variant="outlined" onClick={handleAplicarPagos}>Aplicar</Button>
-                                        </div>
-
-                                    </div>
-                                </div>
+                                    </div> 
+                                    : null 
+                                }
                             </div>
 
                             <div>
-                                <ListClientesCreditos getCheckedData={handleCheckedData} onReload={onReload} />
+                                <ListClientesCreditos 
+                                    getCheckedData={handleCheckedData} 
+                                    onReload={onReload} 
+                                    formIsOpen={handleFormIsOpen}
+                                />
                             </div>
                         </div>
                         </div>

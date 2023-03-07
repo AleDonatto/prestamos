@@ -34,6 +34,7 @@ export const ListClientesCreditos = (props) => {
   const irAFormRenovacion = (e, item) => {
     setClienteRenovacionSeleccionado(item)
     setMostrarFormCliente(true)
+    props.formIsOpen(true)
   }
 
   const handleChangePage = (event, newPage) => {
@@ -76,6 +77,7 @@ export const ListClientesCreditos = (props) => {
 
   const reloadList = () => {
     setMostrarFormCliente(false)
+    props.formIsOpen(false)
     setClienteRenovacionSeleccionado([])
     handlegetClients()
     handlelistGrupos()
