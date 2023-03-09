@@ -80,12 +80,12 @@ class ClientesController extends Controller
             $aval->cliente_id = $cliente->idCliente;
             $aval->save();
             
-            $clienteActual = Cliente::where('idCliente', $clienteRequest['idCliente'])
-                                    ->update(['id_anterior' => $cliente->idCliente]);
+            Cliente::where('idCliente', $clienteRequest['idCliente'])
+                   ->update(['id_anterior' => $cliente->idCliente]);
 
             $credito = new Credito();
-            $credito->fechaAcreditacion = date('Y-m-d'); // $clienteRequest['diaAlta']
-            $credito->monto = $clienteRequest['capital'];
+            $credito->fechaAcreditacion = date('Y-m-d');
+            $credito->monto = $clienteRequest['monto'];
             // $credito->prestamo = $clienteRequest['monto'];
             $credito->plazos = $clienteRequest['plazos'];
             $credito->estatus = 'activo';
@@ -233,6 +233,7 @@ class ClientesController extends Controller
         ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
         ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
         ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
+        ->whereRaw('clientes.id_anterior is null')
         ->orderBy('clientes.created_at')
         ->get();
 

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react'
 import Paper from '@mui/material/Paper';
-import { Button, TextField, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import { Button, TextField, FormControl, Select, InputLabel, MenuItem, Modal, Box, Typography, Link, Tooltip } from '@mui/material';
 import UpdateIcon from '@mui/icons-material/Update';
 import { DataGrid } from '@mui/x-data-grid';
-import FileOpenIcon from '@mui/icons-material/FileOpen';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import { FormClientesRenovacion } from '@/Components/Clientes/FormClientesRenovacion';
+import Swal from 'sweetalert2'
 
 export const ListClientesCreditos = (props) => {
   let aux = []
@@ -17,11 +18,76 @@ export const ListClientesCreditos = (props) => {
   const [grupos, setGrupos] = useState([]);
   const [grupo, setgrupo] = useState(0)
   const [mostrarFormCliente, setMostrarFormCliente] = useState(false)
-  
+  const [minicipios, setminicipios] = useState([])
+  const [clienteBuscar, setClienteBuscar] = useState('')
   const [clienteRenovacionSeleccionado, setClienteRenovacionSeleccionado] = useState({});
   const [onReload, setOnReload] = useState(false);
-    
   const gridRef = useRef(null);
+  const [listPagos, setListPagos] = useState([])
+  const [clienteSeleccionado, setClienteSeleccionado] = useState(null)
+  
+  const [open, setOpen] = useState(false);
+  const handleOpen = (e, cliente) => {
+    axios.post('/aplicar-pagos-get-by-client', {
+      cliente
+    })
+    .then(res => {
+      setClienteSeleccionado(cliente)
+      setListPagos(res.data.datos)
+      setOpen(true)
+
+    })
+    .catch( err => {
+      console.log(err.response)
+    })
+  };
+  const handleClose = () => {
+    setOpen(false)
+  };
+
+  const handleDeletePago = (e, id) => {
+    e.preventDefault()
+    axios.post('/aplicar-pagos-delete', {
+      id
+    })
+    .then(res => {
+      handlegetClients()
+      handleOpen(e, clienteSeleccionado)
+      Swal.fire({
+          position: 'top-end',
+          icon: 'success',
+          title: 'Pago eliminado exitosamente, lista actualizada',
+          showConfirmButton: false,
+          timer: 10000
+      })
+    })
+    .catch( err => {
+      console.log(err.response)
+    })
+
+  } 
+
+  const [listGrupo, setlistGrupo] = useState({
+    grupo: 0
+  })
+
+  const [listMunicipios, setlistMunicipios] = useState({
+    municipio: 0
+  })
+
+    
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 390,
+    height: 500,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
   useEffect(() => {
     setOnReload(props.onReload);
@@ -36,16 +102,7 @@ export const ListClientesCreditos = (props) => {
     setMostrarFormCliente(true)
     props.formIsOpen(true)
   }
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
-
+  
   const handleSearchTable = () => {
     handleTableRollback()
 
@@ -62,10 +119,17 @@ export const ListClientesCreditos = (props) => {
       setlistClientes(searchClients)
     }
   }
-
-  const handleClick = (event, cellValues) => {
-      console.log(cellValues.row);
-  };
+  
+  const handlegetMunicipios = async () => {
+    axios.get('/municipios/list')
+    .then(res => {
+      const dataMunicipios = res.data.listMunicipios 
+      setminicipios(dataMunicipios)
+    })
+    .catch(err => {
+      console.log(err.response)
+    })
+  }
 
   const handleCellClick = (param, event) => {
     event.stopPropagation();
@@ -84,10 +148,10 @@ export const ListClientesCreditos = (props) => {
   }
 
   const columnsGrid = [
-    { field: 'credito', headerName: 'Credito',  width: 130},
+    { field: 'credito', headerName: 'Credito',  width: 70},
     { field: 'cliente', headerName: 'Cliente',  width: 330},
-    { field: 'capital', headerName: 'Capital',  width: 130},
-    { field: 'pagoRegular', headerName: 'Pago regular',  width: 130},
+    { field: 'capital', headerName: 'Capital',  width: 110},
+    { field: 'pagoRegular', headerName: 'Pago regular',  width: 110},
     {
       field: "Pagos",
       width: 130,
@@ -100,14 +164,56 @@ export const ListClientesCreditos = (props) => {
         );
       }
     },
-    { field: 'poblados', headerName: 'Poblados',  width: 230},
+    { field: 'nombreMunicipio', headerName: 'Municipio',  width: 130},
+    { field: 'poblados', headerName: 'Poblados',  width: 130},
+    {
+      field: "Acciones",
+      width: 130,
+      renderCell: (cellValues) => {
+        return (
+          <Tooltip title="Lista de pagos" placement="top-start">
+            <Link onClick={(e) => { handleOpen(e, cellValues.row.idCliente) }}>
+              <LocalAtmIcon />
+            </Link>
+          </Tooltip>
+        );
+      }
+    },
+    
   ];
+
+  
+  const columnsGridPagos = [
+    { field: 'id', headerName: 'Id. Pago',  width: 70},
+    { field: 'fechaPago', headerName: 'Fecha pago',  width: 120},
+    {
+      field: "Acciones",
+      width: 110,
+      renderCell: (cellValues) => {
+        return (
+          <Tooltip title="Eliminar pago" placement="top-start">
+            <Link onClick={(e) => { handleDeletePago(e, cellValues.row.id) }} >
+              <LocalAtmIcon />
+            </Link>
+          </Tooltip>
+        );
+      }
+    },
+    
+  ];
+
   const handleTableRollback = () => {
     setlistClientes(auxClient)
   }
 
   const handlegetClients = () => {
-    axios.post('/creditos', {grupo})
+    let params = {
+      grupo : listGrupo.grupo,
+      municipio : listMunicipios.municipio,
+      cliente : clienteBuscar,
+    }
+    
+    axios.post('/creditos', params)
     .then(res => {
       setlistClientes(res.data.datos)
       setauxClient(res.data.datos)
@@ -115,12 +221,12 @@ export const ListClientesCreditos = (props) => {
     .catch( err => {
       console.log(err.response)
     })
+  
   }
 
   const handlelistGrupos = async () => {
     await axios.get('/grupos/list')
     .then(res => {
-      //console.log(res.data)
       const listGruposData = res.data.grupos
       setGrupos(listGruposData)
       aux = res.data.grupos
@@ -129,12 +235,6 @@ export const ListClientesCreditos = (props) => {
     .catch(err => {
       console.log(err.response)
     })
-  }
-
-  const handleSelectGrupo = (e) => {
-    setgrupo(e.target.value);
-    handlegetClients()
-    
   }
 
   const handleFilterGrupo = () => {
@@ -149,6 +249,7 @@ export const ListClientesCreditos = (props) => {
   useEffect(() => {
     handlegetClients()
     handlelistGrupos()
+    handlegetMunicipios()
   }, [])
 
   useEffect(() => {
@@ -156,48 +257,74 @@ export const ListClientesCreditos = (props) => {
   }, [search])
 
   useEffect(() => {
-    //handleTableRollback()
     handleFilterGrupo()
   }, [grupo])
 
   return (
     <div>
-
       {
         mostrarFormCliente ? 
           <FormClientesRenovacion closeForm={reloadList} cliente={clienteRenovacionSeleccionado} />
         : 
         <div>   
-          <div className='mt-5 grid lg:grid-cols-3 sm:grid-cols-1 gap-2'>
-            <div className='flex justify-start'>
-              <TextField label='Cliente' onChange={ (e) => setsearch(e.target.value)}/>
+          <div className='mt-5 grid lg:grid-cols-6 md:grid-cols-1 gap-4'>
+            <div className=''>
+              <TextField label='Buscar' className='w-full' onChange={ (e) => setClienteBuscar(e.target.value)}/>
             </div>
-            <div className='flex justify-start'>
-              <div className=''>
-                <FormControl className='w-40'>
+            <div className='col-span-2 flex'>
+              <div className='pr-2'>
+                <FormControl className='w-48'>
                   <InputLabel id="grupo">Grupo</InputLabel>
-                  <Select name='grupo' defaultValue={0} label="Grupo" onChange={handleSelectGrupo}>
+                  <Select name='grupo' defaultValue={0} label="Grupo" onChange={(e) => {
+                    setlistGrupo({
+                      ...listGrupo,
+                      [e.target.name]: e.target.value
+                    }) 
+                  }}>
                     <MenuItem value={0}>
                       <em>Seleccione</em>
                     </MenuItem>
                     {
                       grupos.map((item, index) => (
-                        <MenuItem value={item.idGrupo} key={'grupo'+item.idGrupo}>{item.nombreGrupo}</MenuItem>
+                        <MenuItem value={item.idGrupo} key={'grupo'+item.idGrupo}>{item.idGrupo}</MenuItem>
                       ))
                     }
                   </Select>
                 </FormControl>
               </div>
-              <div className='ml-5 mt-2'>
-                <Button variant="outlined" type='button' onClick={handleTableRollback}>Restaurar</Button>
+              <div className='pr-2'>
+                <FormControl className='w-48'>
+                  <InputLabel id="municipio">Municipio</InputLabel>
+                  <Select name='municipio' defaultValue={0} label="Municipio" onChange={(e) => {
+                    setlistMunicipios({
+                      ...listMunicipios,
+                      [e.target.name]: e.target.value
+                    })
+                  }}>
+                    <MenuItem value={0}>
+                      <em>Seleccione</em>
+                    </MenuItem>
+                    {
+                      minicipios.map((item, index) => (
+                        <MenuItem value={item.idMunicipio} key={'municipio'+item.idMunicipio}>{item.nombreMunicipio}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </FormControl>
               </div>
             </div>
-            <div className='flex justify-end'>
-              {/*<Button variant="outlined" endIcon={<RefreshIcon/>} className='mx-5' onClick={handleTableRollback}>Revertir</Button>*/}
+            <div className='col-span-2 flex mt-2'>
+              <div className='pr-2'>
+                <Button variant="outlined" type='button' onClick={handlegetClients}>Consultar Datos</Button>
+              </div>
+              <div className="pr-2">
+                <Button variant="outlined" className='ml-2' type='button'>
+                  <a href={route('formatoCobro',{...listGrupo, ...listMunicipios})} target="_blank" rel="noopener noreferrer">Crear Lista</a>
+                </Button>
+              </div>
+            </div>
+            <div className='flex justify-items-end'>
               <Button variant="outlined" endIcon={<UpdateIcon/>} className='mx-5' onClick={handlegetClients}>Actualizar</Button>
-              <a href={route('formatoCobro')} target="_blank" rel="noopener noreferrer"className="border border-gray-200 bg-gray-200 text-gray-700 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-gray-300 focus:outline-none focus:shadow-outline">
-                <FileOpenIcon/>
-              </a>
             </div>
           </div>
           <div className='mt-10 grid lg:grid-cols-1 sm:grid-cols-1 gap-4'>
@@ -220,10 +347,33 @@ export const ListClientesCreditos = (props) => {
             </div>
           </div>
         </div>
-        
       }
 
-
+      
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        style={{ height: 500 }}
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Pagos realizados
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2, height: '100%' }}>
+            <DataGrid
+              style={{ height: '80%' }}
+              getRowId={(row) => row.id}
+              rows={listPagos}
+              columns={columnsGridPagos}
+              rowsPerPage={15}
+              hideFooterPagination={true}
+              hideFooter={true}
+            />
+          </Typography>
+        </Box>
+      </Modal>
     </div>
   )
 }

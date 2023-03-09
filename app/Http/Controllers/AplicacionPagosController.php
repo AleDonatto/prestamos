@@ -24,4 +24,34 @@ class AplicacionPagosController extends Controller
         }
     }
 
+
+    public function getPagos(Request $request){
+        $cliente = $request->cliente;
+        $order   = $request->order ?? 'desc';
+
+        $pagos = AplicacionPagos::where('cliente_id', $cliente)
+        ->select([
+            "id",
+            DB::raw("date(created_at) as fechaPago")
+        ])
+        ->orderBy('created_at', $order)
+        ->get();
+
+        return response()->json([
+            'status' => true,
+            'datos' => $pagos,
+        ]);
+    }
+
+    
+    public function delete(Request $request){
+        $pago_id = $request->id;
+
+        $pagos = AplicacionPagos::where('id', $pago_id)->delete();
+
+        return response()->json([
+            'status' => true,
+        ]);
+    }
+
 }

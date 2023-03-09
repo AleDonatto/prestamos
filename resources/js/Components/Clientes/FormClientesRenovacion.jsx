@@ -334,9 +334,9 @@ export const FormClientesRenovacion = (props) => {
                                 </div>
                                 <div className="w-full px-3 sm:w-1/3">
                                     <FormControl className='w-full'>
-                                        <InputLabel id="plazos">Plazos</InputLabel>
+                                        <InputLabel id="plazos"  InputLabelProps={{shrink: true,}}>Plazos</InputLabel>
                                         <Select
-                                            labelId="plazos" id="demo-simple-select" name='plazos'
+                                            labelId="plazos" id="demo-simple-select" name='plazos'  InputLabelProps={{shrink: true,}}
                                             value={plazos} defaultValue={0} label="plazos" onChange={(val) => { setPlazos(val.target.value) }}
                                         >
                                             <MenuItem value={0}>

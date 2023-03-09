@@ -71,10 +71,10 @@ Route::post('/grupos/edit', [GruposController::class, 'editGrupos'])->middleware
 Route::get('formatos/pagos', [FormatosController::class, 'formatoCobros'])->middleware(['auth', 'verified'])->name('formatoCobro');
 
 
-
-Route::post('/aplicar-pagos', [AplicacionPagosController::class, 'store'])->middleware(['auth', 'verified'])->name('aplicarPagosStore');
 Route::post('/creditos', [CreditosController::class, 'index'])->middleware(['auth', 'verified'])->name('creditosIndex');
-// Route::get('/creditos', [CreditosController::class, 'index'])->middleware(['auth', 'verified'])->name('creditosIndex');
+Route::post('/aplicar-pagos', [AplicacionPagosController::class, 'store'])->middleware(['auth', 'verified'])->name('aplicarPagosStore');
+Route::post('/aplicar-pagos-get-by-client', [AplicacionPagosController::class, 'getPagos'])->middleware(['auth', 'verified'])->name('aplicarPagosGetPagos');
+Route::post('/aplicar-pagos-delete', [AplicacionPagosController::class, 'delete'])->middleware(['auth', 'verified'])->name('aplicarPagosDelete');
 
 
 Route::middleware('auth')->group(function () {

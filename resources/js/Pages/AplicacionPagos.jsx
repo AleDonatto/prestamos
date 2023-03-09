@@ -78,6 +78,8 @@ const AplicacionPago = (props) => {
 
     const handleFormIsOpen = (e) => {
         setFormIsOpen(e)
+        setPagosAplicar(1)
+        setClientesSeleccionados([])
     }
 
     return (
