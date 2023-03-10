@@ -20,7 +20,7 @@ export const FormClientesRenovacion = (props) => {
     const [prestamo, setPrestamo] = useState(0)
     const [plazos, setPlazos] = useState(0)
     const [grupoNuevo, setGrupoNuevo] = useState('')
-    
+    const [municipio, setmunicipio] = useState('')
     const [pagosFaltantes, setPagosFaltantes] = useState(0)
     const [montoFaltante, setMontoFaltante] = useState(0)
     
@@ -31,6 +31,7 @@ export const FormClientesRenovacion = (props) => {
     const [aval, setaval] = useState({})
 
     const handleChangeCliente = (e) => {
+        console.log(e.target.name ,' - ', e.target.value)
         setclient({
             ...client,
             [e.target.name]: e.target.value
@@ -85,7 +86,7 @@ export const FormClientesRenovacion = (props) => {
         }
 
         
-        axios.get(`/grupos-show/${grupoNuevo}`)
+        axios.get(`/grupos-show/${client.nombreGrupo}`)
         .then( res => {
             
             if(!res.data.exist){
@@ -211,6 +212,9 @@ export const FormClientesRenovacion = (props) => {
         getDatosCliente(props.cliente.idCliente)
         setPagosFaltantes(plazosFaltantes)
         setMontoFaltante(plazosFaltantes * 200)
+        setGrupoNuevo(props.cliente.nombreGrupo)
+        setPlazos(props.cliente.plazo)
+        setmunicipio(props.cliente.nombreMunicipio)
         
       }, []);
 
@@ -270,9 +274,9 @@ export const FormClientesRenovacion = (props) => {
                                 <div className="w-full px-3 sm:w-1/3">
                                     <Autocomplete
                                         disablePortal
-                                        id=""
-                                        disabled={disableClient}
+                                        InputLabelProps={{shrink: true,}}
                                         options={municipios}
+                                        defaultValue={municipio}
                                         getOptionLabel={option => option.nombreMunicipio||''}
                                         isOptionEqualToValue={option => option.idMunicipio === client.municipio}
                                         onChange={(e,item) => {
@@ -280,48 +284,50 @@ export const FormClientesRenovacion = (props) => {
                                                 ...client,
                                                 municipio: item.idMunicipio
                                             })
+                                            setmunicipio(item.nombreMunicipio)
                                         }}
-                                        renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio'/>}
+                                        renderInput={(params) => 
+                                            <TextField 
+                                                className='border-0 border-none focus:border-none'
+                                                {...params} 
+                                                label="Municipio" 
+                                                InputLabelProps={{shrink: true,}} 
+                                                name='municipio' 
+                                                value={municipio}
+                                            ></TextField>
+                                        }
                                     />
                                 </div>
                                 <div className='w-full px-3 sm:w-1/3'>
                                     <TextField id='' label="Poblado" name='poblado' className='w-full' InputLabelProps={{shrink: true,}}
-                                    disabled={disableClient} value={client.poblado} onChange={handleChangeCliente}></TextField>
+                                    value={client.poblado} onChange={handleChangeCliente}></TextField>
                                 </div>
                             </div>
 
                             <div className="-mx-3 mt-5 flex flex-wrap">
                                 <div className="w-full px-3 sm:w-1/3">
                                     <TextField id='' label="Calle" name='calle' className='w-full'  InputLabelProps={{shrink: true,}}
-                                    disabled={disableClient} value={client.calle} onChange={handleChangeCliente}></TextField>
+                                    value={client.calle} onChange={handleChangeCliente}></TextField>
                                 </div>
                                 <div className="w-full px-3 sm:w-1/3">
                                     <TextField id='' label="Referencias" name='referencias' className='w-full' InputLabelProps={{shrink: true,}}
-                                    disabled={disableClient} value={client.referencias} onChange={handleChangeCliente}></TextField>
+                                    value={client.referencias} onChange={handleChangeCliente}></TextField>
                                 </div>
                                 <div className="w-full px-3 sm:w-1/3">
                                     <TextField id='' label="Garantia" name='garantia' className='w-full' InputLabelProps={{shrink: true,}}
-                                    disabled={disableClient} value={client.garantia} onChange={handleChangeCliente}></TextField>
+                                    value={client.garantia} onChange={handleChangeCliente}></TextField>
                                 </div>
                             </div>
                             <div className='-mx-3 mt-5 flex flex-wrap'>
                                 <div className="w-full px-3 sm:w-1/3">
-                                    <TextField id='' label="Fecha Alta" name='fecha_acreditacion' 
-                                    disabled={disableClient} value={client.diaAlta} className='w-full' type="date" InputLabelProps={{shrink: true,}} onChange={handleChangeCliente}></TextField>
+                                    <TextField label="Fecha Alta" name='diaAlta' 
+                                    value={client.diaAlta} className='w-full' type="date" InputLabelProps={{shrink: true,}} onChange={handleChangeCliente}></TextField>
                                 </div>
                                 <div className="w-full px-3 sm:w-1/3">
-                                    <FormControl fullWidth >
-                                        <InputLabel >Grupo</InputLabel>
-                                        <TextField id='' label="Grupo" name='grupoNuevo' 
-                                        value={grupoNuevo} className='w-full' type="number" onChange={(val) => { setGrupoNuevo(val.target.value) }}></TextField>
-                                    </FormControl>
+                                    <TextField label="Grupo" name='nombreGrupo'
+                                    value={client.nombreGrupo} className='w-full' type="number" InputLabelProps={{shrink: true,}} onChange={handleChangeCliente}></TextField>
                                 </div>
                             </div>
-
-                            
-
-
-
                             
                             <div className='mt-5'>
                                 <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Prestamo</h1>
@@ -354,7 +360,7 @@ export const FormClientesRenovacion = (props) => {
                 </div>
             </div>
 
-            <div className='bg-white mt-10 overflow-hidden shadow-sm sm:rounded-lg'>
+            <div className='bg-white mt-2 overflow-hidden shadow-sm sm:rounded-lg'>
                 <div className='p-6 text-gray-900'>
                     <form method="post" onSubmit={handleUpdateAval}>
                         <div className="-mx-3 mt-5 flex justify-center">

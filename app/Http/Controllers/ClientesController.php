@@ -246,7 +246,15 @@ class ClientesController extends Controller
 
     public function editCliente($idCliente){
         $client = DB::table('clientes')
-        ->select('clientes.*')
+        ->select([
+            'clientes.*',
+            'grupos.nombreGrupo as nombreGrupo',
+            'municipios.nombreMunicipio as nombreMunicipio',
+            'creditos.plazos as plazo',
+        ])
+        ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+        ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
+        ->join('creditos', 'clientes.idCliente', '=', 'creditos.cliente_id')
         ->where('clientes.idCliente', $idCliente)
         ->first();
 
