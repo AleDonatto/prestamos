@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
 use InertiaInertia;
 use App\Models\AplicacionPagos;
-
+use PDF;
 class AplicacionPagosController extends Controller
 {
     public function store(Request $request){
@@ -52,6 +52,15 @@ class AplicacionPagosController extends Controller
         return response()->json([
             'status' => true,
         ]);
+    }
+
+    public function reportePdfVista1(Request $request){
+        $datos = $request->datos;
+        $pdf = PDF::loadView('/formatos/AplicacionPagos', ['datos' => $datos]);
+        $pdf->setPaper('a4', 'landscape');
+        $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
+
+        return $pdf->stream('listAplicacionPagos.pdf');
     }
 
 }

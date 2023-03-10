@@ -4,6 +4,7 @@ import { Button, TextField, FormControl, Select, InputLabel, MenuItem, Modal, Bo
 import UpdateIcon from '@mui/icons-material/Update';
 import { DataGrid } from '@mui/x-data-grid';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { FormClientesRenovacion } from '@/Components/Clientes/FormClientesRenovacion';
 import Swal from 'sweetalert2'
 
@@ -193,7 +194,7 @@ export const ListClientesCreditos = (props) => {
         return (
           <Tooltip title="Eliminar pago" placement="top-start">
             <Link onClick={(e) => { handleDeletePago(e, cellValues.row.id) }} >
-              <LocalAtmIcon />
+              <DeleteIcon />
             </Link>
           </Tooltip>
         );
@@ -222,6 +223,24 @@ export const ListClientesCreditos = (props) => {
       console.log(err.response)
     })
   
+  }
+
+  const descargarReporte = () => {
+    axios.post('/aplicar-pagos-pdf', {datos : listClientes}, { 
+      headers: { 'Content-Type': 'multipart/form-data' },
+      'responseType': 'blob' 
+    })
+    .then(res => {
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'reporeteAplicacionPagos.pdf');
+      document.body.appendChild(link);
+      link.click();
+    })
+    .catch( err => {
+      console.log(err.response)
+    })
   }
 
   const handlelistGrupos = async () => {
@@ -318,15 +337,16 @@ export const ListClientesCreditos = (props) => {
                 <Button variant="outlined" type='button' onClick={handlegetClients}>Consultar Datos</Button>
               </div>
               <div className="pr-2">
-                <Button variant="outlined" className='ml-2' type='button'>
-                  <a href={route('formatoCobro',{...listGrupo, ...listMunicipios})} target="_blank" rel="noopener noreferrer">Crear Lista</a>
-                </Button>
+                <Tooltip title="Descargar reporte" placement="top-start">
+                  <Button variant="outlined" endIcon={<UpdateIcon/>} className='mx-5' onClick={descargarReporte}>Descargar reporte</Button>
+                </Tooltip>
               </div>
             </div>
             <div className='flex justify-items-end'>
               <Button variant="outlined" endIcon={<UpdateIcon/>} className='mx-5' onClick={handlegetClients}>Actualizar</Button>
             </div>
           </div>
+          
           <div className='mt-10 grid lg:grid-cols-1 sm:grid-cols-1 gap-4'>
             <div >
               <Paper>

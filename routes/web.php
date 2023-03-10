@@ -75,6 +75,7 @@ Route::post('/creditos', [CreditosController::class, 'index'])->middleware(['aut
 Route::post('/aplicar-pagos', [AplicacionPagosController::class, 'store'])->middleware(['auth', 'verified'])->name('aplicarPagosStore');
 Route::post('/aplicar-pagos-get-by-client', [AplicacionPagosController::class, 'getPagos'])->middleware(['auth', 'verified'])->name('aplicarPagosGetPagos');
 Route::post('/aplicar-pagos-delete', [AplicacionPagosController::class, 'delete'])->middleware(['auth', 'verified'])->name('aplicarPagosDelete');
+Route::post('/aplicar-pagos-pdf', [AplicacionPagosController::class, 'reportePdfVista1'])->middleware(['auth', 'verified'])->name('aplicarPagosReportePdfVista1');
 
 
 Route::middleware('auth')->group(function () {
