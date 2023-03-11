@@ -210,9 +210,12 @@
                             <td class="font-size-9 px-3" style="max-width: 18px;" colspan="14"></td>
                         </tr>
                     </tfoot>
-                </table>
+            </table>
+            
+            @if(!$loop->last)
                 <div class="page_break"></div>
-                @endforeach
+            @endif
+            @endforeach
         </div>
     </main>
     
