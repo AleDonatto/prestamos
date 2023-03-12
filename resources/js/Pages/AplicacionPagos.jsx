@@ -93,9 +93,7 @@ const AplicacionPago = (props) => {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6  pt-1 text-gray-900">
-                            <h1 className='pt-2 text-base md:text-lg lg:text-xl font-weight-bold text-gray-600 font-bold'>
-                                Pagos a aplicar
-                            </h1>
+                            
                             <div>
                             <div className='mt-10 grid lg:grid-cols-2 sm:grid-cols-1 gap-4'>
                                 
@@ -103,6 +101,9 @@ const AplicacionPago = (props) => {
                                     !formIsOpen 
                                     ?
                                     <div>
+                                        <h1 className='pt-2 text-base md:text-lg lg:text-xl font-weight-bold text-gray-600 font-bold'>
+                                            Pagos a aplicar
+                                        </h1>
                                         <div className='flex flex-grap mt-4'>
                                             <div>
                                                 <TextField label="Pagos" name='pagos' className="outline-0 focus:border-0" min={0} value={pagosAplicar}  onChange={handleChangePagoAplicar}></TextField>

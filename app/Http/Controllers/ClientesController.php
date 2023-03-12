@@ -44,10 +44,21 @@ class ClientesController extends Controller
         try {
             $clienteRequest = $request->client;
             $avalRequest    = $request->aval;
+            $grupoSeleccionado = Grupo::where('idGrupo', $request->grupoNuevo)->get();
 
+            if(count($grupoSeleccionado) > 0){
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Error: el grupo ya existe',
+                ]);
+            }
+            
             $grupo = new Grupo();
-            $grupo->nombreGrupo = $request->grupoNuevo;  
-            $grupo->save();  $cliente = new Cliente();
+            $grupo->idGrupo = $request->grupoNuevo;
+            $grupo->nombreGrupo = $request->grupoNuevo;
+            $grupo->save();  
+
+            $cliente = new Cliente();
             $cliente->nombre = $clienteRequest['nombre'];
             $cliente->apellido_paterno = $clienteRequest['apellido_paterno'];
             $cliente->apellido_materno = $clienteRequest['apellido_materno'];
@@ -86,7 +97,6 @@ class ClientesController extends Controller
             $credito = new Credito();
             $credito->fechaAcreditacion = date('Y-m-d');
             $credito->monto = $clienteRequest['monto'];
-            // $credito->prestamo = $clienteRequest['monto'];
             $credito->plazos = $clienteRequest['plazos'];
             $credito->estatus = 'activo';
             $credito->cliente_id = $cliente->idCliente;

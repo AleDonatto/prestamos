@@ -100,7 +100,7 @@ export const FormClientesRenovacion = (props) => {
                 axios.post('/clientes-registrar-renovacion', {
                     client,
                     aval,
-                    grupoNuevo
+                    grupoNuevo : client.nombreGrupo
                 })
                 .then(res => {
                     if(res.data.status) {
