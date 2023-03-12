@@ -13,7 +13,7 @@ use Inertia\Inertia;
 
 class ClientesController extends Controller
 {
-    //
+    
     public function listGrupos(){
         $listGrupos = DB::table('grupos')
         ->select('grupos.*')
@@ -22,6 +22,87 @@ class ClientesController extends Controller
 
         return response()->json([
             'grupos' => $listGrupos
+        ]);
+    }
+
+    public function showGrupo($nombre){
+        $listGrupos = DB::table('grupos')
+        ->select('grupos.*')
+        ->orderBy('grupos.created_at')
+        ->where('grupos.nombreGrupo', $nombre)
+        ->get();
+
+        return response()->json([
+            'grupo' => $listGrupos,
+            'exist' => count($listGrupos) > 0 
+        ]);
+    }
+
+    public function renovarCliente(Request $request) {
+        DB::beginTransaction();
+
+        try {
+            $clienteRequest = $request->client;
+            $avalRequest    = $request->aval;
+
+            $grupo = new Grupo();
+            $grupo->nombreGrupo = $request->grupoNuevo;  
+            $grupo->save();  $cliente = new Cliente();
+            $cliente->nombre = $clienteRequest['nombre'];
+            $cliente->apellido_paterno = $clienteRequest['apellido_paterno'];
+            $cliente->apellido_materno = $clienteRequest['apellido_materno'];
+            $cliente->curp = $clienteRequest['curp'];
+            $cliente->telefono = 's/n'; 
+            $cliente->celular = $clienteRequest['celular'];
+            $cliente->estado = $clienteRequest['estado'];
+            $cliente->municipio_id = $clienteRequest['municipio_id'];
+            $cliente->poblado = $clienteRequest['poblado'];
+            $cliente->calle = $clienteRequest['calle'];
+            $cliente->referencias = $clienteRequest['referencias'];
+            $cliente->garantias = isset($clienteRequest['garantia']) ? $clienteRequest['garantia'] : '';
+            $cliente->diaAlta = $clienteRequest['diaAlta'];
+            $cliente->grupo_id = $grupo->idGrupo;
+            $cliente->save();
+    
+            $aval = new Aval();
+            $aval->nombre = $avalRequest['nombre'];
+            $aval->apellido_paterno = $avalRequest['apellido_paterno'];
+            $aval->apellido_materno = $avalRequest['apellido_materno'];
+            $aval->curp = $avalRequest['curp'];
+            $aval->telefono = 's/n';
+            $aval->celular = $avalRequest['celular'];
+            $aval->estado = $avalRequest['estado'];
+            $aval->municipio_id = $avalRequest['municipio_id'];
+            $aval->poblado = $avalRequest['poblado'];
+            $aval->calle = $avalRequest['calle'];
+            $aval->referencias = $avalRequest['referencias'];
+            $aval->garantias = isset($avalRequest['garantia']) ? $avalRequest['garantia'] : '';
+            $aval->cliente_id = $cliente->idCliente;
+            $aval->save();
+            
+            Cliente::where('idCliente', $clienteRequest['idCliente'])
+                   ->update(['id_anterior' => $cliente->idCliente]);
+
+            $credito = new Credito();
+            $credito->fechaAcreditacion = date('Y-m-d');
+            $credito->monto = $clienteRequest['monto'];
+            // $credito->prestamo = $clienteRequest['monto'];
+            $credito->plazos = $clienteRequest['plazos'];
+            $credito->estatus = 'activo';
+            $credito->cliente_id = $cliente->idCliente;
+            $credito->save();
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json([
+                'status' => false,
+                'msg' => 'Error inesperado ' . $e->getMessage(),
+            ]);
+        }
+            
+        
+        return response()->json([
+            'status' => true,
         ]);
     }
 
@@ -152,6 +233,7 @@ class ClientesController extends Controller
         ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
         ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
         ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
+        ->whereRaw('clientes.id_anterior is null')
         ->orderBy('clientes.created_at')
         ->get();
 
@@ -161,6 +243,33 @@ class ClientesController extends Controller
         ]);
     }
 
+
+    public function editCliente($idCliente){
+        $client = DB::table('clientes')
+        ->select([
+            'clientes.*',
+            'grupos.nombreGrupo as nombreGrupo',
+            'municipios.nombreMunicipio as nombreMunicipio',
+            'creditos.plazos as plazo',
+        ])
+        ->join('grupos', 'clientes.grupo_id', '=', 'grupos.idGrupo')
+        ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
+        ->join('creditos', 'clientes.idCliente', '=', 'creditos.cliente_id')
+        ->where('clientes.idCliente', $idCliente)
+        ->first();
+
+        $aval = DB::table('avales')
+        ->select('avales.*')
+        ->where('avales.cliente_id', $idCliente)
+        ->first();
+
+        return response()->json([
+            'cliente' => $client,
+            'aval' => $aval
+        ]);
+    }
+
+    
     public function viewEditCliente($idCliente){
         $client = DB::table('clientes')
         ->select('clientes.*')
