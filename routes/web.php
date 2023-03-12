@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\CreditosController;
+use App\Http\Controllers\AplicacionPagosController;
 use App\Http\Controllers\FormatosController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\GruposController;
@@ -38,16 +40,24 @@ Route::get('/clientes', function () {
     return Inertia::render('Clientes');
 })->middleware(['auth', 'verified'])->name('clientes');
 
+Route::get('/aplicacionPagos', function () {
+    return Inertia::render('AplicacionPagos');
+})->middleware(['auth', 'verified'])->name('aplicacionPagos');
+
+
 Route::get('/grupos/list', [ClientesController::class, 'listGrupos'])->middleware(['auth', 'verified'])->name('listGrupos');
 Route::post('/grupos/create', [ClientesController::class, 'createGrupos'])->middleware(['auth', 'verified'])->name('createGrupos');
+Route::get('/grupos-show/{nombre}', [ClientesController::class, 'showGrupo'])->middleware(['auth', 'verified'])->name('showGrupo');
 
 Route::post('/clientes/create', [ClientesController::class, 'createClientes'])->middleware(['auth', 'verified'])->name('createCliente');
 Route::get('/clientes/list', [ClientesController::class, 'listClientes'])->middleware(['auth', 'verified'])->name('listCliente');
 Route::get('/clientes/edit/{id}', [ClientesController::class, 'viewEditCliente'])->middleware(['auth', 'verified'])->name('editCliente');
 Route::post('/clientes/params', [ClientesController::class, 'consDynamicClients'])->middleware(['auth', 'verified'])->name('clientsParams');
+Route::post('/clientes-registrar-renovacion', [ClientesController::class, 'renovarCliente'])->middleware(['auth', 'verified'])->name('renovarCliente');
 
 Route::post('/clientes/update/client', [ClientesController::class, 'updateDatosCliente'])->middleware(['auth', 'verified'])->name('updateCliente');
 Route::post('/clientes/update/aval', [ClientesController::class, 'updateDatosAval'])->middleware(['auth', 'verified'])->name('updateAval');
+Route::get('/clientes-edit/{id}', [ClientesController::class, 'editCliente'])->middleware(['auth', 'verified'])->name('editClienteAPI');
 
 Route::get('/municipios', [MunicipioController::class, 'viewMunicipios'])->middleware(['auth', 'verified'])->name('viewMunicipios');
 Route::get('/municipios/list', [MunicipioController::class, 'listMunicipios'])->middleware(['auth', 'verified'])->name('listMunicipios');
@@ -60,10 +70,21 @@ Route::post('/grupos/edit', [GruposController::class, 'editGrupos'])->middleware
 
 Route::get('formatos/pagos', [FormatosController::class, 'formatoCobros'])->middleware(['auth', 'verified'])->name('formatoCobro');
 
+
+Route::post('/creditos', [CreditosController::class, 'index'])->middleware(['auth', 'verified'])->name('creditosIndex');
+Route::post('/aplicar-pagos', [AplicacionPagosController::class, 'store'])->middleware(['auth', 'verified'])->name('aplicarPagosStore');
+Route::post('/aplicar-pagos-get-by-client', [AplicacionPagosController::class, 'getPagos'])->middleware(['auth', 'verified'])->name('aplicarPagosGetPagos');
+Route::post('/aplicar-pagos-delete', [AplicacionPagosController::class, 'delete'])->middleware(['auth', 'verified'])->name('aplicarPagosDelete');
+Route::post('/aplicar-pagos-pdf', [AplicacionPagosController::class, 'reportePdfVista1'])->middleware(['auth', 'verified'])->name('aplicarPagosReportePdfVista1');
+
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+
 
 require __DIR__.'/auth.php';

@@ -21,6 +21,7 @@ class FormatosController extends Controller
             ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
             ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo','grupos.idGrupo', 'creditos.idCredito', 
                 'avales.nombre as nombre_aval', 
+                'creditos.monto', 
                 'avales.apellido_paterno as apellido_paterno_aval', 
                 'avales.apellido_materno as apellido_materno_aval', 
                 'avales.poblado as poblado_aval',
@@ -31,21 +32,22 @@ class FormatosController extends Controller
             )
             //->select('avles.*', 'municipios.nombreMunicipio')
             ->where('grupos.idGrupo', $request->grupo)
+            ->whereRaw('clientes.id_anterior is null')
             ->orderBy('clientes.created_at')
             ->get();
 
-            $data = [
-                'title' => 'Welcome to Test',
-                'date' => date('m/d/Y'),
-                'clientes' => $listClientes,
-                'nClientes' => count($listClientes)
-            ]; 
+            // $data = [
+            //     'title' => 'Welcome to Test',
+            //     'date' => date('m/d/Y'),
+            //     'clientes' => $listClientes,
+            //     'nClientes' => count($listClientes)
+            // ]; 
     
-            $pdf = PDF::loadView('/formatos/Cobros', $data);
-            $pdf->setPaper('a4', 'landscape');
-            $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
+            // $pdf = PDF::loadView('/formatos/Cobros', $data);
+            // $pdf->setPaper('a4', 'landscape');
+            // $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
 
-            return $pdf->stream('listclients.pdf');
+            // return $pdf->stream('listclients.pdf');
         }else if($request->grupo == 0 && $request->municipio >= 1){
 
             $listClientes = DB::table('clientes')
@@ -55,6 +57,7 @@ class FormatosController extends Controller
             ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
             ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo','grupos.idGrupo', 'creditos.idCredito', 
                 'avales.nombre as nombre_aval', 
+                'creditos.monto', 
                 'avales.apellido_paterno as apellido_paterno_aval', 
                 'avales.apellido_materno as apellido_materno_aval', 
                 'avales.poblado as poblado_aval',
@@ -65,20 +68,21 @@ class FormatosController extends Controller
             )
             ->where('municipios.idMunicipio', $request->municipio)
             ->orderBy('clientes.created_at')
+            ->whereRaw('clientes.id_anterior is null')
             ->get();
 
-            $data = [
-                'title' => 'Welcome to Test',
-                'date' => date('m/d/Y'),
-                'clientes' => $listClientes,
-                'nClientes' => count($listClientes)
-            ]; 
+            // $data = [
+            //     'title' => 'Welcome to Test',
+            //     'date' => date('m/d/Y'),
+            //     'clientes' => $listClientes,
+            //     'nClientes' => count($listClientes)
+            // ]; 
 
-            $pdf = PDF::loadView('/formatos/Cobros', $data);
-            $pdf->setPaper('a4', 'landscape');
-            $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
+            // $pdf = PDF::loadView('/formatos/Cobros', $data);
+            // $pdf->setPaper('a4', 'landscape');
+            // $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
 
-            return $pdf->stream('listclients.pdf');
+            // return $pdf->stream('listclients.pdf');
         }else if($request->municipio >= 1 && $request->grupo >= 0){
 
             $listClientes = DB::table('clientes')
@@ -88,6 +92,7 @@ class FormatosController extends Controller
             ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
             ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo','grupos.idGrupo', 'creditos.idCredito', 
                 'avales.nombre as nombre_aval', 
+                'creditos.monto', 
                 'avales.apellido_paterno as apellido_paterno_aval', 
                 'avales.apellido_materno as apellido_materno_aval', 
                 'avales.poblado as poblado_aval',
@@ -98,22 +103,23 @@ class FormatosController extends Controller
             )
             ->where('grupos.idGrupo', $request->grupo)
             ->where('municipios.idMunicipio', $request->municipio)
+            ->whereRaw('clientes.id_anterior is null')
             ->orderBy('clientes.created_at')
             ->get();
 
-            $data = [
-                'title' => 'Welcome to Test',
-                'date' => date('m/d/Y'),
-                'clientes' => $listClientes,
-                'nClientes' => count($listClientes)
-            ]; 
+            // $data = [
+            //     'title' => 'Welcome to Test',
+            //     'date' => date('m/d/Y'),
+            //     'clientes' => $listClientes,
+            //     'nClientes' => count($listClientes)
+            // ]; 
 
-            $pdf = PDF::loadView('/formatos/Cobros', $data);
-            $pdf->setPaper('a4', 'landscape');
-            $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
+            // $pdf = PDF::loadView('/formatos/Cobros', $data);
+            // $pdf->setPaper('a4', 'landscape');
+            // $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
         
-            //return $pdf->download('itsolutionstuff.pdf');
-            return $pdf->stream('listclients.pdf');
+            // //return $pdf->download('itsolutionstuff.pdf');
+            // return $pdf->stream('listclients.pdf');
         }else {
 
             $listClientes = DB::table('clientes')
@@ -121,7 +127,9 @@ class FormatosController extends Controller
             ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
             ->join('avales', 'clientes.idCliente' , '=', 'avales.cliente_id')
             ->join('creditos', 'clientes.idCliente' , '=', 'creditos.cliente_id')
-            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo','grupos.idGrupo', 'creditos.idCredito', 
+            ->select('clientes.*','municipios.nombreMunicipio', 'grupos.nombreGrupo','grupos.idGrupo', 
+                'creditos.idCredito', 
+                'creditos.monto', 
                 'avales.nombre as nombre_aval', 
                 'avales.apellido_paterno as apellido_paterno_aval', 
                 'avales.apellido_materno as apellido_materno_aval', 
@@ -131,22 +139,26 @@ class FormatosController extends Controller
                 'avales.celular as telefono_aval',
                 'avales.referencias as referencias_aval'
             )
+            ->whereRaw('clientes.id_anterior is null')
             ->orderBy('clientes.created_at')
             ->get();
-
-            $data = [
-                'title' => 'Welcome to Test',
-                'date' => date('m/d/Y'),
-                'clientes' => $listClientes,
-                'nClientes' => count($listClientes)
-            ]; 
-
-            $pdf = PDF::loadView('/formatos/Cobros', $data);
-            $pdf->setPaper('a4', 'landscape');
-            $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
-        
-            //return $pdf->download('itsolutionstuff.pdf');
-            return $pdf->stream('listclients.pdf');
         }
+        
+        $nClientes = count($listClientes);
+        $listClientes = $listClientes->chunk(4);
+        $data = [
+            'title' => 'Welcome to Test',
+            'date' => date('m/d/Y'),
+            'clientesGrupos' => $listClientes,
+            'nClientes' => $nClientes
+        ]; 
+
+        // return $data;
+
+        $pdf = PDF::loadView('/formatos/Cobros', $data);
+        $pdf->setPaper('a4', 'landscape');
+        $pdf->setOption(['dpi' => 100, 'defaultFont' => 'roboto']);
+    
+        return $pdf->stream('listclients.pdf');
     }
 }

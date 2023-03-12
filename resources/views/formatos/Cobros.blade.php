@@ -98,6 +98,8 @@
     tr {
     page-break-inside: avoid;
     }
+
+    .page_break { page-break-before: always; }
     </style>
     <!--<header>
         Cabecera del documento
@@ -108,6 +110,8 @@
     </footer>-->
     <main>
         <div class="">
+            @foreach($clientesGrupos as $clientesGrupo)
+            @php($montoTotal = 0)
             <table >
                 <thead>
                     <tr>
@@ -137,74 +141,81 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($clientes as $client)
-                    <tr>
-                        <td class="font-size-9 px-1 text-center" style="height: 145px; width: 10px;">{{ $client->idCredito }}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 10px;">{{ $client->idGrupo }}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombre}} <br> {{$client->apellido_paterno }} <br> {{$client->apellido_materno}}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; max-width: 40px;">{{ $client->nombreMunicipio }} <br> {{$client->referencias}}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; max-width: 54px;">{{ $client->garantias }} <br> {{$client->celular}} </td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombre_aval}} <br> {{$client->apellido_paterno_aval }} <br> {{$client->apellido_materno_aval}}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; max-width: 40px;">{{ $client->nombreMunicipio}} <br> {{$client->referencias_aval}}</td>
-                        <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->garantias_aval}} <br>{{$client->telefono_aval}}</td>
-                        <td class="font-size-9 px-1" style="height: 145px; width: 15px;">$2000.00</td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">
-                                {{date("Y-m-d",strtotime($client->diaAlta."+ 7 days")); }}
-                            </p>
-                        </td>
-                        <td class="font-size-9 px-3 " style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">
-                                {{date("Y-m-d",strtotime($client->diaAlta."+ 14 days"));}}
-                            </p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 21 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 28 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 35 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 42 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 49 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 56 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 63 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 70 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 77 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 84 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 91 days"));}}</p>
-                        </td>
-                        <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
-                            <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 98 days"));}}</p>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td class="font-size-9 px-1 text-center" style="width: 10px;" colspan="8"></td>
-                        <td class="font-size-9 px-1 text-center" style="width: 15px;">  {{ '$' . number_format( ($nClientes * 200) , 2 ) }} </td>
-                        <td class="font-size-9 px-3" style="max-width: 18px;" colspan="14"></td>
-                    </tr>
-                </tfoot>
+                        @foreach($clientesGrupo as $client)
+                        @php($montoTotal += $client->monto)
+
+                        <tr>
+                            <td class="font-size-9 px-1 text-center" style="height: 145px; width: 10px;">{{ $client->idCredito }}</td>
+                            <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 10px;">{{ $client->idGrupo }}</td>
+                            <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombre}} <br> {{$client->apellido_paterno }} <br> {{$client->apellido_materno}}</td>
+                            <td class="font-size-9 px-1 text-uppercase" style="height: 145px; max-width: 40px;">{{ $client->nombreMunicipio }} <br> {{$client->referencias}}</td>
+                            <td class="font-size-9 px-1 text-uppercase" style="height: 145px; max-width: 54px;">{{ $client->garantias }} <br> {{$client->celular}} </td>
+                            <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombre_aval}} <br> {{$client->apellido_paterno_aval }} <br> {{$client->apellido_materno_aval}}</td>
+                            <td class="font-size-9 px-1 text-uppercase" style="height: 145px; max-width: 40px;">{{ $client->nombreMunicipio}} <br> {{$client->referencias_aval}}</td>
+                            <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->garantias_aval}} <br>{{$client->telefono_aval}}</td>
+                            <td class="font-size-9 px-1" style="height: 145px; width: 15px;"> {{ '$' . number_format($client->monto, 2) }} </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">
+                                    {{date("Y-m-d",strtotime($client->diaAlta."+ 7 days")); }}
+                                </p>
+                            </td>
+                            <td class="font-size-9 px-3 " style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">
+                                    {{date("Y-m-d",strtotime($client->diaAlta."+ 14 days"));}}
+                                </p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 21 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 28 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 35 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 42 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 49 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 56 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 63 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 70 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 77 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 84 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 91 days"));}}</p>
+                            </td>
+                            <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 98 days"));}}</p>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="font-size-9 px-1 text-center" style="width: 10px;" colspan="8"></td>
+                            <td class="font-size-9 px-1 text-center" style="width: 15px;">  {{ '$' . number_format( $montoTotal , 2 ) }} </td>
+                            <td class="font-size-9 px-3" style="max-width: 18px;" colspan="14"></td>
+                        </tr>
+                    </tfoot>
             </table>
+            
+            @if(!$loop->last)
+                <div class="page_break"></div>
+            @endif
+            @endforeach
         </div>
     </main>
     
