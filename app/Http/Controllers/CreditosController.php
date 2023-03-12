@@ -32,8 +32,7 @@ class CreditosController extends Controller
             'clientes.poblado as poblados',
             'creditos.cliente_id as idCliente',
             'grupos.idGrupo as grupo_id',
-            'grupos.idGrupo as grupo_id',
-            'grupos.nombreGrupo as nombreGrupo',
+            'grupos.idGrupo as nombreGrupo',
             'municipios.nombreMunicipio as nombreMunicipio',
         ])
         ->join('clientes', 'clientes.idCliente', '=', 'creditos.cliente_id')

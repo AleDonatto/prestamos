@@ -380,6 +380,7 @@ class ClientesController extends Controller
             ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
             ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
             ->where('grupos.idGrupo', $request->grupo)
+            ->whereRaw('clientes.id_anterior is null')
             ->orderBy('clientes.created_at')
             ->get();
 
@@ -393,6 +394,7 @@ class ClientesController extends Controller
             ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
             ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
             ->where('municipios.idMunicipio', $request->municipio)
+            ->whereRaw('clientes.id_anterior is null')
             ->orderBy('clientes.created_at')
             ->get();
 
@@ -406,6 +408,7 @@ class ClientesController extends Controller
             ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
             ->where('municipios.idMunicipio', $request->municipio)
             ->where('grupos.idGrupo', $request->grupo)
+            ->whereRaw('clientes.id_anterior is null')
             ->orderBy('clientes.created_at')
             ->get();
 
