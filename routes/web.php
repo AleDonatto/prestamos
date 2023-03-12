@@ -44,6 +44,10 @@ Route::get('/aplicacionPagos', function () {
     return Inertia::render('AplicacionPagos');
 })->middleware(['auth', 'verified'])->name('aplicacionPagos');
 
+Route::get('/carteraFinalizada', function () {
+    return Inertia::render('CarteraFinalizada');
+})->middleware(['auth', 'verified'])->name('carteraFinalizada');
+
 
 Route::get('/grupos/list', [ClientesController::class, 'listGrupos'])->middleware(['auth', 'verified'])->name('listGrupos');
 Route::post('/grupos/create', [ClientesController::class, 'createGrupos'])->middleware(['auth', 'verified'])->name('createGrupos');

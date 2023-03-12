@@ -165,8 +165,8 @@ export const ListClientesCreditos = (props) => {
         );
       }
     },
+    { field: 'nombreGrupo', headerName: 'Grupo',  width: 130},
     { field: 'nombreMunicipio', headerName: 'Municipio',  width: 130},
-    { field: 'poblados', headerName: 'Poblados',  width: 130},
     {
       field: "Acciones",
       width: 130,
@@ -212,6 +212,7 @@ export const ListClientesCreditos = (props) => {
       grupo : listGrupo.grupo,
       municipio : listMunicipios.municipio,
       cliente : clienteBuscar,
+      mostrarCarteraFinalizada : props.mostrarFinalizados,
     }
     
     axios.post('/creditos', params)

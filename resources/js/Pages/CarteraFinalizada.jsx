@@ -5,7 +5,7 @@ import { Button, TextField } from '@mui/material';
 import { ListClientesCreditos } from '@/Components/Clientes/ListClientesCreditos';
 import Swal from 'sweetalert2'
 
-const AplicacionPago = (props) => {
+const CarteraFinalizada = (props) => {
 
     const [pagosAplicar, setPagosAplicar] = useState(1);
     const [clientesSeleccionados, setClientesSeleccionados] = useState([]);
@@ -79,6 +79,7 @@ const AplicacionPago = (props) => {
     const handleFormIsOpen = (e) => {
         setFormIsOpen(e)
         setPagosAplicar(1)
+        // setClientesSeleccionados([])
     }
 
     return (
@@ -121,7 +122,7 @@ const AplicacionPago = (props) => {
                                     getCheckedData={handleCheckedData} 
                                     onReload={onReload} 
                                     formIsOpen={handleFormIsOpen}
-                                    mostrarFinalizados={false}
+                                    mostrarFinalizados={true} 
                                 />
                             </div>
                         </div>
@@ -135,4 +136,4 @@ const AplicacionPago = (props) => {
     )
 }
 
-export default AplicacionPago
+export default CarteraFinalizada

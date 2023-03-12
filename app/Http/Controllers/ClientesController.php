@@ -248,6 +248,7 @@ class ClientesController extends Controller
         $client = DB::table('clientes')
         ->select([
             'clientes.*',
+            'clientes.garantias as garantia',
             'grupos.nombreGrupo as nombreGrupo',
             'municipios.nombreMunicipio as nombreMunicipio',
             'creditos.plazos as plazo',
@@ -259,7 +260,10 @@ class ClientesController extends Controller
         ->first();
 
         $aval = DB::table('avales')
-        ->select('avales.*')
+        ->select([
+            'avales.*', 
+            'avales.garantias as garantia',
+        ])
         ->where('avales.cliente_id', $idCliente)
         ->first();
 
