@@ -33,7 +33,7 @@ export default function Authenticated({ auth, header, children }) {
                                     Municipios
                                 </NavLink>
 
-                                <NavLink href={route('aplicacionPagos')} active={route().current('clientes')}>
+                                <NavLink href={route('aplicacionPagos')} active={route().current('aplicacionPagos')}>
                                     Aplicación de pagos
                                 </NavLink>
                                 
