@@ -115,8 +115,8 @@
                         <th class="font-size-9 text-center" style="width: 20px;">Capital.</th>
                         <th class="font-size-9 text-center" style="max-width: 60px;">Pago regular</th>
                         <th class="font-size-9 text-center" style="width: 18px;">Pagos</th>
+                        <th class="font-size-9 text-center">Grupo</th>
                         <th class="font-size-9 text-center">Municipio</th>
-                        <th class="font-size-9 text-center">Poblado</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -127,8 +127,8 @@
                         <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;">{{ $client['capital'] }}</td>
                         <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;">{{ $client['pagoRegular'] }}</td>
                         <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;">{{ $client['pagos'] }}</td>
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;">{{ $client['grupo_id'] }}</td>
                         <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;">{{ $client['nombreMunicipio'] }}</td>
-                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;">{{ $client['poblados'] }}</td>
                     </tr>
                     @endforeach
                 </tbody>

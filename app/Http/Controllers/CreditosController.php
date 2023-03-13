@@ -19,7 +19,7 @@ class CreditosController extends Controller
         $grupo = $request->grupo;
         $cliente = trim($request->cliente);
         $municipio = $request->municipio;
-        
+        $mostrarCarteraFinalizada = $request->mostrarCarteraFinalizada; 
         $credito = DB::table('creditos')
         ->select([
             'creditos.idCredito as credito',
@@ -32,8 +32,7 @@ class CreditosController extends Controller
             'clientes.poblado as poblados',
             'creditos.cliente_id as idCliente',
             'grupos.idGrupo as grupo_id',
-            'grupos.idGrupo as grupo_id',
-            'grupos.nombreGrupo as nombreGrupo',
+            'grupos.idGrupo as nombreGrupo',
             'municipios.nombreMunicipio as nombreMunicipio',
         ])
         ->join('clientes', 'clientes.idCliente', '=', 'creditos.cliente_id')
@@ -41,12 +40,18 @@ class CreditosController extends Controller
         ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
         ->whereRaw('clientes.id_anterior is null')
         ->whereRaw(" if($grupo <> 0 , grupos.idGrupo = '$grupo', true) ")
-        ->whereRaw(" if($municipio <> 0 , clientes.municipio_id = '$municipio', true) ")
-        ->whereRaw(" if('$cliente' <> '' , concat(clientes.nombre , ' ' , clientes.apellido_paterno , ' ', clientes.apellido_materno ) like '%$cliente%', true) ")
-        ->orderBy('creditos.created_at')->get();
+        ->whereRaw(" if($municipio <> 0 , clientes.municipio_id = '$municipio', true) ");
+        if($mostrarCarteraFinalizada) {
+            $credito = $credito->whereRaw("creditos.plazos - (select count(aplicacion.id) from aplicacion_pagos aplicacion where aplicacion.cliente_id = clientes.idCliente) = 0 ");
+        } else {
+            $credito = $credito->whereRaw("creditos.plazos - (select count(aplicacion.id) from aplicacion_pagos aplicacion where aplicacion.cliente_id = clientes.idCliente) > 0 ");
+        }
+        
+        $credito = $credito->whereRaw(" if('$cliente' <> '' , concat(clientes.nombre , ' ' , clientes.apellido_paterno , ' ', clientes.apellido_materno ) like '%$cliente%', true) ")
+        ->orderBy('creditos.created_at');
 
         return response()->json([
-            'datos' => $credito
+            'datos' => $credito->get()
         ]);
     }
 }

@@ -44,10 +44,21 @@ class ClientesController extends Controller
         try {
             $clienteRequest = $request->client;
             $avalRequest    = $request->aval;
+            $grupoSeleccionado = Grupo::where('idGrupo', $request->grupoNuevo)->get();
 
+            if(count($grupoSeleccionado) > 0){
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Error: el grupo ya existe',
+                ]);
+            }
+            
             $grupo = new Grupo();
-            $grupo->nombreGrupo = $request->grupoNuevo;  
-            $grupo->save();  $cliente = new Cliente();
+            $grupo->idGrupo = $request->grupoNuevo;
+            $grupo->nombreGrupo = $request->grupoNuevo;
+            $grupo->save();  
+
+            $cliente = new Cliente();
             $cliente->nombre = $clienteRequest['nombre'];
             $cliente->apellido_paterno = $clienteRequest['apellido_paterno'];
             $cliente->apellido_materno = $clienteRequest['apellido_materno'];
@@ -86,7 +97,6 @@ class ClientesController extends Controller
             $credito = new Credito();
             $credito->fechaAcreditacion = date('Y-m-d');
             $credito->monto = $clienteRequest['monto'];
-            // $credito->prestamo = $clienteRequest['monto'];
             $credito->plazos = $clienteRequest['plazos'];
             $credito->estatus = 'activo';
             $credito->cliente_id = $cliente->idCliente;
@@ -248,6 +258,7 @@ class ClientesController extends Controller
         $client = DB::table('clientes')
         ->select([
             'clientes.*',
+            'clientes.garantias as garantia',
             'grupos.nombreGrupo as nombreGrupo',
             'municipios.nombreMunicipio as nombreMunicipio',
             'creditos.plazos as plazo',
@@ -259,7 +270,10 @@ class ClientesController extends Controller
         ->first();
 
         $aval = DB::table('avales')
-        ->select('avales.*')
+        ->select([
+            'avales.*', 
+            'avales.garantias as garantia',
+        ])
         ->where('avales.cliente_id', $idCliente)
         ->first();
 
@@ -376,6 +390,7 @@ class ClientesController extends Controller
             ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
             ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
             ->where('grupos.idGrupo', $request->grupo)
+            ->whereRaw('clientes.id_anterior is null')
             ->orderBy('clientes.created_at')
             ->get();
 
@@ -389,6 +404,7 @@ class ClientesController extends Controller
             ->join('municipios', 'clientes.municipio_id', '=', 'municipios.idMunicipio')
             ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
             ->where('municipios.idMunicipio', $request->municipio)
+            ->whereRaw('clientes.id_anterior is null')
             ->orderBy('clientes.created_at')
             ->get();
 
@@ -402,6 +418,7 @@ class ClientesController extends Controller
             ->select('clientes.*', 'grupos.nombreGrupo', 'municipios.nombreMunicipio', 'municipios.idMunicipio')
             ->where('municipios.idMunicipio', $request->municipio)
             ->where('grupos.idGrupo', $request->grupo)
+            ->whereRaw('clientes.id_anterior is null')
             ->orderBy('clientes.created_at')
             ->get();
 
