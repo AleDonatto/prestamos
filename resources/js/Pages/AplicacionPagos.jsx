@@ -11,10 +11,13 @@ const AplicacionPago = (props) => {
     const [clientesSeleccionados, setClientesSeleccionados] = useState([]);
     const [onReload, setOnReload] = useState(false);
     const [formIsOpen, setFormIsOpen] = useState(false);
+    const [desactivarBtnAplicar, setDesactivarBtnAplicar] = useState(false);
+    
     
 
     const handleAplicarPagos = async () => {
         let sobrepasanLosPagosRestantes = false
+        setDesactivarBtnAplicar(true)
 
         if( pagosAplicar > 0 && clientesSeleccionados.length > 0 ){
             clientesSeleccionados.forEach( (value) => {
@@ -22,6 +25,7 @@ const AplicacionPago = (props) => {
                 if( pagosRestantes < pagosAplicar){
                     console.error('Los pagos a aplicar sobrepasan los pagos que restan')
                     sobrepasanLosPagosRestantes = true
+                    setDesactivarBtnAplicar(false)
                     return;
                 }
             })
@@ -66,6 +70,9 @@ const AplicacionPago = (props) => {
                 timer: 1500
             })
         }
+
+        setDesactivarBtnAplicar(false)
+
     }
 
     const handleChangePagoAplicar = (e) => {
@@ -109,7 +116,7 @@ const AplicacionPago = (props) => {
                                                 <TextField label="Pagos" name='pagos' className="outline-0 focus:border-0" min={0} value={pagosAplicar}  onChange={handleChangePagoAplicar}></TextField>
                                             </div>
                                             <div className='ml-5 mt-2' >
-                                                <Button variant="outlined" onClick={handleAplicarPagos}>Aplicar</Button>
+                                                <Button disabled={desactivarBtnAplicar} variant="outlined" onClick={handleAplicarPagos}>Aplicar</Button>
                                             </div>
                                         </div>
                                     </div> 
