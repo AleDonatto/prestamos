@@ -142,7 +142,8 @@
                 </thead>
                 <tbody>
                         @foreach($clientesGrupo as $client)
-                        @php($montoTotal += $client->monto)
+                        @php($monto = ($client->monto * 0.10) )
+                        @php($montoTotal += $monto)
 
                         <tr>
                             <td class="font-size-9 px-1 text-center" style="height: 145px; width: 10px;">{{ $client->idCredito }}</td>
@@ -153,7 +154,7 @@
                             <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->nombre_aval}} <br> {{$client->apellido_paterno_aval }} <br> {{$client->apellido_materno_aval}}</td>
                             <td class="font-size-9 px-1 text-uppercase" style="height: 145px; max-width: 40px;">{{ $client->nombreMunicipio}} <br> {{$client->referencias_aval}}</td>
                             <td class="font-size-9 px-1 text-uppercase" style="height: 145px; width: 20px;">{{ $client->garantias_aval}} <br>{{$client->telefono_aval}}</td>
-                            <td class="font-size-9 px-1" style="height: 145px; width: 15px;"> {{ '$' . number_format($client->monto, 2) }} </td>
+                            <td class="font-size-9 px-1" style="height: 145px; width: 15px;"> {{ '$' . number_format($monto, 2) }} </td>
                             <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
                                 <p class="vertical-text width-fecha">
                                     {{date("Y-m-d",strtotime($client->diaAlta."+ 7 days")); }}
