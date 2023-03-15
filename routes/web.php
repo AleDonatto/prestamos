@@ -11,6 +11,7 @@ use App\Http\Controllers\AplicacionPagosController;
 use App\Http\Controllers\FormatosController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\GruposController;
+use App\Http\Controllers\ControlPagoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +88,11 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Route::get('/generar-control-pago/{idCliente}', [ControlPagoController::class, 'generacion'])->middleware(['auth', 'verified'])->name('generarControlPagos');
+Route::get('/generar-control-pago/{idCliente}', [ControlPagoController::class, 'generacion'])->name('generarControlPagos');
+Route::get('/generar-control-pago', [ControlPagoController::class, 'generacionTodosClientes'])->name('generarTodosClientes');
+Route::get('/mostrar-control-pago/{idCliente}', [ControlPagoController::class, 'controlPorCliente'])->name('controlPorCliente');
 
 
 require __DIR__.'/auth.php';

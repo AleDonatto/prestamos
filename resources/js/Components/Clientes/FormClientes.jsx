@@ -146,6 +146,16 @@ export const FormClientes = () => {
         })
     }
 
+    const generarControlPagos = (idCliente) => {
+        axios.get(`/generar-control-pago/${idCliente}`)
+        .then(res => {
+
+        })
+        .catch( err => {
+            console.log(err.response)
+        })
+    }
+
     const handleCreateCliente = (e) => {
         e.preventDefault()
         setdisableSubmit(true)
@@ -162,16 +172,19 @@ export const FormClientes = () => {
             })
 
             if(res.data.status === 'success'){
+                let idCliente = res.data.idCliente
+                console.log(idCliente) 
+                generarControlPagos(idCliente)
                 handleResetValues()
             }
             setdisableSubmit(false)
         })
         .catch( err => {
-            console.log(err.response)
+            console.log(err)
             Swal.fire({
                 position: 'top-end',
                 icon: 'error',
-                title: err.response.data.message,
+                title: err,
                 showConfirmButton: false,
                 timer: 10000
             })

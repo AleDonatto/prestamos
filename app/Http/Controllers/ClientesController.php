@@ -232,6 +232,7 @@ class ClientesController extends Controller
 
             return response()->json([
                 'status' => 'success',
+                'idCliente' => $cliente->idCliente,
                 'message' => 'Cliente Agregado'
             ]);
         }
