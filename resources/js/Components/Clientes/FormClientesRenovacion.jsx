@@ -31,7 +31,7 @@ export const FormClientesRenovacion = (props) => {
     const [aval, setaval] = useState({})
 
     const handleChangeCliente = (e) => {
-        console.log(e.target.name ,' - ', e.target.value)
+        // console.log(e.target.name ,' - ', e.target.value)
         setclient({
             ...client,
             [e.target.name]: e.target.value
@@ -48,7 +48,7 @@ export const FormClientesRenovacion = (props) => {
     const handlegetMunicipios = () => {
         axios.get('/municipios/list')
         .then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             const list = res.data.listMunicipios
             setmunicipios(list)
 
@@ -105,6 +105,7 @@ export const FormClientesRenovacion = (props) => {
                 .then(res => {
                     if(res.data.status) {
                         props.closeForm(res.data.status)
+                        generarControlPagos(res.data.idCliente)
 
                         Swal.fire({
                             position: 'top-end',
@@ -144,7 +145,7 @@ export const FormClientesRenovacion = (props) => {
         e.preventDefault()
         axios.post('/clientes/update/aval', aval)
         .then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -173,11 +174,21 @@ export const FormClientesRenovacion = (props) => {
         setdefMunicipio(filter)
     }
 
+    const generarControlPagos = (idCliente) => {
+        axios.get(`/generar-control-pago/${idCliente}`)
+        .then(res => {
+
+        })
+        .catch( err => {
+            console.log(err.response)
+        })
+    }
+
     const getDatosCliente = (idCliente) => {
         
         axios.get(`/clientes-edit/${idCliente}`)
         .then(res => {
-            console.log(res)
+            // console.log(res)
             setclient(res.data.cliente)
             setaval(res.data.aval)
         })
@@ -189,7 +200,7 @@ export const FormClientesRenovacion = (props) => {
     const handlegetGrupos = async () => {
         axios.get('/grupos/list')
         .then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             const dataresponse = res.data.grupos
             setgrupos(dataresponse)
         })

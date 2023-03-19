@@ -34,12 +34,16 @@ export const ListClientesCreditos = (props) => {
   const [nipValidar, setNipValidar] = useState('');
   
   const handleOpen = (e, cliente) => {
+    
+    if( isNaN(cliente) ) {
+      cliente = cliente.idCliente
+    }
     axios.get('/mostrar-control-pago/' +  cliente)
     .then(res => {
-      console.log("Mostrar control de pagos")
-      setClienteSeleccionado(cliente)
+      // console.log("Mostrar control de pagos")
+      setClienteSeleccionado(res.data.cliente)
       handleClienteSelection(cliente)
-      setListPagos(res.data)
+      setListPagos(res.data.pagos)
       setMostrarApartado('payments')
       props.apartadoActual('payments')
     })
@@ -100,7 +104,7 @@ export const ListClientesCreditos = (props) => {
   useEffect(() => {
     setOnReload(props.onReload);
     if (props.onReload != onReload) {
-      console.log('Reload')
+      // console.log('Reload')
       reloadList()
       setOnReload(props.onReload)
     }  
@@ -152,8 +156,6 @@ export const ListClientesCreditos = (props) => {
   };
 
   const reloadList = () => {
-    console.log('mostrarApartado')
-    console.log(mostrarApartado)
     if(mostrarApartado != 'payments') {
       handlegetClients()
       setClienteRenovacionSeleccionado([])
@@ -162,8 +164,6 @@ export const ListClientesCreditos = (props) => {
       setMostrarApartado('main')
       props.apartadoActual('main')
     } else {
-      console.log('clienteSeleccionado')
-      console.log(clienteSeleccionado)
       handleOpen(null, clienteSeleccionado)
     }
   }
@@ -248,7 +248,7 @@ export const ListClientesCreditos = (props) => {
 
   const validarNIP = () => {
     console.log(nipValidar)
-    if(nipValidar == 1234) {
+    if(nipValidar == 1407) {
       handleDeletePago(null, idPagoSeleccionado)
     } else {
       setOpen(false)
@@ -455,10 +455,19 @@ export const ListClientesCreditos = (props) => {
         ?
           <div>
             <div className='mb-5'>
-              <Button onClick={backPage}>Regresar</Button>
+              <Button type='button' variant='contained' onClick={backPage} >Regresar</Button>
+            </div>
+            <div className='mb-5'>
+              <div>
+                <h5>
+                  <b>
+                    Cliente: { clienteSeleccionado.nombre + ' ' + clienteSeleccionado.apellido_paterno + ' ' + clienteSeleccionado.apellido_materno } 
+                  </b> 
+                </h5>
+              </div>
             </div>
             <div className="grid grid-cols-14 ">
-              { listPagos?.map( (pago)  => <div className={setClasesPagos(pago.status_pago)} > <div style={{ left: 'calc(50% - 0.5rem)', lineHeight: '1', paddingTop: '0.5rem', position: 'relative', transform: 'rotate(182deg)', whiteSpace: 'nowrap', writingMode: 'vertical-rl', bottom: '1px !important' }} >{pago.fechaSemana}</div> { pago.status_pago == 'pagado' ? <Link> <DeleteIcon onClick={(e) => {handleOpenModal(e, pago.id)}} /> </Link> : null } </div>) }
+              { listPagos?.map( (pago)  => <div className={setClasesPagos(pago.status_pago)} > <div style={{ left: 'calc(50% - 0.5rem)', lineHeight: '1', paddingTop: '0.5rem', position: 'relative', transform: 'rotate(182deg)', whiteSpace: 'nowrap', writingMode: 'vertical-rl', bottom: '1px !important' }} >{pago.fechaSemanaFormato}</div> { pago.ultimoPago == 1 ? <Link> <DeleteIcon onClick={(e) => {handleOpenModal(e, pago.id)}} /> </Link> : null } </div>) }
             </div>
             
           </div>
@@ -479,8 +488,8 @@ export const ListClientesCreditos = (props) => {
             Se requiere NIP de autorización para eliminar el pago. 
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2, height: '100%' }}>
-            <TextField className='w-full' onChange={(val) => {setNipValidar(val.target.value)} }></TextField>
-            <Button type='button' variant='contained' onClick={validarNIP}> Eliminar pago </Button>
+            <TextField className='w-full mb-5' type="password" onChange={(val) => {setNipValidar(val.target.value)} }></TextField>
+            <Button type='button' variant='contained' className='mt-5' onClick={validarNIP}> Eliminar pago </Button>
           </Typography>
         </Box>
       </Modal>

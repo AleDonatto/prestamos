@@ -40,6 +40,10 @@ class ClientesController extends Controller
 
     public function renovarCliente(Request $request) {
         DB::beginTransaction();
+        $response = [
+            'status' => false,
+            'msg' => 'Error al registrar renovación',
+        ];
 
         try {
             $clienteRequest = $request->client;
@@ -101,6 +105,10 @@ class ClientesController extends Controller
             $credito->estatus = 'activo';
             $credito->cliente_id = $cliente->idCliente;
             $credito->save();
+            $response = [
+                'status' => true,
+                'idCliente' => $cliente->idCliente,
+            ];
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -111,9 +119,7 @@ class ClientesController extends Controller
         }
             
         
-        return response()->json([
-            'status' => true,
-        ]);
+        return response()->json($response);
     }
 
     public function createGrupos(Request $request){

@@ -102,9 +102,26 @@ class ControlPagoController extends Controller
 
     public function controlPorCliente($idCliente) 
     {
-        $controlPagos = ControlPagos::where('cliente_id', $idCliente)->get();
+        $cliente = Cliente::where('idCliente', $idCliente)->get();
 
-        return response()->json($controlPagos);
+        if(count($cliente) > 0) {
+            $cliente = $cliente[0];
+        }
+
+        $controlPagos = ControlPagos::where('cliente_id', $idCliente)
+        ->select([
+            '*',  
+            DB::raw("if( (SELECT pagos.semana FROM control_pagos pagos where pagos.cliente_id = $idCliente and pagos.fechaPago is not null order by pagos.semana desc limit 1) = semana, true, false) as ultimoPago"),   
+            DB::raw("DATE_FORMAT(fechaSemana,'%d/%m/%Y') as fechaSemanaFormato"),
+        ])
+        ->get();
+
+
+
+        return response()->json([
+            'pagos' => $controlPagos,
+            'cliente' => $cliente
+        ]);
     }
 
     public function eliminarPago($id) {
