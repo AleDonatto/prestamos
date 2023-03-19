@@ -93,6 +93,8 @@ Route::middleware('auth')->group(function () {
 Route::get('/generar-control-pago/{idCliente}', [ControlPagoController::class, 'generacion'])->name('generarControlPagos');
 Route::get('/generar-control-pago', [ControlPagoController::class, 'generacionTodosClientes'])->name('generarTodosClientes');
 Route::get('/mostrar-control-pago/{idCliente}', [ControlPagoController::class, 'controlPorCliente'])->name('controlPorCliente');
-
+Route::delete('/control-pagos-delete/{id}', [ControlPagoController::class, 'eliminarPago'])->name('eliminarPago');
+Route::post('/realizar-control-pagos', [ControlPagoController::class, 'realizarPago'])->name('realizarPago');
+Route::post('/control-pagos-lista', [ControlPagoController::class, 'index'])->middleware(['auth', 'verified'])->name('controlPagosIndex');
 
 require __DIR__.'/auth.php';

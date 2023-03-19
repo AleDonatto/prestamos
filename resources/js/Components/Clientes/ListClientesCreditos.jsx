@@ -5,6 +5,8 @@ import UpdateIcon from '@mui/icons-material/Update';
 import { DataGrid } from '@mui/x-data-grid';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
 import { FormClientesRenovacion } from '@/Components/Clientes/FormClientesRenovacion';
 import Swal from 'sweetalert2'
 
@@ -26,17 +28,18 @@ export const ListClientesCreditos = (props) => {
   const gridRef = useRef(null);
   const [listPagos, setListPagos] = useState([])
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null)
-  
+  const [mostrarApartado, setMostrarApartado] = useState('main')
   const [open, setOpen] = useState(false);
+  
   const handleOpen = (e, cliente) => {
-    axios.post('/aplicar-pagos-get-by-client', {
-      cliente
-    })
+    axios.get('/mostrar-control-pago/' +  cliente)
     .then(res => {
+      console.log("Mostrar control de pagos")
       setClienteSeleccionado(cliente)
-      setListPagos(res.data.datos)
-      setOpen(true)
-
+      handleClienteSelection(cliente)
+      setListPagos(res.data)
+      setMostrarApartado('payments')
+      props.apartadoActual('payments')
     })
     .catch( err => {
       console.log(err.response)
@@ -48,9 +51,7 @@ export const ListClientesCreditos = (props) => {
 
   const handleDeletePago = (e, id) => {
     e.preventDefault()
-    axios.post('/aplicar-pagos-delete', {
-      id
-    })
+    axios.delete('/control-pagos-delete/' + id)
     .then(res => {
       handlegetClients()
       handleOpen(e, clienteSeleccionado)
@@ -93,6 +94,7 @@ export const ListClientesCreditos = (props) => {
   useEffect(() => {
     setOnReload(props.onReload);
     if (props.onReload != onReload) {
+      console.log('Reload')
       reloadList()
       setOnReload(props.onReload)
     }  
@@ -100,7 +102,10 @@ export const ListClientesCreditos = (props) => {
 
   const irAFormRenovacion = (e, item) => {
     setClienteRenovacionSeleccionado(item)
-    setMostrarFormCliente(true)
+    // setMostrarFormCliente(true)
+    setMostrarApartado('form')
+    props.apartadoActual('form')
+    
     props.formIsOpen(true)
   }
   
@@ -141,11 +146,36 @@ export const ListClientesCreditos = (props) => {
   };
 
   const reloadList = () => {
-    setMostrarFormCliente(false)
-    props.formIsOpen(false)
-    setClienteRenovacionSeleccionado([])
-    handlegetClients()
-    handlelistGrupos()
+    console.log('mostrarApartado')
+    console.log(mostrarApartado)
+    if(mostrarApartado != 'payments') {
+      handlegetClients()
+      setClienteRenovacionSeleccionado([])
+      handlelistGrupos()
+      props.formIsOpen(false)
+      setMostrarApartado('main')
+      props.apartadoActual('main')
+    } else {
+      console.log('clienteSeleccionado')
+      console.log(clienteSeleccionado)
+      handleOpen(null, clienteSeleccionado)
+    }
+  }
+
+  const backPage = () => {
+      handlegetClients()
+      setClienteRenovacionSeleccionado([])
+      handlelistGrupos()
+      props.formIsOpen(false)
+      setMostrarApartado('main')
+      props.apartadoActual('main')
+  }
+
+
+  const openPayments = () => {
+    props.formIsOpen(true)
+    setMostrarApartado('main')
+    props.apartadoActual('main')
   }
 
   const columnsGrid = [
@@ -215,7 +245,7 @@ export const ListClientesCreditos = (props) => {
       mostrarCarteraFinalizada : props.mostrarFinalizados,
     }
     
-    axios.post('/creditos', params)
+    axios.post('/control-pagos-lista', params)
     .then(res => {
       setlistClientes(res.data.datos)
       setauxClient(res.data.datos)
@@ -262,9 +292,24 @@ export const ListClientesCreditos = (props) => {
   }
 
   const handleCheckSelection = (data) => {
-    props.getCheckedData( listClientes.filter( cliente =>  data.includes(cliente.credito) ) );
+    // props.getCheckedData( listClientes.filter( cliente =>  data.includes(cliente.credito) ) );
+    props.getCheckedData( data );
   };
 
+  const handleClienteSelection = (data) => {
+    props.getCheckedData( [data] );
+  };
+
+  const setClasesPagos = (status) => {
+    let styleGeneral = " border-2 border-black text-center align-middle h-48 pt-5"
+    if(status == 'vencido') {
+      return 'bg-rose-500 ' + styleGeneral
+    } else if (status == 'pendiente') {
+      return 'bg-sky-50 ' + styleGeneral
+    } else {
+      return 'bg-green-500 ' + styleGeneral
+    }
+  } 
 
   useEffect(() => {
     handlegetClients()
@@ -281,11 +326,16 @@ export const ListClientesCreditos = (props) => {
   }, [grupo])
 
   return (
-    <div>
+    <div className='pb-5'>
+
       {
-        mostrarFormCliente ? 
+        mostrarApartado == 'form' ? 
           <FormClientesRenovacion closeForm={reloadList} cliente={clienteRenovacionSeleccionado} />
-        : 
+        : null
+      }
+
+      {
+        mostrarApartado == 'main' ? 
         <div>   
           <div className='mt-5 grid lg:grid-cols-6 md:grid-cols-1 gap-4'>
             <div className=''>
@@ -353,7 +403,7 @@ export const ListClientesCreditos = (props) => {
               <Paper>
                 <div style={{ height: 500, width: "100%" }}>
                   <DataGrid
-                    getRowId={(row) => row.credito}
+                    getRowId={(row) => row.idCliente}
                     rows={listClientes}
                     columns={columnsGrid}
                     checkboxSelection
@@ -368,6 +418,22 @@ export const ListClientesCreditos = (props) => {
             </div>
           </div>
         </div>
+        : null
+      }
+
+      { 
+        mostrarApartado == 'payments' 
+        ?
+          <div>
+            <div className='mb-5'>
+              <Button onClick={backPage}>Regresar</Button>
+            </div>
+            <div className="grid grid-cols-14 ">
+              { listPagos?.map( (pago)  => <div className={setClasesPagos(pago.status_pago)} > <div style={{ left: 'calc(50% - 0.5rem)', lineHeight: '1', paddingTop: '0.5rem', position: 'relative', transform: 'rotate(182deg)', whiteSpace: 'nowrap', writingMode: 'vertical-rl', bottom: '1px !important' }} >{pago.fechaSemana}</div> { pago.status_pago == 'pagado' ? <Link> <DeleteIcon onClick={(e) => {handleDeletePago(e, pago.id)}} /> </Link> : null } </div>) }
+            </div>
+            
+          </div>
+        : null
       }
 
       
@@ -380,7 +446,7 @@ export const ListClientesCreditos = (props) => {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Pagos realizados
+            Se requiere NIP de autorización para eliminar el pago. 
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2, height: '100%' }}>
             <DataGrid
@@ -395,6 +461,7 @@ export const ListClientesCreditos = (props) => {
           </Typography>
         </Box>
       </Modal>
+
     </div>
   )
 }
