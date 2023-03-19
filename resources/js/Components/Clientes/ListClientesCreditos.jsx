@@ -30,6 +30,8 @@ export const ListClientesCreditos = (props) => {
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null)
   const [mostrarApartado, setMostrarApartado] = useState('main')
   const [open, setOpen] = useState(false);
+  const [idPagoSeleccionado, setIdPagoSeleccionado] = useState(null);
+  const [nipValidar, setNipValidar] = useState('');
   
   const handleOpen = (e, cliente) => {
     axios.get('/mostrar-control-pago/' +  cliente)
@@ -50,17 +52,21 @@ export const ListClientesCreditos = (props) => {
   };
 
   const handleDeletePago = (e, id) => {
-    e.preventDefault()
+    if(e != null){
+      e.preventDefault()
+    }
+    setOpen(false)
     axios.delete('/control-pagos-delete/' + id)
     .then(res => {
       handlegetClients()
       handleOpen(e, clienteSeleccionado)
+      
       Swal.fire({
           position: 'top-end',
           icon: 'success',
           title: 'Pago eliminado exitosamente, lista actualizada',
           showConfirmButton: false,
-          timer: 10000
+          timer: 3000
       })
     })
     .catch( err => {
@@ -84,7 +90,7 @@ export const ListClientesCreditos = (props) => {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 390,
-    height: 500,
+    height: 250,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -187,7 +193,7 @@ export const ListClientesCreditos = (props) => {
       field: "Pagos",
       width: 130,
       renderCell: (cellValues) => {
-        let btnRenovacion = cellValues.row.plazosPagados >= 10 ? <Button size="small" variant="contained"  onClick={(e) => { irAFormRenovacion(e, cellValues.row) }}>R</Button> : null;  
+        let btnRenovacion = cellValues.row.plazosPagados >= 10 ? <Button size="small" type='button' variant='contained' onClick={(e) => { irAFormRenovacion(e, cellValues.row) }}>R</Button> : null;  
         return (
           <div>
             { btnRenovacion } <span> { cellValues.row.pagos } </span> 
@@ -232,6 +238,29 @@ export const ListClientesCreditos = (props) => {
     },
     
   ];
+
+  const handleOpenModal = (e, idPago) => {
+    setIdPagoSeleccionado(idPago)
+    setOpen(true)
+
+    //handleDeletePago(e, pago.id)
+  }
+
+  const validarNIP = () => {
+    console.log(nipValidar)
+    if(nipValidar == 1234) {
+      handleDeletePago(null, idPagoSeleccionado)
+    } else {
+      setOpen(false)
+      Swal.fire({
+          position: 'top-end',
+          icon: 'error',
+          title: 'El NIP es erroneo',
+          showConfirmButton: false,
+          timer: 3000
+      })
+    }
+  }
 
   const handleTableRollback = () => {
     setlistClientes(auxClient)
@@ -429,7 +458,7 @@ export const ListClientesCreditos = (props) => {
               <Button onClick={backPage}>Regresar</Button>
             </div>
             <div className="grid grid-cols-14 ">
-              { listPagos?.map( (pago)  => <div className={setClasesPagos(pago.status_pago)} > <div style={{ left: 'calc(50% - 0.5rem)', lineHeight: '1', paddingTop: '0.5rem', position: 'relative', transform: 'rotate(182deg)', whiteSpace: 'nowrap', writingMode: 'vertical-rl', bottom: '1px !important' }} >{pago.fechaSemana}</div> { pago.status_pago == 'pagado' ? <Link> <DeleteIcon onClick={(e) => {handleDeletePago(e, pago.id)}} /> </Link> : null } </div>) }
+              { listPagos?.map( (pago)  => <div className={setClasesPagos(pago.status_pago)} > <div style={{ left: 'calc(50% - 0.5rem)', lineHeight: '1', paddingTop: '0.5rem', position: 'relative', transform: 'rotate(182deg)', whiteSpace: 'nowrap', writingMode: 'vertical-rl', bottom: '1px !important' }} >{pago.fechaSemana}</div> { pago.status_pago == 'pagado' ? <Link> <DeleteIcon onClick={(e) => {handleOpenModal(e, pago.id)}} /> </Link> : null } </div>) }
             </div>
             
           </div>
@@ -443,21 +472,15 @@ export const ListClientesCreditos = (props) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
         style={{ height: 500 }}
+        className="mt-5 p-5"
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Se requiere NIP de autorización para eliminar el pago. 
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2, height: '100%' }}>
-            <DataGrid
-              style={{ height: '80%' }}
-              getRowId={(row) => row.id}
-              rows={listPagos}
-              columns={columnsGridPagos}
-              rowsPerPage={15}
-              hideFooterPagination={true}
-              hideFooter={true}
-            />
+            <TextField className='w-full' onChange={(val) => {setNipValidar(val.target.value)} }></TextField>
+            <Button type='button' variant='contained' onClick={validarNIP}> Eliminar pago </Button>
           </Typography>
         </Box>
       </Modal>
