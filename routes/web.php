@@ -12,6 +12,7 @@ use App\Http\Controllers\FormatosController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\GruposController;
 use App\Http\Controllers\ControlPagoController;
+use App\Http\Controllers\CarteraVencidaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,12 @@ Route::get('/aplicacionPagos', function () {
 Route::get('/carteraFinalizada', function () {
     return Inertia::render('CarteraFinalizada');
 })->middleware(['auth', 'verified'])->name('carteraFinalizada');
+
+
+Route::get('/carteraVencida', function () {
+    return Inertia::render('CarteraVencida');
+})->middleware(['auth', 'verified'])->name('carteraVencida');
+
 
 
 Route::get('/grupos/list', [ClientesController::class, 'listGrupos'])->middleware(['auth', 'verified'])->name('listGrupos');
@@ -96,5 +103,8 @@ Route::get('/mostrar-control-pago/{idCliente}', [ControlPagoController::class, '
 Route::delete('/control-pagos-delete/{id}', [ControlPagoController::class, 'eliminarPago'])->name('eliminarPago');
 Route::post('/realizar-control-pagos', [ControlPagoController::class, 'realizarPago'])->name('realizarPago');
 Route::post('/control-pagos-lista', [ControlPagoController::class, 'index'])->middleware(['auth', 'verified'])->name('controlPagosIndex');
+
+Route::get('/cartera-vencida', [CarteraVencidaController::class, 'index'])->name('carteraVencidaIndex');
+Route::get('/cartera-vencida-reporte', [CarteraVencidaController::class, 'reporteExcel'])->name('carteraVencidaReporte');
 
 require __DIR__.'/auth.php';

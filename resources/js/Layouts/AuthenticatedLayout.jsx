@@ -40,6 +40,10 @@ export default function Authenticated({ auth, header, children }) {
                                 <NavLink href={route('carteraFinalizada')} active={route().current('carteraFinalizada')}>
                                     Cartera Finalizada
                                 </NavLink> 
+                                
+                                <NavLink href={route('carteraVencida')} active={route().current('carteraVencida')}>
+                                    Cartera Vencida
+                                </NavLink> 
 
                                 <NavLink href={route('viewGrupos')} active={route().current('viewGrupos')}>
                                     Grupos
