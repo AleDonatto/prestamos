@@ -37,9 +37,9 @@ export default function Authenticated({ auth, header, children }) {
                                     Aplicación de pagos
                                 </NavLink>
                                 
-                                <NavLink href={route('carteraFinalizada')} active={route().current('clientes')}>
+                                <NavLink href={route('carteraFinalizada')} active={route().current('carteraFinalizada')}>
                                     Cartera Finalizada
-                                </NavLink>
+                                </NavLink> 
 
                                 <NavLink href={route('viewGrupos')} active={route().current('viewGrupos')}>
                                     Grupos
