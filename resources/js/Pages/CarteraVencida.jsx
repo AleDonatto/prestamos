@@ -24,8 +24,10 @@ const CarteraVencida = (props) => {
     
     const columnsGridClientesVencidos = [
         { field: 'cliente', headerName: 'Cliente',  width: 370},
-        { field: 'abonos', headerName: 'Abonos',  width: 330},
+        { field: 'grupo', headerName: 'Grupo',  width: 110},           
+        { field: 'abonos', headerName: 'Abonos',  width: 110},
         { field: 'montos', headerName: 'Monto',  width: 210},           
+        { field: 'fechaSemana', headerName: 'Fecha vencida',  width: 230},
     ];
 
 

@@ -38,17 +38,26 @@ class CarteraVencidaController extends Controller
     public static function getCarteraVencida($agrupadosPor = 'municipios', $grupo) 
     {
 
-        $sqlAgrupar = $agrupadosPor == 'municipios' ? 'municipio.idMunicipio' : 'control.cliente_id';
-        $sqlMostrar = $agrupadosPor == 'municipios' ? 'municipio.nombreMunicipio as municipio,' : "concat(cliente.nombre , ' ' , cliente.apellido_paterno , ' ', cliente.apellido_materno ) as cliente,";
+        $sqlAgrupar = $agrupadosPor == 'municipios' ? 'municipio.idMunicipio' : 'control.cliente_id, control.fechaSemana';
+        $sqlMostrar = $agrupadosPor == 'municipios' 
+        ? 'municipio.nombreMunicipio as municipio, count(cliente_id) as abonos, sum(control.monto) as montos, ' 
+        : "concat(cliente.nombre , ' ' , cliente.apellido_paterno , ' ', cliente.apellido_materno ) as cliente, 
+        ( select count(control1.id) FROM control_pagos control1 
+            WHERE control1.cliente_id = control.cliente_id and control1.fechaPago is null 
+            AND control1.fechaSemana < date(now()) ) as abonos,
+        ( select sum(control1.monto) FROM control_pagos control1 WHERE control1.cliente_id = control.cliente_id and control1.fechaPago is null AND control1.fechaSemana < date(now()) ) as montos,
+       ";
 
         $query = DB::select("SELECT  $sqlMostrar
-                count(cliente_id) as abonos,
-                sum(control.monto) as montos,
                 municipio.idMunicipio as idMunicipio,
-                cliente.idCliente
+                cliente.idCliente,
+                control.fechaSemana, 
+                grupo.idGrupo as grupo,
+                grupo.nombreGrupo
         FROM control_pagos control 
         INNER JOIN clientes cliente on control.cliente_id = cliente.idCliente
         INNER JOIN municipios as municipio on cliente.municipio_id = municipio.idMunicipio
+        INNER JOIN grupos grupo on cliente.grupo_id = grupo.idGrupo
         WHERE fechaPago is null AND fechaSemana < date(now())
         group by $sqlAgrupar
         ");
@@ -204,8 +213,10 @@ class CarteraVencidaController extends Controller
         //Header del Excel
         $activeWorksheet->setCellValue('A1', 'Municipio');
         $activeWorksheet->setCellValue('B1', 'Acreditada');
-        $activeWorksheet->setCellValue('C1', 'Abonos');
-        $activeWorksheet->setCellValue('D1', 'Monto total');
+        $activeWorksheet->setCellValue('C1', 'Grupo');
+        $activeWorksheet->setCellValue('D1', 'Fecha vencida');
+        $activeWorksheet->setCellValue('E1', 'Abonos');
+        $activeWorksheet->setCellValue('F1', 'Monto total');
         $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(30);
         $spreadsheet->getActiveSheet()->getColumnDimension('B')->setWidth(50);
         $spreadsheet->getActiveSheet()->getColumnDimension('C')->setWidth(20);
@@ -218,16 +229,18 @@ class CarteraVencidaController extends Controller
             $municipioNombre = $datos->municipio;
 
             $activeWorksheet->setCellValue('A' . $cellY, $datos->municipio);
-            $activeWorksheet->setCellValue('C' . $cellY, $datos->abonos);
-            $activeWorksheet->setCellValue('D' . $cellY, $datos->montos);
+            $activeWorksheet->setCellValue('E' . $cellY, $datos->abonos);
+            $activeWorksheet->setCellValue('F' . $cellY, $datos->montos);
 
             if(count($datos->clientes) > 0) 
                 $cellY++;
 
             foreach($datos->clientes as $cliente) {
                 $activeWorksheet->setCellValue('B' . $cellY, $cliente->cliente);
-                $activeWorksheet->setCellValue('C' . $cellY, $cliente->abonos);
-                $activeWorksheet->setCellValue('D' . $cellY, $cliente->montos);
+                $activeWorksheet->setCellValue('C' . $cellY, $cliente->grupo);
+                $activeWorksheet->setCellValue('D' . $cellY, $cliente->fechaSemana);
+                $activeWorksheet->setCellValue('E' . $cellY, $cliente->abonos);
+                $activeWorksheet->setCellValue('F' . $cellY, $cliente->montos);
                 $cellY++;
             }
             
