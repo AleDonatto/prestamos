@@ -106,5 +106,7 @@ Route::post('/control-pagos-lista', [ControlPagoController::class, 'index'])->mi
 
 Route::get('/cartera-vencida', [CarteraVencidaController::class, 'index'])->name('carteraVencidaIndex');
 Route::get('/cartera-vencida-reporte', [CarteraVencidaController::class, 'reporteExcel'])->name('carteraVencidaReporte');
+Route::post('/cartera-vencida-municipio', [CarteraVencidaController::class, 'indexByMunicipio'])->name('carteraVencidaReporteByMunicipio');
+Route::get('/cartera-vencida-reporte-municipio/{idMunicipio}', [CarteraVencidaController::class, 'reporteExcelIdMunicipio'])->name('reporteExcelIdMunicipio');
 
 require __DIR__.'/auth.php';
