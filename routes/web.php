@@ -71,6 +71,8 @@ Route::post('/clientes/update/client', [ClientesController::class, 'updateDatosC
 Route::post('/clientes/update/aval', [ClientesController::class, 'updateDatosAval'])->middleware(['auth', 'verified'])->name('updateAval');
 Route::get('/clientes-edit/{id}', [ClientesController::class, 'editCliente'])->middleware(['auth', 'verified'])->name('editClienteAPI');
 
+Route::get('/clients/delete/{id}', [ClientesController::class, 'deleteClient'])->middleware(['auth','verified'])->name('deleteClient');
+
 Route::get('/municipios', [MunicipioController::class, 'viewMunicipios'])->middleware(['auth', 'verified'])->name('viewMunicipios');
 Route::get('/municipios/list', [MunicipioController::class, 'listMunicipios'])->middleware(['auth', 'verified'])->name('listMunicipios');
 Route::post('/municipios/create', [MunicipioController::class, 'createMunicipios'])->middleware(['auth', 'verified'])->name('createMunicipios');
