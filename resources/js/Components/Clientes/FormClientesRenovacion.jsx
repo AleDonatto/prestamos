@@ -3,6 +3,7 @@ import { Button, TextField, Autocomplete, Select, MenuItem, FormControl } from '
 import InputLabel from '@mui/material/InputLabel';
 import Swal from 'sweetalert2'
 import moment from 'moment';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export const FormClientesRenovacion = (props) => {
 
@@ -236,7 +237,7 @@ export const FormClientesRenovacion = (props) => {
             
             
             <div className="-mx-3 mt-5 flex">
-                <Button type='button' variant='contained'  onClick={handleCloseForm}>
+                <Button type='button' variant='contained' startIcon={<ArrowBackIcon />} onClick={handleCloseForm}>
                     Regresar
                 </Button>
             </div>
