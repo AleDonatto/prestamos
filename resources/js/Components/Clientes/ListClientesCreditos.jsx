@@ -6,6 +6,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import { FormClientesRenovacion } from '@/Components/Clientes/FormClientesRenovacion';
 import Swal from 'sweetalert2'
@@ -455,7 +456,7 @@ export const ListClientesCreditos = (props) => {
         ?
           <div>
             <div className='mb-5'>
-              <Button type='button' variant='contained' onClick={backPage} >Regresar</Button>
+              <Button type='button' variant='contained' startIcon={<ArrowBackIcon />}  onClick={backPage} >Regresar</Button>
             </div>
             <div className='mb-5'>
               <div>

@@ -29,15 +29,26 @@ class CarteraVencidaController extends Controller
 
         $res = $this->getDatosReportePorMunicipio($idMunicipio);
 
+        if (is_object($res)) {
+            $clientes = $res->clientes;
+            $clientesArray = array();
+
+            foreach ($clientes as $cliente) {
+                array_push($clientesArray, $cliente);
+            }
+
+            $res->clientes = $clientesArray;
+        }
+
         return response()->json([
             'datos' => $res,
         ]);
     }
 
 
-    public static function getCarteraVencida($agrupadosPor = 'municipios', $grupo) 
+    public static function getCarteraVencida($agrupadosPor = 'municipios', $grupo, $idMunicipio = null) 
     {
-
+        $buscarPorMunicipio = !is_null($idMunicipio) ? "AND  municipio.idMunicipio = $idMunicipio " : '';
         $sqlAgrupar = $agrupadosPor == 'municipios' ? 'municipio.idMunicipio' : 'control.cliente_id, control.fechaSemana';
         $sqlMostrar = $agrupadosPor == 'municipios' 
         ? 'municipio.nombreMunicipio as municipio, count(cliente_id) as abonos, sum(control.monto) as montos, ' 
@@ -49,16 +60,17 @@ class CarteraVencidaController extends Controller
        ";
 
         $query = DB::select("SELECT  $sqlMostrar
+                control.id id,
                 municipio.idMunicipio as idMunicipio,
                 cliente.idCliente,
                 control.fechaSemana, 
                 grupo.idGrupo as grupo,
-                grupo.nombreGrupo
+                grupo.nombreGrupo 
         FROM control_pagos control 
         INNER JOIN clientes cliente on control.cliente_id = cliente.idCliente
         INNER JOIN municipios as municipio on cliente.municipio_id = municipio.idMunicipio
         INNER JOIN grupos grupo on cliente.grupo_id = grupo.idGrupo
-        WHERE fechaPago is null AND fechaSemana < date(now())
+        WHERE fechaPago is null AND fechaSemana < date(now()) $buscarPorMunicipio
         group by $sqlAgrupar
         ");
 
@@ -106,7 +118,7 @@ class CarteraVencidaController extends Controller
         $grupo = 1;
         
         $datosAgrupadosPorMunicipios = self::getCarteraVencidaPorMunicipio($idMunicipio);
-        $datosAgrupadosPorClientes = self::getCarteraVencida('clientes', $grupo);
+        $datosAgrupadosPorClientes = self::getCarteraVencida('clientes', $grupo, $idMunicipio);
         
         return array_map(function ($el) use ($datosAgrupadosPorClientes) {
             $clientesPorMunicipio = array_filter($datosAgrupadosPorClientes, function ($dato) use($el){
