@@ -4,6 +4,7 @@ import { Button, TextField, FormControl, Select, InputLabel, MenuItem } from '@m
 import UpdateIcon from '@mui/icons-material/Update';
 import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import FileOpenIcon from '@mui/icons-material/FileOpen';
 import { Link } from '@inertiajs/react';
 import Swal from 'sweetalert2'
@@ -44,16 +45,58 @@ const columnsGrid = [
           }}
           >
         </Button>*/}
-          {
+          
             <Link href={route('editCliente', cellValues.row.idCliente)}>
               <EditIcon />
             </Link>
-          }
+            <Button
+              className='px-2'
+              variant="text"
+              endIcon={<DeleteIcon />}
+              onClick={(event) => {
+                handleDeleteClient(event, cellValues.row.idCliente);
+              }}
+            >
+            </Button>
+          
         </div>
       );
     }
   }
 ];
+
+const handleDeleteClient = (e, idCliente) => {
+  Swal.fire({
+    title: '¿Está seguro que desea eliminar el cliente?',
+    text: "¡No se podrá revertir los cambios!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, eliminar!',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+
+      axios.get(`/clients/delete/${idCliente}`)
+      .then(res => {
+        Swal.fire(
+          'Deleted!',
+          res.data.message,
+          res.data.type
+        )
+      })
+      .catch(err => {
+        Swal.fire(
+          'Deleted!',
+          err.response.data.message,
+          'error'
+        )
+      })
+      
+    }
+  })
+}
 
 export const ListClientes = () => {
 
@@ -180,7 +223,6 @@ export const ListClientes = () => {
       console.log(err.response)
     })
   }
-
 
   useEffect(() => {
     handlegetClients()

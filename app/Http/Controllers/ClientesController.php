@@ -438,4 +438,35 @@ class ClientesController extends Controller
             'message' => 'No se envio ningun parametro'
         ]);
     }
+
+    public function deleteClient($idClient){
+
+        $countCreditos = DB::table('creditos')->where('cliente_id', $idClient)->count();
+        $countPagos = DB::table('control_pagos')->where('cliente_id', $idClient)->count();
+
+        if($countCreditos <=1){
+
+            if($countPagos >=1){
+                return response()->json([
+                    'message' => 'No es posible eliminar el cliente',
+                    'type' => 'error'
+                ]);
+            }else{
+                $deleteCreditos = DB::table('creditos')->where('cliente_id', $idClient)->delete();
+                $deleteAval = DB::table('avales')->where('cliente_id', $idClient)->delete();
+                $deleteClient = DB::table('clientes')->where('idCliente', $idClient)->delete();
+
+                return response()->json([
+                    'message' => 'Cliente eliminado correctamente',
+                    'type' => 'success'
+                ]);
+            }
+            
+        }
+        
+        return response()->json([
+            'message' => 'No es posible eliminar el cliente',
+            'type' => 'error'
+        ]);
+    }
 }
