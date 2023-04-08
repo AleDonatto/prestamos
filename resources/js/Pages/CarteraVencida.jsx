@@ -77,18 +77,19 @@ const CarteraVencida = (props) => {
         axios.get('cartera-vencida')
             .then((res) => {
                 let resData = res.data.datos
+                console.log("Cartera nueva")
 
                 if (idMunicipio !== null) {
                     resData = resData.filter((dato) => dato.idMunicipio == idMunicipio)
                 }
                 setListPagos(resData)
-                let montoTotalAux = listClientes.reduce((current, carry) => {
+                let montoTotalAux = resData.reduce((current, carry) => {
                     return current += carry.montos;
                 }, 0);
-                let abonosTotalAux = listClientes.reduce((current, carry) => {
+                let abonosTotalAux = resData.reduce((current, carry) => {
                     return current += carry.abonos;
                 }, 0);
-
+                
                 setMontoTotal(montoTotalAux)
                 setAbonosTotal(abonosTotalAux)
             })
@@ -169,7 +170,7 @@ const CarteraVencida = (props) => {
     }
 
     useEffect(() => {
-        getDatos()
+        getDatos(null)
         handlegetMunicipios()
     }, [])
 
