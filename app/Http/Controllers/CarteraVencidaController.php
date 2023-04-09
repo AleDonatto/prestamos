@@ -260,12 +260,12 @@ class CarteraVencidaController extends Controller
                 $cellY++;
         }
         
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header("Content-Disposition: attachment;filename='Cartera vencida de $municipioNombre.xlsx'");
-        header('Cache-Control: max-age=0');
+        // header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        // header("Content-Disposition: attachment;filename='Cartera vencida de $municipioNombre.xlsx'");
+        // header('Cache-Control: max-age=0');
         $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
-        file_put_contents('depuracionverperiodos.txt', ob_get_contents());
-        ob_end_clean(); 
+        // file_put_contents('depuracionverperiodos.txt', ob_get_contents());
+        // ob_end_clean(); 
         
         $writer->save("php://output");
     }

@@ -13,6 +13,7 @@ export const EditFormClient = (props) => {
     const [municipios, setmunicipios] = useState([])
     const [defMunicipio, setdefMunicipio] = useState(null)
     const [grupos, setgrupos] = useState([])
+    const [fechaAltaOriginal, setFechaAltaOriginal] = useState('')
 
     const date = moment().format()
     const [client, setclient] = useState({
@@ -90,6 +91,10 @@ export const EditFormClient = (props) => {
                 showConfirmButton: false,
                 timer: 1500
             })
+            
+            if(fechaAltaOriginal != client.fecha_acreditacion) {
+                generarControlPagos(client.idCliente)
+            }
             setdisableClient(!disableClient)
         })
         .catch(err => {
@@ -100,6 +105,17 @@ export const EditFormClient = (props) => {
                 showConfirmButton: false,
                 timer: 10000
             })
+        })
+    }
+
+    
+    const generarControlPagos = (idCliente) => {
+        axios.get(`/generar-control-pago/${idCliente}`)
+        .then(res => {
+
+        })
+        .catch( err => {
+            console.log(err.response)
         })
     }
 
@@ -151,6 +167,7 @@ export const EditFormClient = (props) => {
     useEffect(() => {
         handlegetGrupos()
         handlegetMunicipios()
+        setFechaAltaOriginal(client.fecha_acreditacion)
     }, [])
     
 
