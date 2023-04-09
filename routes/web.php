@@ -55,6 +55,9 @@ Route::get('/carteraVencida', function () {
     return Inertia::render('CarteraVencida');
 })->middleware(['auth', 'verified'])->name('carteraVencida');
 
+Route::get('/pruebas', function (){
+    return Inertia::render('Pruebas');
+})->middleware(['auth', 'verified'])->name('pruebas');
 
 
 Route::get('/grupos/list', [ClientesController::class, 'listGrupos'])->middleware(['auth', 'verified'])->name('listGrupos');

@@ -9,96 +9,102 @@ import FileOpenIcon from '@mui/icons-material/FileOpen';
 import { Link } from '@inertiajs/react';
 import Swal from 'sweetalert2'
 
-const handleClick = (event, cellValues) => {
-  console.log(cellValues.row);
-};
-  
-const handleCellClick = (param, event) => {
-  event.stopPropagation();
-};
-  
-const handleRowClick = (param, event) => {
-  event.stopPropagation();
-};
-  
-const columnsGrid = [
-  { field: 'nombre', headerName: 'Nombre',  width: 130},
-  { field: 'apellido_paterno', headerName: 'Apellido Paterno', width: 130},
-  { field: 'apellido_materno',headerName: 'Apellido Materno', width: 130},
-  { field: 'curp',headerName: 'CURP', width: 130},
-  //{ field: 'telefono',headerName: 'Telefono', width: 130},
-  { field: 'celular',headerName: 'Celular', width: 130},
-  { field: 'grupo_id',headerName: 'Grupo', width: 130},
-  { field: 'nombreMunicipio',headerName: 'Municipio', width: 130},
-  { field: 'poblado', headerName: 'Colonia', width: 130},
-  {
-    field: "Actions",
-    renderCell: (cellValues) => {
-      return (
-        <div>
-          {/*<Button
-          className='px-2'
-          variant="text"
-          endIcon={<EditIcon />}
-          onClick={(event) => {
-            handleClick(event, cellValues);
-          }}
-          >
-        </Button>*/}
-          
-            <Link href={route('editCliente', cellValues.row.idCliente)}>
-              <EditIcon />
-            </Link>
-            <Button
-              className='px-2'
-              variant="text"
-              endIcon={<DeleteIcon />}
-              onClick={(event) => {
-                handleDeleteClient(event, cellValues.row.idCliente);
-              }}
-            >
-            </Button>
-          
-        </div>
-      );
-    }
-  }
-];
-
-const handleDeleteClient = (e, idCliente) => {
-  Swal.fire({
-    title: '¿Está seguro que desea eliminar el cliente?',
-    text: "¡No se podrá revertir los cambios!",
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Si, eliminar!',
-    cancelButtonText: 'Cancelar'
-  }).then((result) => {
-    if (result.isConfirmed) {
-
-      axios.get(`/clients/delete/${idCliente}`)
-      .then(res => {
-        Swal.fire(
-          'Deleted!',
-          res.data.message,
-          res.data.type
-        )
-      })
-      .catch(err => {
-        Swal.fire(
-          'Deleted!',
-          err.response.data.message,
-          'error'
-        )
-      })
-      
-    }
-  })
-}
 
 export const ListClientes = () => {
+
+  /*table methods */
+  const handleClick = (event, cellValues) => {
+    console.log(cellValues.row);
+  };
+    
+  const handleCellClick = (param, event) => {
+    event.stopPropagation();
+  };
+    
+  const handleRowClick = (param, event) => {
+    event.stopPropagation();
+  };
+    
+  const columnsGrid = [
+    { field: 'nombre', headerName: 'Nombre',  width: 130},
+    { field: 'apellido_paterno', headerName: 'Apellido Paterno', width: 130},
+    { field: 'apellido_materno',headerName: 'Apellido Materno', width: 130},
+    { field: 'curp',headerName: 'CURP', width: 130},
+    //{ field: 'telefono',headerName: 'Telefono', width: 130},
+    { field: 'celular',headerName: 'Celular', width: 130},
+    { field: 'grupo_id',headerName: 'Grupo', width: 130},
+    { field: 'nombreMunicipio',headerName: 'Municipio', width: 130},
+    { field: 'poblado', headerName: 'Colonia', width: 130},
+    {
+      field: "Actions",
+      renderCell: (cellValues) => {
+        return (
+          <div>
+            {/*<Button
+            className='px-2'
+            variant="text"
+            endIcon={<EditIcon />}
+            onClick={(event) => {
+              handleClick(event, cellValues);
+            }}
+            >
+          </Button>*/}
+            
+              <Link href={route('editCliente', cellValues.row.idCliente)}>
+                <EditIcon />
+              </Link>
+              <Button
+                className='px-2'
+                variant="text"
+                endIcon={<DeleteIcon />}
+                onClick={(event) => {
+                  handleDeleteClient(event, cellValues.row.idCliente);
+                }}
+              >
+              </Button>
+            
+          </div>
+        );
+      }
+    }
+  ];
+  
+  const handleDeleteClient = (e, idCliente) => {
+    Swal.fire({
+      title: '¿Está seguro que desea eliminar el cliente?',
+      text: "¡No se podrá revertir los cambios!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, eliminar!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+  
+        axios.get(`/clients/delete/${idCliente}`)
+        .then(res => {
+          Swal.fire(
+            'Deleted!',
+            res.data.message,
+            res.data.type
+          )
+          //console.log(res.data)
+          handlegetClients()
+        })
+        .catch(err => {
+          Swal.fire(
+            'Deleted!',
+            err.response.data.message,
+            'error'
+          )
+          //console.log(err.response)
+        })
+        
+      }
+    })
+  }
+  /*end table methods */
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
