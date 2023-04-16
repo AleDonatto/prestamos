@@ -97,7 +97,7 @@ export const FormClientes = () => {
     const handlelistMunicipios = () => {
         axios.get('/municipios/list')
         .then(res => {
-            console.log(res.data)
+            //console.log(res.data)
             const list = res.data.listMunicipios
             setmunicipios(list)
         })
