@@ -44,6 +44,10 @@ export default function Authenticated({ auth, header, children }) {
                                 <NavLink href={route('carteraVencida')} active={route().current('carteraVencida')}>
                                     Cartera Vencida
                                 </NavLink> 
+                                
+                                <NavLink href={route('pruebas')} active={route().current('pruebas')}>
+                                    Estimas
+                                </NavLink> 
 
                                 <NavLink href={route('viewGrupos')} active={route().current('viewGrupos')}>
                                     Grupos
