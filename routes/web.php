@@ -13,6 +13,7 @@ use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\GruposController;
 use App\Http\Controllers\ControlPagoController;
 use App\Http\Controllers\CarteraVencidaController;
+use App\Http\Controllers\EstimasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,5 +114,12 @@ Route::get('/cartera-vencida', [CarteraVencidaController::class, 'index'])->name
 Route::get('/cartera-vencida-reporte', [CarteraVencidaController::class, 'reporteExcel'])->name('carteraVencidaReporte');
 Route::post('/cartera-vencida-municipio', [CarteraVencidaController::class, 'indexByMunicipio'])->name('carteraVencidaReporteByMunicipio');
 Route::get('/cartera-vencida-reporte-municipio/{idMunicipio}', [CarteraVencidaController::class, 'reporteExcelIdMunicipio'])->name('reporteExcelIdMunicipio');
+
+Route::get('/estimas/edit/{id}/dia/{dia}', [EstimasController::class, 'viewGetEstima'])->middleware(['auth', 'verified'])->name('viewGetEstima');
+Route::post('/estimas', [EstimasController::class, 'getEstimas'])->middleware(['auth', 'verified'])->name('getEstimas');
+Route::post('/estimas-generate', [EstimasController::class, 'generarEstimas'])->middleware(['auth', 'verified'])->name('generarEstimas');
+Route::post('/estimas-guardar', [EstimasController::class, 'guardarResultadoEstimas'])->middleware(['auth', 'verified'])->name('guardarResultadoEstimas');
+Route::post('/estimas-get-dia', [EstimasController::class, 'getEstimasDeSemanaPorDia'])->middleware(['auth', 'verified'])->name('getEstimasDeSemanaPorDia');
+Route::get('/estimas-res-delete/{id}', [EstimasController::class, 'deleteEstimaResultados'])->middleware(['auth', 'verified'])->name('deleteEstimaResultados');
 
 require __DIR__.'/auth.php';
