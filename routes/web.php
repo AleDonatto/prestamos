@@ -121,5 +121,8 @@ Route::post('/estimas-generate', [EstimasController::class, 'generarEstimas'])->
 Route::post('/estimas-guardar', [EstimasController::class, 'guardarResultadoEstimas'])->middleware(['auth', 'verified'])->name('guardarResultadoEstimas');
 Route::post('/estimas-get-dia', [EstimasController::class, 'getEstimasDeSemanaPorDia'])->middleware(['auth', 'verified'])->name('getEstimasDeSemanaPorDia');
 Route::get('/estimas-res-delete/{id}', [EstimasController::class, 'deleteEstimaResultados'])->middleware(['auth', 'verified'])->name('deleteEstimaResultados');
+Route::post('/estimas-semana-pdf', [EstimasController::class, 'generarEstimaPDF'])->middleware(['auth', 'verified'])->name('deleteEstimaResultados');
+Route::post('/estimas-editar', [EstimasController::class, 'editarResultadoEstimas'])->middleware(['auth', 'verified'])->name('guardarResultadoEstimas');
+
 
 require __DIR__.'/auth.php';

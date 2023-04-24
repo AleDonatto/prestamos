@@ -4,6 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SendIcon from '@mui/icons-material/Send';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CancelIcon from '@mui/icons-material/Cancel';
 import axios from 'axios';
 import { usePage } from '@inertiajs/react'
 import Swal from 'sweetalert2'
@@ -47,6 +48,44 @@ export const EstimacionMunicipioEdit = (props) => {
         e.preventDefault()
         setEditarEstimaForm(true)
         setEstimaSeleccionada(registro)
+    }
+
+    const onEditarEstima = (e, estimaSeleccionada) => {
+        e.preventDefault()
+        
+        let montos = (parseInt(estimaSeleccionada.montoPrimerPrestamo) + parseInt(estimaSeleccionada.montoSegundoPrestamo) + parseInt(estimaSeleccionada.montoTercerPrestamo) + parseInt(estimaSeleccionada.montoCuartoPrestamo) + parseInt(estimaSeleccionada.montoQuintoPrestamo) + parseInt(estimaSeleccionada.montoSextoPrestamo) + parseInt(estimaSeleccionada.montoSeptimoPrestamo) + parseInt(estimaSeleccionada.montoOctavoPrestamo) )
+        let abonos = parseInt(estimaSeleccionada.nPrimerPrestamo) + parseInt(estimaSeleccionada.nSegundoPrestamo) + parseInt(estimaSeleccionada.nTercerPrestamo) + parseInt(estimaSeleccionada.nCuartoPrestamo) + parseInt(estimaSeleccionada.nQuintoPrestamo) + parseInt(estimaSeleccionada.nSextoPrestamo) + parseInt(estimaSeleccionada.nSeptimoPrestamo) + parseInt(estimaSeleccionada.nOctavoPrestamo) 
+      
+        axios.post('/estimas-editar', {
+            estima : {
+                ...estimaSeleccionada, 
+                totalMonto: montos,
+                totalAbonos: abonos,
+            },
+            idMunicipio : estimaSeleccionada.idMunicipio,
+            dia : datosEstimas.dia,
+            idEstima : datosEstimas.idEstima
+        })
+        .then((res) => {
+            if(res.data.status) {
+                setNuevaEstimaForm(false)
+                setEditarEstimaForm(false)
+                setEstimaSeleccionada({})
+                getEstimasPorDia()
+            } else {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'danger',
+                    title: res.data.msg,
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            }
+        })  
+        .catch((err) => {
+
+        })
+
     }
     
 
@@ -112,6 +151,14 @@ export const EstimacionMunicipioEdit = (props) => {
         })
     }
 
+    const onCancelarEdit = (e) => {
+        e.preventDefault()
+
+        setNuevaEstimaForm(false)
+        setEditarEstimaForm(false)
+        setEstimaSeleccionada({})
+
+    }
 
     const onGuardar = (e, registro) => {
         e.preventDefault()
@@ -236,6 +283,7 @@ export const EstimacionMunicipioEdit = (props) => {
                 <table className='w-full border-collapse border border-slate-400'>
                     <thead>
                         <tr>
+                            <th className='border border-slate-300'>Horario</th>
                             <th className='border border-slate-300'>Municipio</th>
                             <th className='border border-slate-300'> 150 </th>
                             <th className='border border-slate-300'> $ </th>
@@ -263,6 +311,7 @@ export const EstimacionMunicipioEdit = (props) => {
                     estimasPorDia.map( (estimaPorDia) => {
                         return (
                                 <tr>
+                                    <td className='border border-slate-300'> {estimaPorDia.horario} </td>
                                     <td className='border border-slate-300'> {estimaPorDia.nombre_municipio} </td>
                                     <td className='border border-slate-300'> {estimaPorDia.nPrimerPrestamo} </td>
                                     <td className='border border-slate-300'> {estimaPorDia.montoPrimerPrestamo.toLocaleString('en-US', { style: 'currency', currency: 'USD' })} </td>
@@ -292,12 +341,12 @@ export const EstimacionMunicipioEdit = (props) => {
                                     <td className='border border-slate-300'> {estimaPorDia.totalAbonos} </td>
                                   
                                     <td className='border border-slate-300'> 
-                                        {/* <Tooltip title="Editar" placement="top-start">
+                                        <Tooltip title="Editar" placement="top-start">
                                             <IconButton aria-label="edit" onClick={(e) => {onEditar(e, estimaPorDia)}}>
                                                 <EditIcon />
                                             </IconButton>
                                         </Tooltip>
-                                         */}
+                                        
                                         <Tooltip title="Eliminar" placement="top-start">
                                             <IconButton aria-label="delete" onClick={(e) => {onEliminar(e, estimaPorDia)}}>
                                                 <DeleteIcon />
@@ -320,7 +369,21 @@ export const EstimacionMunicipioEdit = (props) => {
                 ?
                 <div className='m-5'>
                     
-                    <Button className='mb-5' type='button' variant="contained" size="small" onClick={(e) => {onGuardar(e, estimaSeleccionada)}} startIcon={<SendIcon />}>Guardar estimas</Button>
+                    <Button className='mb-5' type='button' variant="contained" size="small" onClick={(e) => {onEditarEstima(e, estimaSeleccionada)}} startIcon={<SendIcon />}>
+                        Guardar modificacion
+                    </Button>
+
+                    
+                    <Button 
+                        className='mb-5' 
+                        type='button' 
+                        variant="contained" 
+                        size="small" 
+                        onClick={(e) => {onCancelarEdit(e)}} 
+                        startIcon={<CancelIcon />}
+                    >
+                        Cancelar
+                    </Button>
                     <table className='w-full border-collapse border border-slate-400 mt-3'>
                         <thead>
                             <tr>
@@ -348,7 +411,7 @@ export const EstimacionMunicipioEdit = (props) => {
         
                         <tbody>
                             <tr>
-                                <td className='border border-slate-300'> {estimaSeleccionada.nombreMunicipio} </td>
+                                <td className='border border-slate-300'> {estimaSeleccionada.nombre_municipio} </td>
 
                                 <td className='border border-slate-300'>
                                     <TextField
@@ -466,6 +529,17 @@ export const EstimacionMunicipioEdit = (props) => {
                 <div className='m-5'>
                     
                     <Button className='mb-5' type='button' variant="contained" size="small" onClick={(e) => {onGuardar(e, estimaSeleccionada)}} startIcon={<SendIcon />}>Guardar estimas</Button>
+                    
+                    <Button 
+                        className='mb-5' 
+                        type='button' 
+                        variant="contained" 
+                        size="small" 
+                        onClick={(e) => {onCancelarEdit(e)}} 
+                        startIcon={<CancelIcon />}
+                    >
+                        Cancelar
+                    </Button>
                     <Autocomplete
                         style={{width : '25%', marginTop: "12px" }}
                         options={minicipios}
@@ -473,6 +547,16 @@ export const EstimacionMunicipioEdit = (props) => {
                         onChange={(e, item) => { onSetMunicipioSeleccionado(e, item ) }}
                         renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio' />}
                     />
+
+                    <TextField
+                        label="Horario"
+                        type="time"
+                        value={estimaSeleccionada.horario}
+                        format="HH:mm"
+                        name="horario"
+                        style={{width : '25%', marginTop: "12px" }}
+                        onChange={handleChange}
+                    ></TextField>
                     
                     <table className='w-full border-collapse border border-slate-400 mt-3'>
                         <thead>
