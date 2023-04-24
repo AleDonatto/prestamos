@@ -143,9 +143,43 @@ export const FormEstima = () => {
         });
     }
 
+    const getEstimasPDF = (fechaInicio, fechaFin) => {
+        axios.post('/estimas-semana-pdf', {idEstima : idEstimaSeleccionada}, { 
+            headers: { 'Content-Type': 'multipart/form-data' },
+            'responseType': 'blob' 
+          })
+          .then(res => {
+            const url = window.URL.createObjectURL(new Blob([res.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'reporteEstimas.pdf');
+            document.body.appendChild(link);
+            link.click();
+          })
+          .catch( err => {
+            console.log(err.response)
+          })
+    }
+
     const fechasDeSemana = () => {
-        let inicio = '2023-04-10';
-        let fin = '2023-04-14';
+        let currentDate = new Date();
+        
+        //Funcionalidad para obtener el numero de semana actual
+        Date.prototype.getWeek = function() {
+            let firstDayOfYear = new Date(this.getFullYear(), 0, 1);
+            let pastDaysOfYear = (this - firstDayOfYear) / 86400000;
+            return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        };
+        let currentWeek = currentDate.getWeek() - 1;
+        
+        //Fecha del lunes de la semana obtenida
+        let firstDayOfWeek = new Date(currentDate.getFullYear(), 0, (currentWeek - 1) * 7 + 2);
+        //Fecha del viernes de la semana obtenida
+        let lastDayOfWeek = new Date(currentDate.getFullYear(), 0, (currentWeek - 1) * 7 + 6);
+        
+        // formato de Date a YYYY-MM-DD
+        let inicio = firstDayOfWeek.toISOString().slice(0, 10);
+        let fin = lastDayOfWeek.toISOString().slice(0, 10);
 
         setFechaInicio(inicio);
         setFechaFin(fin);
@@ -188,7 +222,7 @@ export const FormEstima = () => {
             <div className='mt-10 grid lg:grid-cols-2 sm:grid-cols-1 gap-4'>
                 <div>
                     <p className='text-base md:text-lg lg:text-xl font-semibold text-gray-600 mb-4'>Crear Estima</p>
-                    <div className='grid grid-cols-3 gap-4'>
+                    <div className='grid grid-cols-4 gap-4'>
                         <div>
                             <label htmlFor="">Fecha de Incio</label>
                             <TextField label="" name='grupoText' type='date' value={fechaInicio} onChange={(val) => {setFechaInicio(val.target.value)}} className="outline-0 focus:border-0"></TextField>
@@ -199,6 +233,9 @@ export const FormEstima = () => {
                         </div>
                         <div className='ml-5 pt-5' >
                             <Button variant="outlined" type='submit' onClick={() => {getEstimas(fechaInicio, fechaFin)}} >Consultar Estima</Button>
+                        </div>
+                        <div className='ml-5 pt-5' >
+                            <Button variant="outlined" type='submit' onClick={() => {getEstimasPDF(fechaInicio, fechaFin)}} >Descargar reporte</Button>
                         </div>
                     </div>
                 </div>
