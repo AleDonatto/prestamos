@@ -81,24 +81,45 @@ export const ListClientes = () => {
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
-  
-        axios.get(`/clients/delete/${idCliente}`)
-        .then(res => {
-          Swal.fire(
-            'Deleted!',
-            res.data.message,
-            res.data.type
-          )
-          //console.log(res.data)
-          handlegetClients()
-        })
-        .catch(err => {
-          Swal.fire(
-            'Deleted!',
-            err.response.data.message,
-            'error'
-          )
-          //console.log(err.response)
+
+        Swal.fire({
+          title: 'Ingrese codigo ded confirmacion',
+          input: 'text',
+          inputAttributes: {
+            autocapitalize: 'off'
+          },
+          showCancelButton: true,
+          confirmButtonText: 'Confirmar',
+          showLoaderOnConfirm: true,
+          preConfirm: (input) => {
+            if(input === '1407') {
+              axios.get(`/clients/delete/${idCliente}`)
+              .then(res => {
+                //console.log(res)
+                Swal.fire(
+                  'Deleted!',
+                  res.data.message,
+                  res.data.type
+                )
+                handlegetClients()
+              })
+              .catch(err => {
+                Swal.fire(
+                  'Deleted!',
+                  err.resopnse.data.message,
+                  'error'
+                )
+                //console.log(err.response)
+              })
+            }else{
+              Swal.fire(
+                'Codigo!',
+                'Codigo incorrecto',
+                'error'
+              )
+            }
+          },
+          allowOutsideClick: () => !Swal.isLoading()
         })
         
       }
@@ -180,7 +201,7 @@ export const ListClientes = () => {
   const handlegetMunicipios = async () => {
     axios.get('/municipios/list')
     .then(res => {
-      console.log(res.data)
+      //console.log(res.data)
       const dataMunicipios = res.data.listMunicipios 
       setminicipios(dataMunicipios)
     })
@@ -206,7 +227,7 @@ export const ListClientes = () => {
     }else{
       axios.post('/clientes/params', data)
       .then(res => {
-        console.log(res.data)
+        //console.log(res.data)
         setlistClientes(res.data.listClients)
       })
       .catch(err => {
