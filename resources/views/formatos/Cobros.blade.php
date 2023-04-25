@@ -10,6 +10,18 @@
 </head>
 <body>
     <style>
+    .cajaExt{
+        position: relative;
+    }/* center class for add style in div */
+    .cajaFirma{
+        width:250px;
+        position: absolute;
+        top: 10%; 
+        left: 11%;
+        transform: translate(-50%, -50%);
+        margin-top: 10px; 
+        border-top:solid black 1px;
+    }
     @page {
 		margin-left: 0.5cm;
 		margin-right: 0;
@@ -217,6 +229,13 @@
                 <div class="page_break"></div>
             @endif
             @endforeach
+
+            <div class="cajaExt">
+                <div class="cajaFirma">
+                    <p style="text-align: center;">C. Carlos Barrera Arroyo</p>
+                </div>
+            </div>
+
         </div>
     </main>
     
