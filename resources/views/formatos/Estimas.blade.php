@@ -9,6 +9,9 @@
 </head>
 <body>
     <style>
+    .invisiblexd {
+        border:white solid 1px;
+    }
     .cajaExt{
         position: relative;
     }/* center class for add style in div */
@@ -762,6 +765,46 @@
                     </tr>
                     @endif
 
+                </tbody>
+            </table>
+        </div>
+
+
+
+        <!-- totalSemana -->
+        <div class="" style="margin-bottom: 10px; margin-left:172px;">
+            <table >
+                <tbody>
+                    <tr>
+                        <!-- <td class="invisiblexd" style="height: 12px; width: 25px;"></td>
+                        <td class=" invisiblexd" style="height: 12px; width: 50px;"></td> -->
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->nPrimerPrestamo}} </td>
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->montoPrimerPrestamo}} </td>
+                        
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->nSegundoPrestamo}} </td>
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->montoSegundoPrestamo}} </td>
+                        
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->nTercerPrestamo}} </td>
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->montoTercerPrestamo}} </td>
+                        
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->nCuartoPrestamo}} </td>
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->montoCuartoPrestamo}} </td>
+                        
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->nQuintoPrestamo}} </td>
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->montoQuintoPrestamo}} </td>
+                        
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->nSextoPrestamo}} </td>
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->montoSextoPrestamo}} </td>
+                        
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->nSeptimoPrestamo}} </td>
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->montoSeptimoPrestamo}} </td>
+                        
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->nOctavoPrestamo}} </td>
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->montoOctavoPrestamo}} </td>
+                        
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->totalMonto}} </td>
+                        <td class="font-size-9 px-1 text-center" style="height: 12px; width: 10px;"> {{$totales['totalSemana']->totalAbonos}} </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

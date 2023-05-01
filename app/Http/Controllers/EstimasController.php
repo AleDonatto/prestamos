@@ -31,7 +31,7 @@ class EstimasController extends Controller
     public function viewGetEstima($id, $dia) {
         $estimaData = array(
             'idEstima' => $id,
-                'dia' => $dia
+                'diaSemana' => $dia
         );
         return Inertia::render('EstimacionMunicipioPorDia', [
             'datosEstimas' => $estimaData            
@@ -87,11 +87,11 @@ class EstimasController extends Controller
     }
 
     public function getEstimasDeSemana($idEstimas) {
-        $datosLunes = EstimasResultados::where('idEstimaSemana', $idEstimas)->where('dia', 'lunes')->orderBy("horario", "asc")->get();
-        $datosMartes = EstimasResultados::where('idEstimaSemana', $idEstimas)->where('dia', 'martes')->orderBy("horario", "asc")->get();
-        $datosMiercoles = EstimasResultados::where('idEstimaSemana', $idEstimas)->where('dia', 'miercoles')->orderBy("horario", "asc")->get();
-        $datosJueves = EstimasResultados::where('idEstimaSemana', $idEstimas)->where('dia', 'jueves')->orderBy("horario", "asc")->get();
-        $datosViernes = EstimasResultados::where('idEstimaSemana', $idEstimas)->where('dia', 'viernes')->orderBy("horario", "asc")->get();
+        $datosLunes = EstimasResultados::where('idEstimaSemana', $idEstimas)->where('diaSemana', 'lunes')->orderBy("horario", "asc")->get();
+        $datosMartes = EstimasResultados::where('idEstimaSemana', $idEstimas)->where('diaSemana', 'martes')->orderBy("horario", "asc")->get();
+        $datosMiercoles = EstimasResultados::where('idEstimaSemana', $idEstimas)->where('diaSemana', 'miercoles')->orderBy("horario", "asc")->get();
+        $datosJueves = EstimasResultados::where('idEstimaSemana', $idEstimas)->where('diaSemana', 'jueves')->orderBy("horario", "asc")->get();
+        $datosViernes = EstimasResultados::where('idEstimaSemana', $idEstimas)->where('diaSemana', 'viernes')->orderBy("horario", "asc")->get();
 
         return [
             'lunes' => $datosLunes,
@@ -123,7 +123,7 @@ class EstimasController extends Controller
             DB::raw("sum(totalMonto) as totalMonto"),
             DB::raw("sum(totalAbonos) as totalAbonos"),
         ])
-        ->where('idEstimaSemana', $idEstimas)->where('dia', 'lunes')->orderBy("horario", "asc")->get();
+        ->where('idEstimaSemana', $idEstimas)->where('diaSemana', 'lunes')->orderBy("horario", "asc")->get();
         $datosMartes = DB::table('estimas_resultados')->select([
             DB::raw("sum(nPrimerPrestamo) as nPrimerPrestamo"),
             DB::raw("sum(montoPrimerPrestamo) as montoPrimerPrestamo"),
@@ -144,7 +144,7 @@ class EstimasController extends Controller
             DB::raw("sum(totalMonto) as totalMonto"),
             DB::raw("sum(totalAbonos) as totalAbonos"),
         ])
-        ->where('idEstimaSemana', $idEstimas)->where('dia', 'martes')->orderBy("horario", "asc")->get();
+        ->where('idEstimaSemana', $idEstimas)->where('diaSemana', 'martes')->orderBy("horario", "asc")->get();
         $datosMiercoles = DB::table('estimas_resultados')->select([
             DB::raw("sum(nPrimerPrestamo) as nPrimerPrestamo"),
             DB::raw("sum(montoPrimerPrestamo) as montoPrimerPrestamo"),
@@ -165,7 +165,7 @@ class EstimasController extends Controller
             DB::raw("sum(totalMonto) as totalMonto"),
             DB::raw("sum(totalAbonos) as totalAbonos"),
         ])
-        ->where('idEstimaSemana', $idEstimas)->where('dia', 'miercoles')->orderBy("horario", "asc")->get();
+        ->where('idEstimaSemana', $idEstimas)->where('diaSemana', 'miercoles')->orderBy("horario", "asc")->get();
         $datosJueves = DB::table('estimas_resultados')->select([
             DB::raw("sum(nPrimerPrestamo) as nPrimerPrestamo"),
             DB::raw("sum(montoPrimerPrestamo) as montoPrimerPrestamo"),
@@ -186,7 +186,7 @@ class EstimasController extends Controller
             DB::raw("sum(totalMonto) as totalMonto"),
             DB::raw("sum(totalAbonos) as totalAbonos"),
         ])
-        ->where('idEstimaSemana', $idEstimas)->where('dia', 'jueves')->orderBy("horario", "asc")->get();
+        ->where('idEstimaSemana', $idEstimas)->where('diaSemana', 'jueves')->orderBy("horario", "asc")->get();
         $datosViernes = DB::table('estimas_resultados')->select([
             DB::raw("sum(nPrimerPrestamo) as nPrimerPrestamo"),
             DB::raw("sum(montoPrimerPrestamo) as montoPrimerPrestamo"),
@@ -207,7 +207,29 @@ class EstimasController extends Controller
             DB::raw("sum(totalMonto) as totalMonto"),
             DB::raw("sum(totalAbonos) as totalAbonos"),
         ])
-        ->where('idEstimaSemana', $idEstimas)->where('dia', 'viernes')->orderBy("horario", "asc")->get();
+        ->where('idEstimaSemana', $idEstimas)->where('diaSemana', 'viernes')->orderBy("horario", "asc")->get();
+
+        $datosSemana = DB::table('estimas_resultados')->select([
+            DB::raw("sum(nPrimerPrestamo) as nPrimerPrestamo"),
+            DB::raw("sum(montoPrimerPrestamo) as montoPrimerPrestamo"),
+            DB::raw("sum(nSegundoPrestamo) as nSegundoPrestamo"),
+            DB::raw("sum(montoSegundoPrestamo) as montoSegundoPrestamo"),
+            DB::raw("sum(nTercerPrestamo) as nTercerPrestamo"),
+            DB::raw("sum(montoTercerPrestamo) as montoTercerPrestamo"),
+            DB::raw("sum(nCuartoPrestamo) as nCuartoPrestamo"),
+            DB::raw("sum(montoCuartoPrestamo) as montoCuartoPrestamo"),
+            DB::raw("sum(nQuintoPrestamo) as nQuintoPrestamo"),
+            DB::raw("sum(montoQuintoPrestamo) as montoQuintoPrestamo"),
+            DB::raw("sum(nSextoPrestamo) as nSextoPrestamo"),
+            DB::raw("sum(montoSextoPrestamo) as montoSextoPrestamo"),
+            DB::raw("sum(nSeptimoPrestamo) as nSeptimoPrestamo"),
+            DB::raw("sum(montoSeptimoPrestamo) as montoSeptimoPrestamo"),
+            DB::raw("sum(nOctavoPrestamo) as nOctavoPrestamo"),
+            DB::raw("sum(montoOctavoPrestamo) as montoOctavoPrestamo"),
+            DB::raw("sum(totalMonto) as totalMonto"),
+            DB::raw("sum(totalAbonos) as totalAbonos"),
+        ])
+        ->where('idEstimaSemana', $idEstimas)->orderBy("horario", "asc")->get();
 
         return [
             'lunes' => $datosLunes[0],
@@ -215,13 +237,14 @@ class EstimasController extends Controller
             'miercoles' => $datosMiercoles[0],
             'jueves' => $datosJueves[0],
             'viernes' => $datosViernes[0],
+            'totalSemana' => $datosSemana[0]
         ];
     }
 
     public function getEstimasDeSemanaPorDia( Request $request ) {
         $idEstima = $request->idEstima;
-        $dia = $request->dia;
-        $datos = EstimasResultados::where('idEstimaSemana', $idEstima)->orderBy("horario", "asc")->where('dia', $dia)->get();
+        $dia = strtolower($request->dia);
+        $datos = EstimasResultados::where('idEstimaSemana', $idEstima)->orderBy("horario", "asc")->where('diaSemana', $dia)->get();
 
         return [
             'datos' => $datos,
@@ -239,7 +262,7 @@ class EstimasController extends Controller
 
         if ($exists->count() == 0) {
             $estima = new EstimasResultados();
-            $estima->dia = $request->dia;
+            $estima->diaSemana = strtolower($request->dia);
             $estima->idEstimaSemana = $request->idEstima;
             $estima->horario = isset($request->estima['horario']) ? $request->estima['horario'] : '';
             $estima->idMunicipio = $request->idMunicipio;
@@ -283,7 +306,7 @@ class EstimasController extends Controller
         $estima = EstimasResultados::find($estimaRecord['id']);
         
         if ($estima->count() > 0) {
-            $estima->dia = $request->dia;
+            $estima->diaSemana = strtolower($request->dia);
             $estima->idEstimaSemana = $request->idEstima;
             $estima->horario = isset($estimaRecord['horario']) ? $estimaRecord['horario'] : '';
             $estima->idMunicipio = $estimaRecord['idMunicipio'];
