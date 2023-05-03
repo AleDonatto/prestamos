@@ -33,9 +33,11 @@ export const EstimacionMunicipioEdit = (props) => {
     }
 
     const getEstimasPorDia = () => {
+        // console.log(datosEstimas)
+        // console.log(datosEstimas)
         
         axios.post('/estimas-get-dia', {
-            dia : datosEstimas.dia,
+            dia : datosEstimas.diaSemana,
             idEstima : datosEstimas.idEstima
         }).then((res) => {
             setEstimasPorDia(res.data.datos)
@@ -63,7 +65,7 @@ export const EstimacionMunicipioEdit = (props) => {
                 totalAbonos: abonos,
             },
             idMunicipio : estimaSeleccionada.idMunicipio,
-            dia : datosEstimas.dia,
+            dia : datosEstimas.diaSemana,
             idEstima : datosEstimas.idEstima
         })
         .then((res) => {
@@ -163,7 +165,7 @@ export const EstimacionMunicipioEdit = (props) => {
     const onGuardar = (e, registro) => {
         e.preventDefault()
         
-        console.log(datosEstimas)
+        // console.log(datosEstimas)
         let montos = (parseInt(estimaSeleccionada.montoPrimerPrestamo) + parseInt(estimaSeleccionada.montoSegundoPrestamo) + parseInt(estimaSeleccionada.montoTercerPrestamo) + parseInt(estimaSeleccionada.montoCuartoPrestamo) + parseInt(estimaSeleccionada.montoQuintoPrestamo) + parseInt(estimaSeleccionada.montoSextoPrestamo) + parseInt(estimaSeleccionada.montoSeptimoPrestamo) + parseInt(estimaSeleccionada.montoOctavoPrestamo) )
         let abonos = parseInt(estimaSeleccionada.nPrimerPrestamo) + parseInt(estimaSeleccionada.nSegundoPrestamo) + parseInt(estimaSeleccionada.nTercerPrestamo) + parseInt(estimaSeleccionada.nCuartoPrestamo) + parseInt(estimaSeleccionada.nQuintoPrestamo) + parseInt(estimaSeleccionada.nSextoPrestamo) + parseInt(estimaSeleccionada.nSeptimoPrestamo) + parseInt(estimaSeleccionada.nOctavoPrestamo) 
         axios.post('/estimas-guardar', {
@@ -173,7 +175,7 @@ export const EstimacionMunicipioEdit = (props) => {
                 totalAbonos: abonos,
             },
             idMunicipio : municipioSeleccionado.idMunicipio,
-            dia : datosEstimas.dia,
+            dia : datosEstimas.diaSemana,
             idEstima : datosEstimas.idEstima
         })
         .then((res) => {
@@ -230,10 +232,10 @@ export const EstimacionMunicipioEdit = (props) => {
 
     const  onSetMunicipioSeleccionado = (e, item ) => {
         e.preventDefault()
-        console.log('item')
-        console.log(item)
+        // console.log('item')
+        // console.log(item)
         setMunicipioSeleccionado(item)
-        console.log(municipioSeleccionado)
+        // console.log(municipioSeleccionado)
     }
 
     const calculateMonto = (nameProp, nValue) => {
@@ -267,13 +269,13 @@ export const EstimacionMunicipioEdit = (props) => {
 
     return (
         <div>
-            <h3 className='text-xl mb-5'>Estimas del dia {datosEstimas.dia} de la semana  </h3> 
+            <h3 className='text-xl mb-5'>Estimas del dia {datosEstimas.diaSemana} de la semana  </h3> 
             <Button startIcon={<ArrowBackIcon />} className='mb-5' type='button' variant="contained"  href={route('pruebas')} >Regresar</Button>
             <div className='w-full border-solid border-2 p-5 rounded-md mt-5'>
                 <div className='mt-5 flex flex-row mt-5'>
                     <div className='basis-3/4'>
                         <h2 className='font-black text-xl'>
-                            {datosEstimas.dia}
+                            {datosEstimas.diaSemana}
                         </h2>
                     </div>
                     <div className='basis-1/4 p-1 grid justify-items-end'>
