@@ -137,7 +137,8 @@ class FormatosController extends Controller
                 'avales.calle as calle_aval',
                 'avales.garantias as garantias_aval',
                 'avales.celular as telefono_aval',
-                'avales.referencias as referencias_aval'
+                'avales.referencias as referencias_aval',
+                'creditos.plazos as plazos'
             )
             ->whereRaw('clientes.id_anterior is null')
             ->orderBy('clientes.created_at')
