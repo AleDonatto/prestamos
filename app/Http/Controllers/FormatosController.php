@@ -28,7 +28,8 @@ class FormatosController extends Controller
                 'avales.calle as calle_aval',
                 'avales.garantias as garantias_aval',
                 'avales.celular as telefono_aval',
-                'avales.referencias as referencias_aval'
+                'avales.referencias as referencias_aval',
+                'creditos.plazos as plazos'
             )
             //->select('avles.*', 'municipios.nombreMunicipio')
             ->where('grupos.idGrupo', $request->grupo)
@@ -64,7 +65,8 @@ class FormatosController extends Controller
                 'avales.calle as calle_aval',
                 'avales.garantias as garantias_aval',
                 'avales.celular as telefono_aval',
-                'avales.referencias as referencias_aval'
+                'avales.referencias as referencias_aval',
+                'creditos.plazos as plazos'
             )
             ->where('municipios.idMunicipio', $request->municipio)
             ->orderBy('clientes.created_at')
@@ -99,7 +101,8 @@ class FormatosController extends Controller
                 'avales.calle as calle_aval',
                 'avales.garantias as garantias_aval',
                 'avales.celular as telefono_aval',
-                'avales.referencias as referencias_aval'
+                'avales.referencias as referencias_aval',
+                'creditos.plazos as plazos'
             )
             ->where('grupos.idGrupo', $request->grupo)
             ->where('municipios.idMunicipio', $request->municipio)
