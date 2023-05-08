@@ -90,7 +90,7 @@ export const FormClientesRenovacion = (props) => {
         axios.get(`/grupos-show/${client.nombreGrupo}`)
         .then( res => {
             
-            if(!res.data.exist){
+            if(true){
                 client.plazos         = plazos
                 client.monto          = prestamo
                 client.pagosFaltantes = pagosFaltantes
@@ -275,7 +275,7 @@ export const FormClientesRenovacion = (props) => {
                                 </div>
                                 <div className="w-full px-3 sm:w-1/3">
                                     <TextField id='' label="Celular" name='celular' className='w-full' InputLabelProps={{shrink: true,}}
-                                    disabled={disableClient} value={client.celular} onChange={handleChangeCliente}></TextField>
+                                    value={client.celular} onChange={handleChangeCliente}></TextField>
                                 </div>
                             </div>
 

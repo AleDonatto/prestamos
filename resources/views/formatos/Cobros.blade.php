@@ -202,16 +202,24 @@
                                 <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 70 days"));}}</p>
                             </td>
                             <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                @if($client->plazos == 14)
                                 <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 77 days"));}}</p>
+                                @endif
                             </td>
                             <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                @if($client->plazos == 14)
                                 <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 84 days"));}}</p>
+                                @endif
                             </td>
                             <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                @if($client->plazos == 14)
                                 <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 91 days"));}}</p>
+                                @endif
                             </td>
                             <td class="font-size-9 px-3" style="height: 145px; max-width: 18px;">
+                                @if($client->plazos == 14)
                                 <p class="vertical-text width-fecha">{{date("Y-m-d",strtotime($client->diaAlta."+ 98 days"));}}</p>
+                                @endif
                             </td>
                         </tr>
                         @endforeach

@@ -13,7 +13,7 @@ use Inertia\Inertia;
 
 class ClientesController extends Controller
 {
-    
+
     public function listGrupos(){
         $listGrupos = DB::table('grupos')
         ->select('grupos.*')
@@ -25,16 +25,18 @@ class ClientesController extends Controller
         ]);
     }
 
-    public function showGrupo($nombre){
+    public function showGrupo($nombre)
+    {
         $listGrupos = DB::table('grupos')
         ->select('grupos.*')
         ->orderBy('grupos.created_at')
-        ->where('grupos.nombreGrupo', $nombre)
+        ->where('grupos.idGrupo', $nombre)
         ->get();
+
 
         return response()->json([
             'grupo' => $listGrupos,
-            'exist' => count($listGrupos) > 0 
+            'exist' => count($listGrupos) > 0
         ]);
     }
 
@@ -50,24 +52,23 @@ class ClientesController extends Controller
             $avalRequest    = $request->aval;
             $grupoSeleccionado = Grupo::where('idGrupo', $request->grupoNuevo)->get();
 
+            $idGrupo = null;
             if(count($grupoSeleccionado) > 0){
-                return response()->json([
-                    'status' => false,
-                    'msg' => 'Error: el grupo ya existe',
-                ]);
+                $idGrupo = $grupoSeleccionado[0]->idGrupo;
+            } else {
+                $grupo = new Grupo();
+                $grupo->idGrupo = $request->grupoNuevo;
+                $grupo->nombreGrupo = $request->grupoNuevo;
+                $grupo->save();
+                $idGrupo = $grupo->idGrupo;
             }
-            
-            $grupo = new Grupo();
-            $grupo->idGrupo = $request->grupoNuevo;
-            $grupo->nombreGrupo = $request->grupoNuevo;
-            $grupo->save();  
 
             $cliente = new Cliente();
             $cliente->nombre = $clienteRequest['nombre'];
             $cliente->apellido_paterno = $clienteRequest['apellido_paterno'];
             $cliente->apellido_materno = $clienteRequest['apellido_materno'];
             $cliente->curp = $clienteRequest['curp'];
-            $cliente->telefono = 's/n'; 
+            $cliente->telefono = 's/n';
             $cliente->celular = $clienteRequest['celular'];
             $cliente->estado = $clienteRequest['estado'];
             $cliente->municipio_id = $clienteRequest['municipio_id'];
@@ -76,9 +77,9 @@ class ClientesController extends Controller
             $cliente->referencias = $clienteRequest['referencias'];
             $cliente->garantias = isset($clienteRequest['garantia']) ? $clienteRequest['garantia'] : '';
             $cliente->diaAlta = $clienteRequest['diaAlta'];
-            $cliente->grupo_id = $grupo->idGrupo;
+            $cliente->grupo_id = $idGrupo;
             $cliente->save();
-    
+
             $aval = new Aval();
             $aval->nombre = $avalRequest['nombre'];
             $aval->apellido_paterno = $avalRequest['apellido_paterno'];
@@ -94,7 +95,7 @@ class ClientesController extends Controller
             $aval->garantias = isset($avalRequest['garantia']) ? $avalRequest['garantia'] : '';
             $aval->cliente_id = $cliente->idCliente;
             $aval->save();
-            
+
             Cliente::where('idCliente', $clienteRequest['idCliente'])
                    ->update(['id_anterior' => $cliente->idCliente]);
 
@@ -112,13 +113,13 @@ class ClientesController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json([
+            $response = [
                 'status' => false,
                 'msg' => 'Error inesperado ' . $e->getMessage(),
-            ]);
+            ];
         }
-            
-        
+
+
         return response()->json($response);
     }
 
@@ -198,7 +199,7 @@ class ClientesController extends Controller
             $cliente->apellido_paterno = $request->apellido_paterno;
             $cliente->apellido_materno = $request->apellido_materno;
             $cliente->curp = $request->curp;
-            $cliente->telefono = 's/n'; 
+            $cliente->telefono = 's/n';
             $cliente->celular = $request->celular;
             $cliente->estado = $request->estado;
             $cliente->municipio_id = $request->municipio;
@@ -206,7 +207,7 @@ class ClientesController extends Controller
             $cliente->calle = $request->calle;
             $cliente->referencias = $request->referencias;
             $cliente->garantias = $request->garantia;
-            //$cliente->plazos = $request->plazos; 
+            //$cliente->plazos = $request->plazos;
             //$cliente->monto = $request->monto;
             $cliente->diaAlta = $request->fecha_acreditacion;
             $cliente->grupo_id = $request->grupo;
@@ -278,7 +279,7 @@ class ClientesController extends Controller
 
         $aval = DB::table('avales')
         ->select([
-            'avales.*', 
+            'avales.*',
             'avales.garantias as garantia',
         ])
         ->where('avales.cliente_id', $idCliente)
@@ -290,7 +291,7 @@ class ClientesController extends Controller
         ]);
     }
 
-    
+
     public function viewEditCliente($idCliente){
         $client = DB::table('clientes')
         ->select('clientes.*')
@@ -323,7 +324,7 @@ class ClientesController extends Controller
             'municipio' => 'required|integer',
             'poblado' => 'required|string',
             'calle' => 'required|string',
-            'referencias' => 'required|string', 
+            'referencias' => 'required|string',
             'garantia' => 'required|string',
             'fecha_acreditacion' => 'required|date',
             'grupo' => 'required|integer'
@@ -331,16 +332,16 @@ class ClientesController extends Controller
 
         $cliente = Cliente::where('idCliente', $request->idCliente)
         ->update([
-            'nombre' => $request->nombre, 
+            'nombre' => $request->nombre,
             'apellido_paterno' => $request->apellido_paterno,
             'apellido_materno' => $request->apellido_materno,
             'curp' => $request->curp,
-            'telefono' => $request->telefono, 
+            'telefono' => $request->telefono,
             'celular' => $request->celular,
             'municipio_id' => $request->municipio,
             'poblado' => $request->poblado,
             'calle' => $request->calle,
-            'referencias' => $request->referencias, 
+            'referencias' => $request->referencias,
             'garantias' => $request->garantia,
             'diaAlta' => $request->fecha_acreditacion,
             'grupo_id' => $request->grupo,
@@ -369,16 +370,16 @@ class ClientesController extends Controller
 
         $aval = Aval::where('idAval', $request->idAval)
         ->update([
-            'nombre' => $request->nombre, 
+            'nombre' => $request->nombre,
             'apellido_paterno' => $request->apellido_paterno,
             'apellido_materno' => $request->apellido_materno,
             'curp' => $request->curp,
-            'telefono' => $request->telefono, 
+            'telefono' => $request->telefono,
             'celular' => $request->celular,
             'municipio_id' => $request->municipio,
             'poblado' => $request->poblado,
             'calle' => $request->calle,
-            'referencias' => $request->referencias, 
+            'referencias' => $request->referencias,
             'garantias' => $request->garantia,
         ]);
 
@@ -389,7 +390,7 @@ class ClientesController extends Controller
     }
 
     public function consDynamicClients(Request $request){
-        
+
         if($request->grupo > 0 && $request->municipio === 0){
 
             $listClientes = DB::table('clientes')
@@ -450,7 +451,7 @@ class ClientesController extends Controller
         if($countCreditos <=1){
 
             if($countPagos === 14){
-                
+
                 $deletePagos = DB::table('control_pagos')->where('cliente_id', $idClient)->delete();
                 $deleteCreditos = DB::table('creditos')->where('cliente_id', $idClient)->delete();
                 $deleteAval = DB::table('avales')->where('cliente_id', $idClient)->delete();
@@ -466,9 +467,9 @@ class ClientesController extends Controller
                     'type' => 'error'
                 ]);
             }
-            
+
         }
-        
+
         return response()->json([
             'message' => 'No es posible eliminar el cliente',
             'type' => 'error'
