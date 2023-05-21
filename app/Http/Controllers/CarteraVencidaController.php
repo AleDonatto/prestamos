@@ -70,7 +70,7 @@ class CarteraVencidaController extends Controller
         INNER JOIN clientes cliente on control.cliente_id = cliente.idCliente
         INNER JOIN municipios as municipio on cliente.municipio_id = municipio.idMunicipio
         INNER JOIN grupos grupo on cliente.grupo_id = grupo.idGrupo
-        WHERE fechaPago is null AND fechaSemana < date(now()) $buscarPorMunicipio
+        WHERE fechaPago is null AND cliente.id_anterior is null AND fechaSemana < date(now()) $buscarPorMunicipio 
         group by $sqlAgrupar
         ");
 
@@ -89,7 +89,7 @@ class CarteraVencidaController extends Controller
         FROM control_pagos control 
         INNER JOIN clientes cliente on control.cliente_id = cliente.idCliente
         INNER JOIN municipios as municipio on cliente.municipio_id = municipio.idMunicipio
-        WHERE fechaPago is null AND fechaSemana < date(now()) AND  municipio.idMunicipio =  $idMunicipio
+        WHERE fechaPago is null AND cliente.id_anterior is null AND fechaSemana < date(now()) AND  municipio.idMunicipio =  $idMunicipio
         group by $sqlAgrupar
         ");
 
@@ -121,7 +121,7 @@ class CarteraVencidaController extends Controller
         $datosAgrupadosPorClientes = self::getCarteraVencida('clientes', $grupo, $idMunicipio);
         
         return array_map(function ($el) use ($datosAgrupadosPorClientes) {
-            $clientesPorMunicipio = array_filter($datosAgrupadosPorClientes, function ($dato) use($el){
+            $clientesPorMunicipio = array_filter($datosAgrupadosPorClientes, function ($dato) use ($el){
                 return $dato->idMunicipio == $el->idMunicipio;
             });
             $el->clientes = count($clientesPorMunicipio) > 1 ? $clientesPorMunicipio : [reset($clientesPorMunicipio)];
