@@ -51,6 +51,45 @@ export const EditFormClient = (props) => {
         garantia: cliente.dataAval?.garantias,
     })
 
+    const handlecleanCliente = () => {
+        setclient({
+            idCliente: cliente.dataClient.idCliente,
+            nombre: '',
+            apellido_paterno: '',
+            apellido_materno: '',
+            curp: '',
+            telefono: '',
+            celular: '',
+            estado: 'Guerrero',
+            municipio: cliente.dataClient.municipio_id,
+            poblado: '',
+            calle: '',
+            referencias: '',
+            garantia: '',
+            //fecha_acreditacion: date.toISOString("es-MX", {timeZone: "America/Mexico_City"}).split(',')[0],
+            fecha_acreditacion: cliente.dataClient.diaAlta,
+            grupo: cliente.dataClient.grupo_id
+        })
+    }
+
+    const handleCleanAval = () => {
+        setaval({
+            idAval: cliente.dataAval?.idAval,
+            nombre: '',
+            apellido_paterno: '',
+            apellido_materno: '',
+            curp: '',
+            telefono: '',
+            celular: '',
+            estado: 'Guerrero',
+            municipio: '',
+            poblado: '',
+            calle: '',
+            referencias: '',
+            garantia: '',
+        })
+    }
+
     const handleChangeCliente = (e) => {
         setclient({
             ...client,
@@ -284,6 +323,9 @@ export const EditFormClient = (props) => {
                                     </Button>
                                 </div>
                                 <div className="px-3 ">
+                                    <Button type='button' disabled={disableClient} variant="contained" onClick={handlecleanCliente}>Limpiar Campos</Button>
+                                </div>
+                                <div className="px-3 ">
                                     <Button type='submit' color="success" disabled={disableClient} variant="contained">Guardar Datos Cliente</Button>
                                 </div>
                             </div>
@@ -373,7 +415,12 @@ export const EditFormClient = (props) => {
                         <div className="-mx-3 mt-5 flex">
                             <div className="px-3">
                                 <Button type='button' variant='contained' onClick={() => {setdisableAval(!disableAval)}}>
-                                    { disableClient === true ? 'Editar' : 'Cancelar'}
+                                    { disableAval === true ? 'Editar' : 'Cancelar'}
+                                </Button>
+                            </div>
+                            <div className="px-3">
+                                <Button type='button' variant='contained' disabled={disableAval} onClick={handleCleanAval}>
+                                    Limpiar Campos del Aval
                                 </Button>
                             </div>
                             <div className="px-3">

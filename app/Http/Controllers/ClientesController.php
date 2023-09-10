@@ -42,6 +42,7 @@ class ClientesController extends Controller
 
     public function renovarCliente(Request $request) {
         DB::beginTransaction();
+        
         $response = [
             'status' => false,
             'msg' => 'Error al registrar renovación',
@@ -106,6 +107,7 @@ class ClientesController extends Controller
             $credito->estatus = 'activo';
             $credito->cliente_id = $cliente->idCliente;
             $credito->save();
+
             $response = [
                 'status' => true,
                 'idCliente' => $cliente->idCliente,

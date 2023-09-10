@@ -14,6 +14,7 @@ import Swal from 'sweetalert2'
 export const ListClientesCreditos = (props) => {
   let aux = []
   let aux1 = []
+  let listNumber = [1,2,3,4,5,6,7,8,9,10,11,12,13,14]
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [listClientes, setlistClientes] = useState([])
@@ -466,6 +467,15 @@ export const ListClientesCreditos = (props) => {
                   </b> 
                 </h5>
               </div>
+            </div>
+            <div className='grid grid-cols-14'>
+              {
+                listNumber.map(
+                  (item) => <div className='text-center font-bold text-lg'>
+                    {item}
+                  </div>
+                )
+              }
             </div>
             <div className="grid grid-cols-14 ">
               { listPagos?.map( (pago)  => <div className={setClasesPagos(pago.status_pago)} > <div style={{ left: 'calc(50% - 0.5rem)', lineHeight: '1', paddingTop: '0.5rem', position: 'relative', transform: 'rotate(182deg)', whiteSpace: 'nowrap', writingMode: 'vertical-rl', bottom: '1px !important' }} >{pago.fechaSemanaFormato}</div> { pago.ultimoPago == 1 ? <Link> <DeleteIcon onClick={(e) => {handleOpenModal(e, pago.id)}} /> </Link> : null } </div>) }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Response;
-use InertiaInertia;
+use Inertia;
 use App\Models\AplicacionPagos;
 use PDF;
 class AplicacionPagosController extends Controller
