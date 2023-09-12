@@ -46,6 +46,24 @@ export const FormClientesRenovacion = (props) => {
         })
     }
 
+    const handleCleanInputsAval = () => {
+        setaval({
+            ...aval,
+            apellido_materno: "",
+            apellido_paterno: "",
+            calle: "",
+            celular: "",
+            curp: "",
+            estado: "",
+            garantia: "",
+            garantias: "",
+            nombre: "",
+            poblado: "",
+            referencias: "",
+            telefono: "",
+        })
+    }
+
     const handlegetMunicipios = () => {
         axios.get('/municipios/list')
         .then(res => {
@@ -192,6 +210,7 @@ export const FormClientesRenovacion = (props) => {
             // console.log(res)
             setclient(res.data.cliente)
             setaval(res.data.aval)
+            console.log(res.data.aval)
         })
         .catch(err => {
             console.log(err.response)
@@ -376,9 +395,16 @@ export const FormClientesRenovacion = (props) => {
                 <div className='p-6 text-gray-900'>
                     <form method="post" onSubmit={handleUpdateAval}>
                         <div className="-mx-3 mt-5 flex justify-center">
-                            <Button type='button' variant='contained'  onClick={() => {setdisableAval(!disableAval)}}>
-                                Editar aval
-                            </Button>
+                            <div>
+                                <Button type='button' variant='contained'  onClick={() => {setdisableAval(!disableAval)}}>
+                                    Editar aval
+                                </Button>
+                            </div>
+                            <div className='ml-3'>
+                                <Button type='button' variant='contained' onClick={handleCleanInputsAval}>
+                                    Limpiar Campos Aval
+                                </Button>
+                            </div>
                         </div>
                         <div className='mt-10'>
                             <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Aval</h1>
