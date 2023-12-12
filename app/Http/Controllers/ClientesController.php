@@ -477,4 +477,13 @@ class ClientesController extends Controller
             'type' => 'error'
         ]);
     }
+
+    public function getCreditoCliente($idClient){
+        $clientCredito = DB::table('creditos')->where('cliente_id', $idClient)->first();
+        
+        return response()->json([
+            'credito' => $clientCredito,
+            'type' => 'error'
+        ]);
+    }
 }

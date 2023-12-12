@@ -3,6 +3,7 @@ import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import { Button, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2'
 
 export const FormMunicipios = () => {
@@ -111,6 +112,36 @@ export const FormMunicipios = () => {
         setOpen(true);
     };
 
+    const handleDeleteMunicipio = async (e, item) => {
+        //console.log(item)
+        try {
+            const request = {
+                idMunicipio: item.row.idMunicipio
+            }
+            const {data} = await axios.post('/municipios/delete', request)
+            console.log(data)
+
+            Swal.fire({
+                position: 'top-end',
+                icon: data.status,
+                title: data.message,
+                showConfirmButton: false,
+                timer: 10000
+            })
+            
+        } catch (error) {
+            //console.log(error)
+            Swal.fire({
+                position: 'top-end',
+                icon: 'error',
+                title: 'No es posible eliminar el Municipio',
+                showConfirmButton: false,
+                timer: 20000
+            })
+            //console.log('error delete municipios')
+        }
+    }
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -121,9 +152,10 @@ export const FormMunicipios = () => {
 
     const columnsGrid = [
         { field: 'idMunicipio', headerName: ' #', flex: 0.3},
-        { field: 'nombreMunicipio', headerName: ' Municipio', flex: 1},
+        { field: 'nombreMunicipio', headerName: ' Municipio', flex: 0.7},
         {
             field: "Actions",
+            flex: 0.2,
             renderCell: (cellValues) => {
                 return (
                     <div>
@@ -137,11 +169,18 @@ export const FormMunicipios = () => {
                         >
                         </Button>*/}
                         {
-                        <Button onClick={(e) => {
-                            handleClickOpen(e, cellValues)
-                        }}>
-                            <EditIcon />
-                        </Button>
+                            <Button onClick={(e) => {
+                                handleClickOpen(e, cellValues)
+                            }}>
+                                <EditIcon />
+                            </Button>
+                        }
+                        {
+                            <Button onClick={(e) => {
+                                handleDeleteMunicipio(e, cellValues)
+                            }}>
+                                <DeleteIcon /> 
+                            </Button>
                         }
                     </div>
                 );

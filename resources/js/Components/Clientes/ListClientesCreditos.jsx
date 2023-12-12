@@ -34,6 +34,10 @@ export const ListClientesCreditos = (props) => {
   const [open, setOpen] = useState(false);
   const [idPagoSeleccionado, setIdPagoSeleccionado] = useState(null);
   const [nipValidar, setNipValidar] = useState('');
+  const [totalPago, settotalPago] = useState({
+    pagado: [], 
+    porPagar: []
+  })
   
   const handleOpen = (e, cliente) => {
     
@@ -48,6 +52,15 @@ export const ListClientesCreditos = (props) => {
       setListPagos(res.data.pagos)
       setMostrarApartado('payments')
       props.apartadoActual('payments')
+
+      const total_pagado = res.data.pagos.filter(item => item.status_pago === 'pagado')
+      const total_porPagar = res.data.pagos.filter(item => item.status_pago === 'pendiente')
+
+      settotalPago({
+        pagado: total_pagado,
+        porPagar: total_porPagar
+      })
+      
     })
     .catch( err => {
       console.log(err.response)
@@ -278,6 +291,7 @@ export const ListClientesCreditos = (props) => {
     
     axios.post('/control-pagos-lista', params)
     .then(res => {
+      // console.log(res)
       setlistClientes(res.data.datos)
       setauxClient(res.data.datos)
     })
@@ -466,19 +480,45 @@ export const ListClientesCreditos = (props) => {
                     Cliente: { clienteSeleccionado.nombre + ' ' + clienteSeleccionado.apellido_paterno + ' ' + clienteSeleccionado.apellido_materno } 
                   </b> 
                 </h5>
+                <h5>
+                  <b>Cantidad Total Pagada: $ {totalPago.pagado.reduce( (a,b) => a + b.monto, 0 ) } </b>
+                </h5>
+                <h5>
+                  <b>Cantidad Total por pagar: ${ totalPago.porPagar.reduce( (a,b) => a + b.monto, 0 ) } </b>
+                </h5>
               </div>
             </div>
             <div className='grid grid-cols-14'>
               {
                 listNumber.map(
-                  (item) => <div className='text-center font-bold text-lg'>
+                  (item, index) => <div className='text-center font-bold text-lg' key={index+'NN'}>
                     {item}
                   </div>
                 )
               }
             </div>
+            <div>
+              {/*
+                listPagos?.map( (item, index) => <div key={index+'tt'}>
+                  {item.id},
+                  {item.monto},
+                  {item.semana},
+                  {item.cliente_id},
+                  {item.credito_id},
+                  {item.fechaSemana},
+                  {item.fechaPago},
+                  {item.deleted_at}, 
+                  {item.created_at}, 
+                  {item.updated_at}, 
+                  {item.diaSemana}, 
+                  {item.ultimoPago}, 
+                  {item.fechaSemanaFormato}, 
+                  {item.status_pago}
+                </div> )
+            */}
+            </div>
             <div className="grid grid-cols-14 ">
-              { listPagos?.map( (pago)  => <div className={setClasesPagos(pago.status_pago)} > <div style={{ left: 'calc(50% - 0.5rem)', lineHeight: '1', paddingTop: '0.5rem', position: 'relative', transform: 'rotate(182deg)', whiteSpace: 'nowrap', writingMode: 'vertical-rl', bottom: '1px !important' }} >{pago.fechaSemanaFormato}</div> { pago.ultimoPago == 1 ? <Link> <DeleteIcon onClick={(e) => {handleOpenModal(e, pago.id)}} /> </Link> : null } </div>) }
+              { listPagos?.map( (pago, index)  => <div className={setClasesPagos(pago.status_pago)} key={index+'pp'}> <div style={{ left: 'calc(50% - 0.5rem)', lineHeight: '1', paddingTop: '0.5rem', position: 'relative', transform: 'rotate(182deg)', whiteSpace: 'nowrap', writingMode: 'vertical-rl', bottom: '1px !important' }} >{pago.fechaSemanaFormato}</div> { pago.ultimoPago == 1 ? <Link> <DeleteIcon onClick={(e) => {handleOpenModal(e, pago.id)}} /> </Link> : null } </div>) }
             </div>
             
           </div>

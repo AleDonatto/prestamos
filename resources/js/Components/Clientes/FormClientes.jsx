@@ -7,6 +7,8 @@ import InputLabel from '@mui/material/InputLabel';
 import Swal from 'sweetalert2'
 import moment from 'moment';
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+import AutocompleteJoy from '@mui/joy/Autocomplete';
+
 
 export const FormClientes = () => {
     
@@ -33,7 +35,7 @@ export const FormClientes = () => {
         curp_aval: '',
         telefono_aval: '',
         celular_aval: '',
-        municipio_aval: '',
+        municipio_aval: 0,
         poblado_aval: '',
         calle_aval: '',
         referencias_aval: '',
@@ -45,6 +47,12 @@ export const FormClientes = () => {
     })
     const [municipios, setmunicipios] = useState([])
     const [disableSubmit, setdisableSubmit] = useState(false)
+
+    const [value, setValue] = React.useState(municipios[0]);
+    const [inputValue, setInputValue] = React.useState('');
+    
+    const [valueAval, setValueAval] = React.useState(municipios[0]);
+    const [inputValueAval, setInputValueAval] = React.useState('');
 
     const listPlazos = [
         <MenuItem value={10} key={10+1}>{10}</MenuItem>,
@@ -156,10 +164,10 @@ export const FormClientes = () => {
         })
     }
 
-    const handleCreateCliente = (e) => {
+    const handleCreateCliente =  async (e) => {
         e.preventDefault()
         setdisableSubmit(true)
-        axios.post('/clientes/create', cliente)
+        await axios.post('/clientes/create', cliente)
         .then(res => {
             console.log(res.data)
 
@@ -176,6 +184,8 @@ export const FormClientes = () => {
                 console.log(idCliente) 
                 generarControlPagos(idCliente)
                 handleResetValues()
+                setInputValue('')
+                setInputValueAval('')
             }
             setdisableSubmit(false)
         })
@@ -201,7 +211,7 @@ export const FormClientes = () => {
             curp: '',
             telefono: '',
             celular: '',
-            municipio: '',
+            //municipio: '',
             poblado: '',
             calle: '',
             referencias: '',
@@ -213,7 +223,7 @@ export const FormClientes = () => {
             curp_aval: '',
             telefono_aval: '',
             celular_aval: '',
-            municipio_aval: '',
+            //municipio_aval: '',
             poblado_aval: '',
             calle_aval: '',
             referencias_aval: '',
@@ -335,7 +345,21 @@ export const FormClientes = () => {
                             <TextField id="" label="Estado" name='estado' value={'Guerrero'} className="w-full" disabled/>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <Autocomplete
+                            <AutocompleteJoy 
+                                options={municipios}
+                                placeholder="Municipio"
+                                getOptionLabel={option => option.nombreMunicipio || ''}
+                                onChange={(e,item) => { setcliente({
+                                    ...cliente,
+                                    municipio: item.idMunicipio
+                                }) }}
+                                value={value}
+                                inputValue={inputValue}
+                                onInputChange={(event, newInputValue) => {
+                                    setInputValue(newInputValue);
+                                }}
+                            ></AutocompleteJoy>
+                            {/*<Autocomplete
                                 disablePortal
                                 id=""
                                 options={municipios}
@@ -345,7 +369,7 @@ export const FormClientes = () => {
                                     municipio: item.idMunicipio
                                 }) }}
                                 renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio"/>}
-                            />
+                            />*/}
                         </div>
                         <div className='w-full px-3 sm:w-1/3'>
                             <TextValidator id='' label="Colonia" name='poblado' className='w-full' value={cliente.poblado} onChange={handleChange} 
@@ -414,7 +438,20 @@ export const FormClientes = () => {
                             <TextValidator id="" value={cliente.estado} label="Estado" name='estado_aval' className="w-full" disabled onChange={handleChange}/>
                         </div>
                         <div className="w-full px-3 sm:w-1/3">
-                            <Autocomplete
+                            <AutocompleteJoy options={municipios}
+                                placeholder="Municipio"
+                                getOptionLabel={option => option.nombreMunicipio}
+                                onChange={(e,item) => { setcliente({
+                                    ...cliente,
+                                    municipio_aval: item.idMunicipio
+                                }) }}
+                                value={valueAval}
+                                inputValue={inputValueAval}
+                                onInputChange={(event, newInputValue) => {
+                                    setInputValueAval(newInputValue);
+                                }}
+                            ></AutocompleteJoy>
+                            {/*<Autocomplete
                                 disablePortal
                                 id=""
                                 options={municipios}
@@ -424,7 +461,7 @@ export const FormClientes = () => {
                                     municipio_aval: item.idMunicipio
                                 }) }}
                                 renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio_aval' />}
-                            />
+                            />*/}
                         </div>
                         <div className='w-full px-3 sm:w-1/3'>
                             <TextValidator id='' label="Colonia" name='poblado_aval' className='w-full' value={cliente.poblado_aval} onChange={handleChange} 

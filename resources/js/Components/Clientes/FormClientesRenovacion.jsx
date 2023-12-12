@@ -4,6 +4,7 @@ import InputLabel from '@mui/material/InputLabel';
 import Swal from 'sweetalert2'
 import moment from 'moment';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AutocompleteJoy from '@mui/joy/Autocomplete';
 
 export const FormClientesRenovacion = (props) => {
 
@@ -15,6 +16,7 @@ export const FormClientesRenovacion = (props) => {
     const [disableClient, setdisableClient] = useState(true)
     
     const [disableAval, setdisableAval] = useState(true)
+    const [submitForm, setsubmitForm] = useState(false)
     const [municipios, setmunicipios] = useState([])
     const [defMunicipio, setdefMunicipio] = useState(null)
     const [grupos, setgrupos] = useState([])
@@ -24,12 +26,19 @@ export const FormClientesRenovacion = (props) => {
     const [municipio, setmunicipio] = useState('')
     const [pagosFaltantes, setPagosFaltantes] = useState(0)
     const [montoFaltante, setMontoFaltante] = useState(0)
+    const [creditoClient, setcreditoClient] = useState(0)
     
 
     const date = moment().format()
     const [client, setclient] = useState({})
 
     const [aval, setaval] = useState({})
+
+    const [value, setValue] = React.useState(municipios[0]);
+    const [inputValue, setInputValue] = React.useState('');
+    
+    const [valueAval, setValueAval] = React.useState(municipios[0]);
+    const [inputValueAval, setInputValueAval] = React.useState('');
 
     const handleChangeCliente = (e) => {
         // console.log(e.target.name ,' - ', e.target.value)
@@ -54,7 +63,6 @@ export const FormClientesRenovacion = (props) => {
             calle: "",
             celular: "",
             curp: "",
-            estado: "",
             garantia: "",
             garantias: "",
             nombre: "",
@@ -107,14 +115,12 @@ export const FormClientesRenovacion = (props) => {
         
         axios.get(`/grupos-show/${client.nombreGrupo}`)
         .then( res => {
-            
             if(true){
                 client.plazos         = plazos
                 client.monto          = prestamo
                 client.pagosFaltantes = pagosFaltantes
                 client.montoFaltante  = montoFaltante
                 client.capital  = prestamo - montoFaltante
-                
                 
                 axios.post('/clientes-registrar-renovacion', {
                     client,
@@ -123,13 +129,14 @@ export const FormClientesRenovacion = (props) => {
                 })
                 .then(res => {
                     if(res.data.status) {
+                        setsubmitForm(false)
                         props.closeForm(res.data.status)
                         generarControlPagos(res.data.idCliente)
 
                         Swal.fire({
                             position: 'top-end',
                             icon: 'success',
-                            title: '',
+                            title: 'Credito renovado con exito',
                             showConfirmButton: false,
                             timer: 1500
                         })
@@ -165,13 +172,13 @@ export const FormClientesRenovacion = (props) => {
         axios.post('/clientes/update/aval', aval)
         .then(res => {
             // console.log(res.data)
-            Swal.fire({
+            /* Swal.fire({
                 position: 'top-end',
                 icon: 'success',
                 title: res.data.message,
                 showConfirmButton: false,
                 timer: 1500
-            })
+            }) */
             setdisableAval(!disableAval)
         })
         .catch(err => {
@@ -184,6 +191,14 @@ export const FormClientesRenovacion = (props) => {
                 timer: 10000
             })
         })
+    }
+
+    const handleCreateRenovacion = (e) => {
+        e.preventDefault()
+        setsubmitForm(true)
+        // handleUpdateAval(e)
+        handleUpdateClient(e)
+
     }
 
     const handlegetDefaultMun = () => {
@@ -208,9 +223,10 @@ export const FormClientesRenovacion = (props) => {
         axios.get(`/clientes-edit/${idCliente}`)
         .then(res => {
             // console.log(res)
+            console.log(res.data.cliente)
+            console.log(res.data.aval)
             setclient(res.data.cliente)
             setaval(res.data.aval)
-            console.log(res.data.aval)
         })
         .catch(err => {
             console.log(err.response)
@@ -229,6 +245,22 @@ export const FormClientesRenovacion = (props) => {
         })
     }
 
+    const handlegetCredito = async (idCliente) => {
+        axios.get(`/cliente/credito/${idCliente}`)
+        .then(res => {
+            const cantidadPagoCredito = res.data.credito.monto * 0.1
+            // setcreditoClient(cantidadPagoCredito)
+            let plazosFaltantes = props.cliente.plazo - props.cliente.plazosPagados
+            //console.log(plazosFaltantes)
+            
+            setMontoFaltante(plazosFaltantes * cantidadPagoCredito)
+            
+        })
+        .catch(err => {
+            console.log(err.response)
+        })
+    }
+
     const handleCloseForm = () => {
         props.closeForm(true)
     }
@@ -240,9 +272,11 @@ export const FormClientesRenovacion = (props) => {
 
     useEffect(() => {
         let plazosFaltantes = props.cliente.plazo - props.cliente.plazosPagados
+        // console.log(plazosFaltantes)
         getDatosCliente(props.cliente.idCliente)
+        handlegetCredito(props.cliente.idCliente)
         setPagosFaltantes(plazosFaltantes)
-        setMontoFaltante(plazosFaltantes * 200)
+        //setMontoFaltante(plazosFaltantes * creditoClient)
         setGrupoNuevo(props.cliente.nombreGrupo)
         setPlazos(props.cliente.plazo)
         setmunicipio(props.cliente.nombreMunicipio)
@@ -260,238 +294,268 @@ export const FormClientesRenovacion = (props) => {
                     Regresar
                 </Button>
             </div>
-            <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div className="p-6 text-gray-900">
-                    <h1 className='text-base md:text-lg lg:text-xl font-weight-bold text-gray-600 font-bold'>Modificar datos de renovacion</h1>
-                    <div className='mt-10'>
-                        <form method='post' onSubmit={handleUpdateClient}  className='mt-10' >
-                            <div className="">
-                                <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Cliente</h1>
+            <form method="post" onSubmit={handleCreateRenovacion} >
+                <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div className="p-6 text-gray-900">
+                        <h1 className='text-base md:text-lg lg:text-xl font-weight-bold text-gray-600 font-bold'>Modificar datos de renovacion</h1>
+                        <div className='mt-10'>
+                                <div className="">
+                                    <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Cliente</h1>
+                                </div>
+                                <div className="-mx-3 mt-5 flex flex-wrap">
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField id="" label="Nombre" name='nombre' className="w-full outline-0 focus:border-0"  InputLabelProps={{shrink: true,}}
+                                        disabled={disableClient} value={client.nombre} onChange={handleChangeCliente}/>
+                                    </div>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField id="" label="Apellido Paterno" name='apellido_paterno' className="w-full"  InputLabelProps={{shrink: true,}}
+                                        disabled={disableClient} value={client.apellido_paterno} onChange={handleChangeCliente}/>
+                                    </div>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField id='filled basic' label="Apellido Materno" name='apellido_materno' className='w-full' InputLabelProps={{shrink: true,}} 
+                                        disabled={disableClient} value={client.apellido_materno} onChange={handleChangeCliente}></TextField>
+                                    </div>
+                                </div>
+
+                                <div className="-mx-3 mt-5 flex flex-wrap">
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField id="" label="CURP" name='curp' className="w-full" InputLabelProps={{shrink: true,}}
+                                        disabled={disableClient} value={client.curp} onChange={handleChangeCliente}/>
+                                    </div>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField id="" label="Telefono" name='telefono' className="w-full" InputLabelProps={{shrink: true,}}
+                                        disabled={disableClient} value={client.telefono} onChange={handleChangeCliente}/>
+                                    </div>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField id='' label="Celular" name='celular' className='w-full' InputLabelProps={{shrink: true,}}
+                                        value={client.celular} onChange={handleChangeCliente}></TextField>
+                                    </div>
+                                </div>
+
+                                <div className="-mx-3 mt-5 flex flex-wrap">
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField id="" label="Estado" InputLabelProps={{shrink: true,}} name='estado' value={'Guerrero'} className="w-full" disabled/>
+                                    </div>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <AutocompleteJoy 
+                                            options={municipios}
+                                            placeholder="Municipio"
+                                            
+                                            getOptionLabel={option => option.nombreMunicipio || ''}
+                                            onChange={(e,item) => { 
+                                                setclient({
+                                                    ...client,
+                                                    municipio_id: item.idMunicipio
+                                                })
+                                                setmunicipio(item.nombreMunicipio)
+                                             }}
+                                            value={value}
+                                            inputValue={inputValue}
+                                            onInputChange={(event, newInputValue) => {
+                                                setInputValue(newInputValue);
+                                            }}
+                                        ></AutocompleteJoy>
+                                        {/*<Autocomplete
+                                            disablePortal
+                                            key={client.municipio}
+                                            defaultValue={ client.municipio }
+                                            options={municipios}
+                                            getOptionLabel={option => option.nombreMunicipio||''}
+                                            isOptionEqualToValue={option => option.idMunicipio === client.municipio}
+                                            onChange={(e,item) => {
+                                                setclient({
+                                                    ...client,
+                                                    municipio: item.idMunicipio
+                                                })
+                                                setmunicipio(item.nombreMunicipio)
+                                            }}
+                                            renderInput={(params) => 
+                                                <TextField 
+                                                    className='border-0 border-none focus:border-none'
+                                                    {...params} 
+                                                    label="Municipio" 
+                                                    InputLabelProps={{shrink: true,}} 
+                                                    name='municipio' 
+                                                    value={municipio}
+                                                ></TextField>
+                                            }
+                                        />*/}
+                                    </div>
+                                    <div className='w-full px-3 sm:w-1/3'>
+                                        <TextField id='' label="Poblado" name='poblado' className='w-full' InputLabelProps={{shrink: true,}}
+                                        value={client.poblado} onChange={handleChangeCliente}></TextField>
+                                    </div>
+                                </div>
+
+                                <div className="-mx-3 mt-5 flex flex-wrap">
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField id='' label="Calle" name='calle' className='w-full'  InputLabelProps={{shrink: true,}}
+                                        value={client.calle} onChange={handleChangeCliente}></TextField>
+                                    </div>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField id='' label="Referencias" name='referencias' className='w-full' InputLabelProps={{shrink: true,}}
+                                        value={client.referencias} onChange={handleChangeCliente}></TextField>
+                                    </div>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField id='' label="Garantia" name='garantia' className='w-full' InputLabelProps={{shrink: true,}}
+                                        value={client.garantia} onChange={handleChangeCliente}></TextField>
+                                    </div>
+                                </div>
+                                <div className='-mx-3 mt-5 flex flex-wrap'>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField label="Fecha Alta" name='diaAlta' 
+                                        value={client.diaAlta} className='w-full' type="date" InputLabelProps={{shrink: true,}} onChange={handleChangeCliente}></TextField>
+                                    </div>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField label="Grupo" name='nombreGrupo'
+                                        value={client.nombreGrupo} className='w-full' type="number" InputLabelProps={{shrink: true,}} onChange={handleChangeCliente}></TextField>
+                                    </div>
+                                </div>
+                                
+                                <div className='mt-5'>
+                                    <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Prestamo</h1>
+                                </div>
+                                <div className="-mx-3 mt-5 flex flex-wrap">
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <TextField label="Prestamo" name='prestamo' className="w-full" min={0} value={prestamo} onChange={(val) => {  setPrestamo(val.target.value); }}></TextField>
+                                        {  prestamo >= 2000 ? <span> El monto a recibir sera ${prestamo - montoFaltante} </span>: null  }
+                                    </div>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                        <FormControl className='w-full'>
+                                            <InputLabel id="plazos"  InputLabelProps={{shrink: true,}}>Plazos</InputLabel>
+                                            <Select
+                                                labelId="plazos" id="demo-simple-select" name='plazos'  InputLabelProps={{shrink: true,}}
+                                                value={plazos} defaultValue={0} label="plazos" onChange={(val) => { setPlazos(val.target.value) }}
+                                            >
+                                                <MenuItem value={0}>
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                {listPlazos}
+                                            </Select>
+                                        </FormControl>
+                                    </div>
+                                    <div className="w-full px-3 sm:w-1/3">
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className='bg-white mt-2 overflow-hidden shadow-sm sm:rounded-lg'>
+                    <div className='p-6 text-gray-900'>
+                            <div className="-mx-3 mt-5 flex justify-center">
+                                <div>
+                                    <Button type='button' variant='contained' onClick={() => {setdisableAval(!disableAval)}}>
+                                        Editar aval
+                                    </Button>
+                                </div>
+                                <div className='ml-3'>
+                                    <Button type='button' variant='contained' onClick={handleCleanInputsAval}>
+                                        Limpiar Campos Aval
+                                    </Button>
+                                </div>
+                            </div>
+                            <div className='mt-10'>
+                                <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Aval</h1>
                             </div>
                             <div className="-mx-3 mt-5 flex flex-wrap">
                                 <div className="w-full px-3 sm:w-1/3">
                                     <TextField id="" label="Nombre" name='nombre' className="w-full outline-0 focus:border-0"  InputLabelProps={{shrink: true,}}
-                                    disabled={disableClient} value={client.nombre} onChange={handleChangeCliente}/>
+                                    disabled={disableAval} value={aval.nombre} onChange={handleChangeAval}/>
                                 </div>
                                 <div className="w-full px-3 sm:w-1/3">
-                                    <TextField id="" label="Apellido Paterno" name='apellido_paterno' className="w-full"  InputLabelProps={{shrink: true,}}
-                                    disabled={disableClient} value={client.apellido_paterno} onChange={handleChangeCliente}/>
+                                    <TextField id="" label="Apellido Paterno"  name='apellido_paterno' className="w-full"  InputLabelProps={{shrink: true,}}
+                                    disabled={disableAval} value={aval.apellido_paterno} onChange={handleChangeAval}/>
                                 </div>
                                 <div className="w-full px-3 sm:w-1/3">
-                                    <TextField id='filled basic' label="Apellido Materno" name='apellido_materno' className='w-full' InputLabelProps={{shrink: true,}} 
-                                    disabled={disableClient} value={client.apellido_materno} onChange={handleChangeCliente}></TextField>
-                                </div>
-                            </div>
-
-                            <div className="-mx-3 mt-5 flex flex-wrap">
-                                <div className="w-full px-3 sm:w-1/3">
-                                    <TextField id="" label="CURP" name='curp' className="w-full" InputLabelProps={{shrink: true,}}
-                                    disabled={disableClient} value={client.curp} onChange={handleChangeCliente}/>
-                                </div>
-                                <div className="w-full px-3 sm:w-1/3">
-                                    <TextField id="" label="Telefono" name='telefono' className="w-full" InputLabelProps={{shrink: true,}}
-                                    disabled={disableClient} value={client.telefono} onChange={handleChangeCliente}/>
-                                </div>
-                                <div className="w-full px-3 sm:w-1/3">
-                                    <TextField id='' label="Celular" name='celular' className='w-full' InputLabelProps={{shrink: true,}}
-                                    value={client.celular} onChange={handleChangeCliente}></TextField>
+                                    <TextField id='' label="Apellido Materno" name='apellido_materno' className='w-full'  InputLabelProps={{shrink: true,}}
+                                    disabled={disableAval} value={aval.apellido_materno} onChange={handleChangeAval}></TextField>
                                 </div>
                             </div>
 
                             <div className="-mx-3 mt-5 flex flex-wrap">
                                 <div className="w-full px-3 sm:w-1/3">
-                                    <TextField id="" label="Estado" InputLabelProps={{shrink: true,}} name='estado' value={'Guerrero'} className="w-full" disabled/>
+                                    <TextField id="" label="CURP" name='curp' className="w-full"  InputLabelProps={{shrink: true,}}
+                                    disabled={disableAval} value={aval.curp} onChange={handleChangeAval}/>
                                 </div>
                                 <div className="w-full px-3 sm:w-1/3">
-                                    <Autocomplete
+                                    <TextField id="" label="Telefono" name='telefono' className="w-full"  InputLabelProps={{shrink: true,}}
+                                    disabled={disableAval} value={aval.telefono} onChange={handleChangeAval} />
+                                </div>
+                                <div className="w-full px-3 sm:w-1/3">
+                                    <TextField id='' label="Celular" name='celular' className='w-full'  InputLabelProps={{shrink: true,}}
+                                    disabled={disableAval} value={aval.celular} onChange={handleChangeAval}></TextField>
+                                </div>
+                            </div>
+
+                            <div className="-mx-3 mt-5 flex flex-wrap">
+                                <div className="w-full px-3 sm:w-1/3">
+                                    <TextField id="" value={aval.estado} label="Estado" name='estado'  InputLabelProps={{shrink: true,}} className="w-full" disabled onChange={handleChangeAval}/>
+                                </div>
+                                <div className="w-full px-3 sm:w-1/3">
+                                    <AutocompleteJoy options={municipios}
+                                        placeholder="Municipio"
+                                        getOptionLabel={option => option.nombreMunicipio || ''}
+                                        onChange={(e,item) => { 
+                                            setaval({
+                                                ...aval,
+                                                municipio_id: item.idMunicipio
+                                            })
+                                         }}
+                                        value={valueAval}
+                                        inputValue={inputValueAval}
+                                        onInputChange={(event, newInputValue) => {
+                                            setInputValueAval(newInputValue);
+                                        }}
+                                    ></AutocompleteJoy>
+                                    {/*<Autocomplete
                                         disablePortal
-                                        InputLabelProps={{shrink: true,}}
+                                        id=""
                                         options={municipios}
-                                        defaultValue={municipio}
                                         getOptionLabel={option => option.nombreMunicipio||''}
-                                        isOptionEqualToValue={option => option.idMunicipio === client.municipio}
+                                        isOptionEqualToValue={option => option.idMunicipio === aval.municipio}
+                                        disabled={disableAval}
                                         onChange={(e,item) => {
-                                            setclient({
-                                                ...client,
+                                            setaval({
+                                                ...aval,
                                                 municipio: item.idMunicipio
                                             })
-                                            setmunicipio(item.nombreMunicipio)
                                         }}
-                                        renderInput={(params) => 
-                                            <TextField 
-                                                className='border-0 border-none focus:border-none'
-                                                {...params} 
-                                                label="Municipio" 
-                                                InputLabelProps={{shrink: true,}} 
-                                                name='municipio' 
-                                                value={municipio}
-                                            ></TextField>
-                                        }
-                                    />
+                                        renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio' />}
+                                    />*/}
                                 </div>
                                 <div className='w-full px-3 sm:w-1/3'>
-                                    <TextField id='' label="Poblado" name='poblado' className='w-full' InputLabelProps={{shrink: true,}}
-                                    value={client.poblado} onChange={handleChangeCliente}></TextField>
+                                    <TextField id='' label="Poblado" name='poblado' className='w-full'  InputLabelProps={{shrink: true,}}
+                                    disabled={disableAval} value={aval.poblado} onChange={handleChangeAval}></TextField>
                                 </div>
                             </div>
 
                             <div className="-mx-3 mt-5 flex flex-wrap">
                                 <div className="w-full px-3 sm:w-1/3">
-                                    <TextField id='' label="Calle" name='calle' className='w-full'  InputLabelProps={{shrink: true,}}
-                                    value={client.calle} onChange={handleChangeCliente}></TextField>
+                                    <TextField label="Calle" name='calle' className='w-full'  InputLabelProps={{shrink: true,}}
+                                    disabled={disableAval} value={aval.calle} onChange={handleChangeAval}></TextField>
                                 </div>
                                 <div className="w-full px-3 sm:w-1/3">
-                                    <TextField id='' label="Referencias" name='referencias' className='w-full' InputLabelProps={{shrink: true,}}
-                                    value={client.referencias} onChange={handleChangeCliente}></TextField>
+                                    <TextField label="Referencias" name='referencias' className='w-full'  InputLabelProps={{shrink: true,}}
+                                    disabled={disableAval} value={aval.referencias} onChange={handleChangeAval}></TextField>
                                 </div>
                                 <div className="w-full px-3 sm:w-1/3">
-                                    <TextField id='' label="Garantia" name='garantia' className='w-full' InputLabelProps={{shrink: true,}}
-                                    value={client.garantia} onChange={handleChangeCliente}></TextField>
+                                    <TextField label="Garantia" name='garantia' className='w-full'  InputLabelProps={{shrink: true,}}
+                                    disabled={disableAval} value={aval.garantia} onChange={handleChangeAval}></TextField>
                                 </div>
                             </div>
-                            <div className='-mx-3 mt-5 flex flex-wrap'>
-                                <div className="w-full px-3 sm:w-1/3">
-                                    <TextField label="Fecha Alta" name='diaAlta' 
-                                    value={client.diaAlta} className='w-full' type="date" InputLabelProps={{shrink: true,}} onChange={handleChangeCliente}></TextField>
-                                </div>
-                                <div className="w-full px-3 sm:w-1/3">
-                                    <TextField label="Grupo" name='nombreGrupo'
-                                    value={client.nombreGrupo} className='w-full' type="number" InputLabelProps={{shrink: true,}} onChange={handleChangeCliente}></TextField>
-                                </div>
-                            </div>
-                            
-                            <div className='mt-5'>
-                                <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Prestamo</h1>
-                            </div>
-                            <div className="-mx-3 mt-5 flex flex-wrap">
-                                <div className="w-full px-3 sm:w-1/3">
-                                    <TextField label="Prestamo" name='prestamo' className="w-full" min={0} value={prestamo} onChange={(val) => {  setPrestamo(val.target.value); }}></TextField>
-                                    {  prestamo >= 2000 ? <span> El monto a recibir sera ${prestamo - montoFaltante} </span>: null  }
-                                
-                                </div>
-                                <div className="w-full px-3 sm:w-1/3">
-                                    <FormControl className='w-full'>
-                                        <InputLabel id="plazos"  InputLabelProps={{shrink: true,}}>Plazos</InputLabel>
-                                        <Select
-                                            labelId="plazos" id="demo-simple-select" name='plazos'  InputLabelProps={{shrink: true,}}
-                                            value={plazos} defaultValue={0} label="plazos" onChange={(val) => { setPlazos(val.target.value) }}
-                                        >
-                                            <MenuItem value={0}>
-                                                <em>None</em>
-                                            </MenuItem>
-                                            {listPlazos}
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div className="w-full px-3 sm:w-1/3">
-                                </div>
-                            </div>
-                        </form>
                     </div>
                 </div>
-            </div>
 
-            <div className='bg-white mt-2 overflow-hidden shadow-sm sm:rounded-lg'>
-                <div className='p-6 text-gray-900'>
-                    <form method="post" onSubmit={handleUpdateAval}>
-                        <div className="-mx-3 mt-5 flex justify-center">
-                            <div>
-                                <Button type='button' variant='contained'  onClick={() => {setdisableAval(!disableAval)}}>
-                                    Editar aval
-                                </Button>
-                            </div>
-                            <div className='ml-3'>
-                                <Button type='button' variant='contained' onClick={handleCleanInputsAval}>
-                                    Limpiar Campos Aval
-                                </Button>
-                            </div>
-                        </div>
-                        <div className='mt-10'>
-                            <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Aval</h1>
-                        </div>
-                        <div className="-mx-3 mt-5 flex flex-wrap">
-                            <div className="w-full px-3 sm:w-1/3">
-                                <TextField id="" label="Nombre" name='nombre' className="w-full outline-0 focus:border-0"  InputLabelProps={{shrink: true,}}
-                                disabled={disableAval} value={aval.nombre} onChange={handleChangeAval}/>
-                            </div>
-                            <div className="w-full px-3 sm:w-1/3">
-                                <TextField id="" label="Apellido Paterno"  name='apellido_paterno' className="w-full"  InputLabelProps={{shrink: true,}}
-                                disabled={disableAval} value={aval.apellido_paterno} onChange={handleChangeAval}/>
-                            </div>
-                            <div className="w-full px-3 sm:w-1/3">
-                                <TextField id='' label="Apellido Materno" name='apellido_materno' className='w-full'  InputLabelProps={{shrink: true,}}
-                                disabled={disableAval} value={aval.apellido_materno} onChange={handleChangeAval}></TextField>
-                            </div>
-                        </div>
-
-                        <div className="-mx-3 mt-5 flex flex-wrap">
-                            <div className="w-full px-3 sm:w-1/3">
-                                <TextField id="" label="CURP" name='curp' className="w-full"  InputLabelProps={{shrink: true,}}
-                                disabled={disableAval} value={aval.curp} onChange={handleChangeAval}/>
-                            </div>
-                            <div className="w-full px-3 sm:w-1/3">
-                                <TextField id="" label="Telefono" name='telefono' className="w-full"  InputLabelProps={{shrink: true,}}
-                                disabled={disableAval} value={aval.telefono} onChange={handleChangeAval} />
-                            </div>
-                            <div className="w-full px-3 sm:w-1/3">
-                                <TextField id='' label="Celular" name='celular' className='w-full'  InputLabelProps={{shrink: true,}}
-                                disabled={disableAval} value={aval.celular} onChange={handleChangeAval}></TextField>
-                            </div>
-                        </div>
-
-                        <div className="-mx-3 mt-5 flex flex-wrap">
-                            <div className="w-full px-3 sm:w-1/3">
-                                <TextField id="" value={aval.estado} label="Estado" name='estado'  InputLabelProps={{shrink: true,}} className="w-full" disabled onChange={handleChangeAval}/>
-                            </div>
-                            <div className="w-full px-3 sm:w-1/3">
-                                <Autocomplete
-                                    disablePortal
-                                    id=""
-                                    options={municipios}
-                                    getOptionLabel={option => option.nombreMunicipio||''}
-                                    isOptionEqualToValue={option => option.idMunicipio === aval.municipio}
-                                    disabled={disableAval}
-                                    onChange={(e,item) => {
-                                        setaval({
-                                            ...aval,
-                                            municipio: item.idMunicipio
-                                        })
-                                    }}
-                                    renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio' />}
-                                />
-                            </div>
-                            <div className='w-full px-3 sm:w-1/3'>
-                                <TextField id='' label="Poblado" name='poblado' className='w-full'  InputLabelProps={{shrink: true,}}
-                                disabled={disableAval} value={aval.poblado} onChange={handleChangeAval}></TextField>
-                            </div>
-                        </div>
-
-                        <div className="-mx-3 mt-5 flex flex-wrap">
-                            <div className="w-full px-3 sm:w-1/3">
-                                <TextField label="Calle" name='calle' className='w-full'  InputLabelProps={{shrink: true,}}
-                                disabled={disableAval} value={aval.calle} onChange={handleChangeAval}></TextField>
-                            </div>
-                            <div className="w-full px-3 sm:w-1/3">
-                                <TextField label="Referencias" name='referencias' className='w-full'  InputLabelProps={{shrink: true,}}
-                                disabled={disableAval} value={aval.referencias} onChange={handleChangeAval}></TextField>
-                            </div>
-                            <div className="w-full px-3 sm:w-1/3">
-                                <TextField label="Garantia" name='garantia' className='w-full'  InputLabelProps={{shrink: true,}}
-                                disabled={disableAval} value={aval.garantia} onChange={handleChangeAval}></TextField>
-                            </div>
-                        </div>
-                    </form>
+                <div>
+                
+                    <div className="-mx-3 mt-5 flex justify-center">
+                        <Button type='submit' variant='contained' disabled={submitForm}>
+                            Registrar renovación
+                        </Button>
+                    </div>
                 </div>
-            </div>
-
-            <div>
-            
-                <div className="-mx-3 mt-5 flex justify-center">
-                    <Button type='button' variant='contained'  onClick={handleUpdateClient}>
-                        Registrar renovación
-                    </Button>
-                </div>
-            </div>
+            </form>
         </div>
     )
 }

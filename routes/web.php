@@ -70,6 +70,7 @@ Route::get('/clientes/list', [ClientesController::class, 'listClientes'])->middl
 Route::get('/clientes/edit/{id}', [ClientesController::class, 'viewEditCliente'])->middleware(['auth', 'verified'])->name('editCliente');
 Route::post('/clientes/params', [ClientesController::class, 'consDynamicClients'])->middleware(['auth', 'verified'])->name('clientsParams');
 Route::post('/clientes-registrar-renovacion', [ClientesController::class, 'renovarCliente'])->middleware(['auth', 'verified'])->name('renovarCliente');
+Route::get('/cliente/credito/{id}', [ClientesController::class, 'getCreditoCliente'])->middleware(['auth', 'verified'])->name('creditoCliente');
 
 Route::post('/clientes/update/client', [ClientesController::class, 'updateDatosCliente'])->middleware(['auth', 'verified'])->name('updateCliente');
 Route::post('/clientes/update/aval', [ClientesController::class, 'updateDatosAval'])->middleware(['auth', 'verified'])->name('updateAval');
@@ -81,6 +82,7 @@ Route::get('/municipios', [MunicipioController::class, 'viewMunicipios'])->middl
 Route::get('/municipios/list', [MunicipioController::class, 'listMunicipios'])->middleware(['auth', 'verified'])->name('listMunicipios');
 Route::post('/municipios/create', [MunicipioController::class, 'createMunicipios'])->middleware(['auth', 'verified'])->name('createMunicipios');
 Route::post('/municipios/edit', [MunicipioController::class, 'editMunicipios'])->middleware(['auth', 'verified'])->name('editMunicipios');
+Route::post('/municipios/delete', [MunicipioController::class, 'deleteMunicpio'])->middleware(['auth', 'verified'])->name('deleteMunicipio');
 
 Route::get('/grupos', [GruposController::class, 'viewGrupos'])->middleware(['auth', 'verified'])->name('viewGrupos');
 Route::post('/grupos/delete', [GruposController::class, 'deleteGrupos'])->middleware(['auth', 'verified'])->name('deleteGrupos');

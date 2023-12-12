@@ -55,4 +55,31 @@ class MunicipioController extends Controller
             'message' => 'Municipio modificado',
         ]);
     }
+
+    public function deleteMunicpio(Request $request) {
+        $validation = $request->validate([
+            'idMunicipio' => 'required'
+        ]);
+
+        try{
+            $delete = DB::table('municipios')
+            ->where('idMunicipio', '=', $request->idMunicipio)
+            ->delete();
+
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Municipio eliminado con exito',
+                'data'=> $delete,
+            ]);
+
+        }catch(Exception $e){
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No es posible eliminar el municipio',
+                'data' => $e->getMessage()
+            ]);
+        }
+    }
 }
