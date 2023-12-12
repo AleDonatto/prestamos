@@ -8,7 +8,7 @@ import Swal from 'sweetalert2'
 import moment from 'moment';
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 import AutocompleteJoy from '@mui/joy/Autocomplete';
-
+import ModalProgress from '../Utils/ModalProgress'
 
 export const FormClientes = () => {
     
@@ -296,224 +296,221 @@ export const FormClientes = () => {
                     <div></div>
                 }
             </div>
-
-            <div>
-
-                
-            </div>
-
             
             {showForm ? 
-                <ValidatorForm onSubmit={handleCreateCliente}  onError={error => console.log(error)} className='mt-10' >
-                    <div className="">
-                        <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Cliente</h1>
-                    </div>
-                    <div className="-mx-3 mt-5 flex flex-wrap">
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id="" label="Nombre" name='nombre' className="w-full outline-0 focus:border-0" value={cliente.nombre} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                <div>
+                    <ModalProgress show={disableSubmit} />
+                    <ValidatorForm onSubmit={handleCreateCliente}  onError={error => console.log(error)} className='mt-10' >
+                        <div className="">
+                            <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Cliente</h1>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id="" label="Apellido Paterno" name='apellido_paterno' className="w-full" value={cliente.apellido_paterno} onChange={handleChange}
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                        <div className="-mx-3 mt-5 flex flex-wrap">
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id="" label="Nombre" name='nombre' className="w-full outline-0 focus:border-0" value={cliente.nombre} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id="" label="Apellido Paterno" name='apellido_paterno' className="w-full" value={cliente.apellido_paterno} onChange={handleChange}
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id='filled basic' label="Apellido Materno" name='apellido_materno' className='w-full' value={cliente.apellido_materno} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id='filled basic' label="Apellido Materno" name='apellido_materno' className='w-full' value={cliente.apellido_materno} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
-                        </div>
-                    </div>
 
-                    <div className="-mx-3 mt-5 flex flex-wrap">
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id="" label="CURP" name='curp' className="w-full" value={cliente.curp} onChange={handleChange} 
-                            validators={['required', 'matchRegexp:[\A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}([A-Z]{2})?([0-9]{2})?']} 
-                            errorMessages={['Este campo es requerido', 'CURP no valida']}
-                            inputProps={{ maxLength: 20 }}/>
+                        <div className="-mx-3 mt-5 flex flex-wrap">
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id="" label="CURP" name='curp' className="w-full" value={cliente.curp} onChange={handleChange} 
+                                validators={['required', 'matchRegexp:[\A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}([A-Z]{2})?([0-9]{2})?']} 
+                                errorMessages={['Este campo es requerido', 'CURP no valida']}
+                                inputProps={{ maxLength: 20 }}/>
+                            </div>
+                            {/*<div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id="" label="Telefono" name='telefono' className="w-full" value={cliente.telefono} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 10 }}/>
+                            </div>*/}
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id='' label="Celular" name='celular' className='w-full' value={cliente.celular} onChange={handlenumber}
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 10 }}/>
+                            </div>
                         </div>
-                        {/*<div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id="" label="Telefono" name='telefono' className="w-full" value={cliente.telefono} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 10 }}/>
-                        </div>*/}
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id='' label="Celular" name='celular' className='w-full' value={cliente.celular} onChange={handlenumber}
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 10 }}/>
-                        </div>
-                    </div>
 
-                    <div className="-mx-3 mt-5 flex flex-wrap">
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextField id="" label="Estado" name='estado' value={'Guerrero'} className="w-full" disabled/>
+                        <div className="-mx-3 mt-5 flex flex-wrap">
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextField id="" label="Estado" name='estado' value={'Guerrero'} className="w-full" disabled/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <AutocompleteJoy 
+                                    options={municipios}
+                                    placeholder="Municipio"
+                                    getOptionLabel={option => option.nombreMunicipio || ''}
+                                    onChange={(e,item) => { setcliente({
+                                        ...cliente,
+                                        municipio: item.idMunicipio
+                                    }) }}
+                                    value={value}
+                                    inputValue={inputValue}
+                                    onInputChange={(event, newInputValue) => {
+                                        setInputValue(newInputValue);
+                                    }}
+                                ></AutocompleteJoy>
+                                {/*<Autocomplete
+                                    disablePortal
+                                    id=""
+                                    options={municipios}
+                                    getOptionLabel={option => option.nombreMunicipio||''}
+                                    onChange={(e,item) => { setcliente({
+                                        ...cliente,
+                                        municipio: item.idMunicipio
+                                    }) }}
+                                    renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio"/>}
+                                />*/}
+                            </div>
+                            <div className='w-full px-3 sm:w-1/3'>
+                                <TextValidator id='' label="Colonia" name='poblado' className='w-full' value={cliente.poblado} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <AutocompleteJoy 
-                                options={municipios}
-                                placeholder="Municipio"
-                                getOptionLabel={option => option.nombreMunicipio || ''}
-                                onChange={(e,item) => { setcliente({
-                                    ...cliente,
-                                    municipio: item.idMunicipio
-                                }) }}
-                                value={value}
-                                inputValue={inputValue}
-                                onInputChange={(event, newInputValue) => {
-                                    setInputValue(newInputValue);
-                                }}
-                            ></AutocompleteJoy>
-                            {/*<Autocomplete
-                                disablePortal
-                                id=""
-                                options={municipios}
-                                getOptionLabel={option => option.nombreMunicipio||''}
-                                onChange={(e,item) => { setcliente({
-                                    ...cliente,
-                                    municipio: item.idMunicipio
-                                }) }}
-                                renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio"/>}
-                            />*/}
-                        </div>
-                        <div className='w-full px-3 sm:w-1/3'>
-                            <TextValidator id='' label="Colonia" name='poblado' className='w-full' value={cliente.poblado} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
-                        </div>
-                    </div>
 
-                    <div className="-mx-3 mt-5 flex flex-wrap">
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id='' label="Calle" name='calle' className='w-full' value={cliente.calle} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                        <div className="-mx-3 mt-5 flex flex-wrap">
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id='' label="Calle" name='calle' className='w-full' value={cliente.calle} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id='' label="Referencias" name='referencias' className='w-full' value={cliente.referencias} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 100 }}/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id='' label="Garantia" name='garantia' className='w-full' value={cliente.garantia} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id='' label="Referencias" name='referencias' className='w-full' value={cliente.referencias} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 100 }}/>
+                        <div className='-mx-3 mt-5 flex flex-wrap'>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id='' label="Fecha Alta" name='fecha_acreditacion' value={cliente.fecha_acreditacion} className='w-full' type="date" InputLabelProps={{shrink: true,}} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} />
+                            </div>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id='' label="Garantia" name='garantia' className='w-full' value={cliente.garantia} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
-                        </div>
-                    </div>
-                    <div className='-mx-3 mt-5 flex flex-wrap'>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id='' label="Fecha Alta" name='fecha_acreditacion' value={cliente.fecha_acreditacion} className='w-full' type="date" InputLabelProps={{shrink: true,}} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} />
-                        </div>
-                    </div>
 
-                    <div className='mt-10'>
-                        <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Aval</h1>
-                    </div>
-                    <div className="-mx-3 mt-5 flex flex-wrap">
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id="" label="Nombre" name='nombre_aval' className="w-full outline-0 focus:border-0" value={cliente.nombre_aval} onChange={handleChange}
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                        <div className='mt-10'>
+                            <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Aval</h1>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id="" label="Apellido Paterno"  name='apellido_paterno_aval' className="w-full" value={cliente.apellido_paterno_aval} onChange={handleChange}
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                        <div className="-mx-3 mt-5 flex flex-wrap">
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id="" label="Nombre" name='nombre_aval' className="w-full outline-0 focus:border-0" value={cliente.nombre_aval} onChange={handleChange}
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id="" label="Apellido Paterno"  name='apellido_paterno_aval' className="w-full" value={cliente.apellido_paterno_aval} onChange={handleChange}
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id='' label="Apellido Materno" name='apellido_materno_aval' className='w-full' value={cliente.apellido_materno_aval} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id='' label="Apellido Materno" name='apellido_materno_aval' className='w-full' value={cliente.apellido_materno_aval} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
-                        </div>
-                    </div>
 
-                    <div className="-mx-3 mt-5 flex flex-wrap">
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id="" label="CURP" name='curp_aval' className="w-full" value={cliente.curp_aval} onChange={handleChange} 
-                            validators={['required', 'matchRegexp:[\A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}([A-Z]{2})?([0-9]{2})?']} 
-                            errorMessages={['Este campo es requerido', 'CURP no valida']}
-                            inputProps={{ maxLength: 20 }}/>
+                        <div className="-mx-3 mt-5 flex flex-wrap">
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id="" label="CURP" name='curp_aval' className="w-full" value={cliente.curp_aval} onChange={handleChange} 
+                                validators={['required', 'matchRegexp:[\A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}([A-Z]{2})?([0-9]{2})?']} 
+                                errorMessages={['Este campo es requerido', 'CURP no valida']}
+                                inputProps={{ maxLength: 20 }}/>
+                            </div>
+                            {/*<div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id="" label="Telefono" name='telefono_aval' className="w-full" value={cliente.telefono_aval} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']}/>
+                            </div>*/}
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id='' label="Celular" name='celular_aval' className='w-full' value={cliente.celular_aval} onChange={handlenumber} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 10 }}/>
+                            </div>
                         </div>
-                        {/*<div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id="" label="Telefono" name='telefono_aval' className="w-full" value={cliente.telefono_aval} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']}/>
-                        </div>*/}
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id='' label="Celular" name='celular_aval' className='w-full' value={cliente.celular_aval} onChange={handlenumber} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 10 }}/>
-                        </div>
-                    </div>
 
-                    <div className="-mx-3 mt-5 flex flex-wrap">
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id="" value={cliente.estado} label="Estado" name='estado_aval' className="w-full" disabled onChange={handleChange}/>
+                        <div className="-mx-3 mt-5 flex flex-wrap">
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id="" value={cliente.estado} label="Estado" name='estado_aval' className="w-full" disabled onChange={handleChange}/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <AutocompleteJoy options={municipios}
+                                    placeholder="Municipio"
+                                    getOptionLabel={option => option.nombreMunicipio}
+                                    onChange={(e,item) => { setcliente({
+                                        ...cliente,
+                                        municipio_aval: item.idMunicipio
+                                    }) }}
+                                    value={valueAval}
+                                    inputValue={inputValueAval}
+                                    onInputChange={(event, newInputValue) => {
+                                        setInputValueAval(newInputValue);
+                                    }}
+                                ></AutocompleteJoy>
+                                {/*<Autocomplete
+                                    disablePortal
+                                    id=""
+                                    options={municipios}
+                                    getOptionLabel={option => option.nombreMunicipio||''}
+                                    onChange={(e,item) => { setcliente({
+                                        ...cliente,
+                                        municipio_aval: item.idMunicipio
+                                    }) }}
+                                    renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio_aval' />}
+                                />*/}
+                            </div>
+                            <div className='w-full px-3 sm:w-1/3'>
+                                <TextValidator id='' label="Colonia" name='poblado_aval' className='w-full' value={cliente.poblado_aval} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <AutocompleteJoy options={municipios}
-                                placeholder="Municipio"
-                                getOptionLabel={option => option.nombreMunicipio}
-                                onChange={(e,item) => { setcliente({
-                                    ...cliente,
-                                    municipio_aval: item.idMunicipio
-                                }) }}
-                                value={valueAval}
-                                inputValue={inputValueAval}
-                                onInputChange={(event, newInputValue) => {
-                                    setInputValueAval(newInputValue);
-                                }}
-                            ></AutocompleteJoy>
-                            {/*<Autocomplete
-                                disablePortal
-                                id=""
-                                options={municipios}
-                                getOptionLabel={option => option.nombreMunicipio||''}
-                                onChange={(e,item) => { setcliente({
-                                    ...cliente,
-                                    municipio_aval: item.idMunicipio
-                                }) }}
-                                renderInput={(params) => <TextField className='border-0 border-none focus:border-none' {...params} label="Municipio" name='municipio_aval' />}
-                            />*/}
-                        </div>
-                        <div className='w-full px-3 sm:w-1/3'>
-                            <TextValidator id='' label="Colonia" name='poblado_aval' className='w-full' value={cliente.poblado_aval} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
-                        </div>
-                    </div>
 
-                    <div className="-mx-3 mt-5 flex flex-wrap">
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator label="Calle" name='calle_aval' className='w-full' value={cliente.calle_aval} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                        <div className="-mx-3 mt-5 flex flex-wrap">
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator label="Calle" name='calle_aval' className='w-full' value={cliente.calle_aval} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator label="Referencias" name='referencias_aval' className='w-full' value={cliente.referencias_aval} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 100 }}/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator label="Garantia" name='garantia_aval' className='w-full' value={cliente.garantia_aval} onChange={handleChange} 
+                                validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
+                            </div>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator label="Referencias" name='referencias_aval' className='w-full' value={cliente.referencias_aval} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 100 }}/>
-                        </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator label="Garantia" name='garantia_aval' className='w-full' value={cliente.garantia_aval} onChange={handleChange} 
-                            validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 40 }}/>
-                        </div>
-                    </div>
 
-                    <div className='mt-10'>
-                        <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Prestamo</h1>
-                    </div>
-                    <div className="-mx-3 mt-5 flex flex-wrap">
-                        <div className="w-full px-3 sm:w-1/3">
-                            <TextValidator id='' label="Monto" name='monto' className='w-full' value={cliente.monto} onChange={handleChange} inputProps={{ maxLength: 12 }}/>
+                        <div className='mt-10'>
+                            <h1 className='text-base md:text-lg lg:text-xl font-semibold text-gray-600'>Datos Prestamo</h1>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
-                            <FormControl className='w-full'>
-                                <InputLabel id="plazos">Plazos</InputLabel>
-                                <Select
-                                    labelId="plazos" id="demo-simple-select" name='plazos'
-                                    value={cliente.plazos} defaultValue={0} label="plazos" onChange={handleChange}
-                                >
-                                    <MenuItem value={0}>
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {listPlazos}
-                                </Select>
-                            </FormControl>
+                        <div className="-mx-3 mt-5 flex flex-wrap">
+                            <div className="w-full px-3 sm:w-1/3">
+                                <TextValidator id='' label="Monto" name='monto' className='w-full' value={cliente.monto} onChange={handleChange} inputProps={{ maxLength: 12 }}/>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                                <FormControl className='w-full'>
+                                    <InputLabel id="plazos">Plazos</InputLabel>
+                                    <Select
+                                        labelId="plazos" id="demo-simple-select" name='plazos'
+                                        value={cliente.plazos} defaultValue={0} label="plazos" onChange={handleChange}
+                                    >
+                                        <MenuItem value={0}>
+                                            <em>None</em>
+                                        </MenuItem>
+                                        {listPlazos}
+                                    </Select>
+                                </FormControl>
+                            </div>
+                            <div className="w-full px-3 sm:w-1/3">
+                            </div>
                         </div>
-                        <div className="w-full px-3 sm:w-1/3">
+                        <div className="-mx-3 mt-5 flex flex-wrap">
+                            <div className="w-full px-3">
+                                <Button type='submit' variant="contained" disabled={disableSubmit}>Agregar Cliente</Button>
+                            </div>
                         </div>
-                    </div>
-                    <div className="-mx-3 mt-5 flex flex-wrap">
-                        <div className="w-full px-3">
-                            <Button type='submit' variant="contained" disabled={disableSubmit}>Agregar Cliente</Button>
-                        </div>
-                    </div>
-                </ValidatorForm>
+                    </ValidatorForm>
+                </div>
                 :
                 <div></div>
             }

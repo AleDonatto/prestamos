@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 import moment from 'moment';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AutocompleteJoy from '@mui/joy/Autocomplete';
+import ModalProgress from '../Utils/ModalProgress';
 
 export const FormClientesRenovacion = (props) => {
 
@@ -294,6 +295,7 @@ export const FormClientesRenovacion = (props) => {
                     Regresar
                 </Button>
             </div>
+            <ModalProgress show={submitForm}/>
             <form method="post" onSubmit={handleCreateRenovacion} >
                 <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div className="p-6 text-gray-900">

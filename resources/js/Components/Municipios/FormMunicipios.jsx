@@ -5,6 +5,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2'
+import ModalProgress from '../Utils/ModalProgress';
 
 export const FormMunicipios = () => {
     const [municipios, setmunicipios] = useState({
@@ -14,6 +15,7 @@ export const FormMunicipios = () => {
     })
 
     const [listMunicipios, setlistMunicipios] = useState([]) //data grid municipios
+    const [disableSubmit, setdisableSubmit] = useState(false)
 
     const [open, setOpen] = React.useState(false); //dialog
 
@@ -24,9 +26,12 @@ export const FormMunicipios = () => {
         })
     }
      
-    const handleSubmitMunicipios = (e) => {
+    const handleSubmitMunicipios = async (e) => {
         e.preventDefault()
-        axios.post('/municipios/create', municipios)
+
+        setdisableSubmit(true)
+
+        await axios.post('/municipios/create', municipios)
         .then( res => {
             console.log(res.data)
 
@@ -42,9 +47,11 @@ export const FormMunicipios = () => {
                 nombreMunicipio: ''
             })
             handlegetMunicipios()
+            setdisableSubmit(false)
         })
         .catch(err => {
             console.log(err.response)
+            setdisableSubmit(false)
             Swal.fire({
                 position: 'top-end',
                 icon: 'error',
@@ -202,6 +209,7 @@ export const FormMunicipios = () => {
             <div className='bg-white overflow-hidden shadow-sm sm:rounded-lg'>
                 <div className='p-6 text-gray-900'>
                     <h1 className='text-base md:text-lg lg:text-xl font-weight-bold text-gray-600 font-bold'>Agregar Municipios</h1>
+                    <ModalProgress show={disableSubmit} />
                     <ValidatorForm onSubmit={handleSubmitMunicipios}>
                         <div className='-mx-3 mt-5 flex flex-wrap'>
                             <div className="w-full px-3 sm:w-1/3">
@@ -209,7 +217,7 @@ export const FormMunicipios = () => {
                                 validators={['required']} errorMessages={['Este campo es requerido']} inputProps={{ maxLength: 50 }}/>
                             </div>
                             <div className="w-full px-3 sm:w-1/3">
-                                <Button type='submit' variant='contained' className='mt-6'>Agregar</Button>
+                                <Button type='submit' variant='contained' className='mt-6' disabled={disableSubmit}>Agregar</Button>
                             </div>
                             <div className="w-full px-3 sm:w-1/3">
                             </div>
